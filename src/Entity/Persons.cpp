@@ -48,6 +48,32 @@ Customer::Customer(const Customer *p_customer): Person(p_customer)
 Customer::Customer(const Customer &t_customer): Person(t_customer)
 {}
 
+void Customer::remove(long id)
+{
+    for(auto it(this->accounts.begin()); it != this->accounts.end(); it++)
+    {
+        if((*it)->getId() == id)
+        {
+            this->accounts.erase(it) ;
+        }
+    }
+}
+
+void Customer::push_back(Account &t_account)
+{
+  this->accounts.push_back(std::make_shared<Account>(t_account))
+}
+
+std::vector<std::shared_ptr<Account> > &Customer::getAccounts()
+{
+  return this->accounts ;
+}
+
+void setAccounts(std::vector<std::shared_ptr<Account> > & another)
+{
+  this->accounts = std::move(t_another) ;
+}
+
 /* Classe Employe */
 Employee::Employee(long _id, std::string _name): Person(_id, _name)
 {}
@@ -58,31 +84,109 @@ Employee::Employee(const Employee *p_employee): Person(p_employee)
 Employee::Employee(const Employee &t_employee): Person(t_employee)
 {}
 
-void Employee::push_back(Employee &t_another)
+void Employee::removeSubordinate(long subordinateId)
 {
-    this->subordinate.push_back(std::make_shared<Employee>(t_another)) ;
+  for(auto it(this->subordinate.begin()); it != this->subordinate.end(); it++)
+  {
+    if((*it)->getId() == subordinateId)
+    {
+      this->subordinate.erase(it) ;
+    }
+  }
+}
+
+void Employee::removeAccount(long accuontID)
+{
+  for(auto it(this->accounts.begin()); it != this->accounts.end(); it++)
+  {
+    if((*it)->getId() == accuontID)
+    {
+      this->accounts.erase(it) ;
+    }
+  }
+}
+
+void Employee::removeOperation(long operationID)
+{
+  for(auto it(this->operations.begin()); it != this->operations.end(); it++)
+  {
+    if((*it)->getId() == operationID)
+    {
+      this->operations.erase(it) ;
+    }
+  }
+}
+
+void Employee::removeGroup(long groupID)
+{
+  for(auto it(this->groups.begin()); it != this->groups.end(); it++)
+  {
+    if((*it)->getId() == groupID)
+    {
+      this->groups.erase(it) ;
+    }
+  }
+}
+
+void Employee::addSubordinate(Employee &subordinate)
+{
+  this->subordinate.push_back(std::make_shared<Employee>(subordinate)) ;
+}
+
+void Employee::addAccount(Account &t_account)
+{
+  this->accounts.push_back(std::make_shared<Account>(t_account)) ;
+}
+
+void Employee::addOperation(BaseOperation &t_operation)
+{
+  this->operations.push_back(std::make_shared<BaseOperation>(t_operation)) ;
+}
+
+void Employee::addGroup(Group &t_group)
+{
+  this->groups.push_back(std::make_shared<Group>(t_group)) ;
 }
 
 std::vector<std::shared_ptr<Employee> > &Employee::getSubordinate()
 {
-    return this->subordinate ;
+  return this->subordinate;
 }
 
-void Employee::remove(long id)
+void Employee::setSubordinate(std::vector<std::shared_ptr<Employee> > &Employee::t_another)
 {
-    for(std::vector<std::shared_ptr<Employee>>::iterator it(this->subordinate.begin()); it != this->subordinate.end(); it++)
-    {
-        if((*it)->id == id)
-        {
-            this->subordinate.erase(it) ;
-            break ;
-        }
-    }
+  this->subordinate = std::move(t_another) ;
+}
+// accounts
+std::vector<std::shared_ptr<Account> > &Employee::getAccounts()
+{
+  return this->accounts ;
 }
 
-void Employee::setSubordinate(std::vector<std::shared_ptr<Employee> > &t_another)
+void Employee::setAccounts(std::vector<std::shared_ptr<Account> > &t_another)
 {
-    this->subordinate = std::move(t_another) ;
+  this->accounts = std::move(t_another) ;
+}
+
+// operations
+std::vector<std::shared_ptr<BaseOperation> > &getOperations()
+{
+  return this->operations ;
+}
+
+void setOperations(std::vector<std::shared_ptr<BaseOperation> > &t_another)
+{
+  this->operations = std::move(t_another) ;
+}
+// group
+std::vector<std::shared_ptr<Group> > &getGroups()
+{
+    return this->groups ;
+}
+
+void setGroups(std::vector<std::shared_ptr<Group> > &t_another) ;
+{
+  this->groups = std::move(t_another) ;
 }
 
 /* Classe Group */
@@ -101,12 +205,12 @@ Group::Group(const Group &t_group)
 
 void Group::push_back(Employee &employee)
 {
-    this->member.push_back(std::make_shared<Employee>(&employee)) ;
+    this->members.push_back(std::make_shared<Employee>(&employee)) ;
 }
 
-std::vector<std::shared_ptr<Employee> > &Group::getMember()
+std::vector<std::shared_ptr<Employee> > &Group::getMembers()
 {
-    return this->member ;
+    return this->members ;
 }
 
 void Group::remove(long id)
@@ -115,15 +219,15 @@ void Group::remove(long id)
     {
         if((*it)->getId() == id)
         {
-            this->member.erase(it) ;
+            this->members.erase(it) ;
             break ;
         }
     }
 }
 
-void Group::setMember(std::vector<std::shared_ptr<Employee> > &t_another)
+void Group::setMembers(std::vector<std::shared_ptr<Employee> > &t_another)
 {
-    this->member = std::move(t_another) ;
+    this->members = std::move(t_another) ;
 }
 
 void Group::setId(long _id)

@@ -53,7 +53,6 @@ public:
      * \param p_person Pointeur sur une instance Person.
      */
     Person(const Person *p_person) ;
-
     /* getters setters */
     void setId(long _id) ;
     long getId() const ;
@@ -67,6 +66,8 @@ public:
  */
 class Customer: public Person
 {
+private:
+  std::vector<std::shared_ptr<Account> > accounts ;
 public:
     /**
     * \fn Customer(long _id = 0, std::string _name= "")
@@ -87,6 +88,24 @@ public:
      * \param p_Customer Pointeur sur une instance Customer.
      */
     Customer(const Customer *p_customer) ;
+
+		/* Opérations */
+	  /**
+     * \fn void remove(long id)
+     * \brief Supprime un compte de la liste des comptes.
+     * \param id ID du compte à supprimer.
+     */
+    void remove(long id) ;
+
+    /**
+     * \fn void push_back(Account &t_account)
+     * \brief Ajoute un compte à la fin de la liste des comptes.
+     * \param t_account Le compte à ajouter.
+     */
+    void push_back(Account &t_account) ;
+    /* getters setters */
+    std::vector<std::shared_ptr<Account> > &getAccounts() ;
+    void setAccounts(std::vector<std::shared_ptr<Account> > & another) ;
 };
 
 /**
@@ -96,7 +115,10 @@ public:
 class Employee: public Person
 {
 private:
-    std::vector<std::shared_ptr<Employee> > subordinate ; /*!< Liste des employés subordonnées */
+    std::vector<std::shared_ptr<Employee> > subordinate ; /*!< Liste des employés subordonnées. */
+    std::vector<std::shared_ptr<Account> > accounts ; /*!< Listes des comptes créés par l'employé. */
+    std::vector<std::shared_ptr<BaseOperation> > operations ;/*!< Listes des opérations éffectuées. */
+    std::vector<std::shared_ptr<Group> > groups ; /*!< Listes des groupes de l'employé. */
 public:
     /**
     * \fn Employee(long _id = 0, std::string _name= "", std::vector<Employee> _subordonne)
@@ -119,29 +141,83 @@ public:
     Employee(const Employee *p_employee) ;
 
     /**
-     * \fn void remove(long id)
+     * \fn void removeSubordinate(long subordinateId)
      * \brief Supprime un employé de la liste des subordonnées.
-     * \param id ID de l'employé à supprimer ;
+     * \param subordinateId ID de l'employé à supprimer ;
      */
-    void remove(long id) ;
+    void removeSubordinate(long subordinateId) ;
 
     /**
-     * \fn void push_back(Employee t_another)
-     * \brief Ajoute un employé à la fin de la liste.
-     * \param t_another Employé à ajouter
+     * \fn void removeAccount(long accuontID)
+     * \brief Supprime un compte de la liste des comptes.
+     * \param accuontID ID du compte à supprimer ;
      */
-    void push_back(Employee &t_another) ;
+    void removeAccount(long accuontID) ;
+
+		/**
+     * \fn void removeOperation(long operationID)
+     * \brief Supprime une opération faite par un employé.
+     * \param accuontID ID du compte à supprimer ;
+     */
+    void removeOperation(long operationID) ;
+
+		/**
+     * \fn void removeAccount(long operationID)
+     * \brief Supprime l'employé d'un groupe.
+     * \param accuontID ID du compte à supprimer ;
+     */
+    void removeGroup(long operationID) ;
+
+    /**
+     * \fn void addSubordinate(Employee &subordinate)
+     * \brief Ajoute un employé à la liste des subornonnées.
+     * \param subordinate Employé à ajouter.
+     */
+    void addSubordinate(Employee &subordinate) ;
+
+    /**
+     * \fn void addAccount(Account &t_account)
+     * \brief Ajoute un Compte à la liste des comptes.
+     * \param t_account Le compte à ajouter.
+     */
+    void addAccount(Account &t_account) ;
+
+    /**
+     * \fn void addOperation(BaseOperation &t_operation)
+     * \brief Ajoute une opération à la liste des opérations.
+     * \param t_operation L'opération à ajouter.
+     */
+    void addOperation(BaseOperation &t_operation) ;
+
+    /**
+     * \fn void addGroup(Group &t_group)
+     * \brief Ajoute un groupe à la liste des groupes.
+     * \param t_group Employé à ajouter.
+     */
+    void addGroup(Group &t_group) ;
 
     /* getters setters */
+    // subordinate
     std::vector<std::shared_ptr<Employee> > &getSubordinate() ;
     void setSubordinate(std::vector<std::shared_ptr<Employee> > &t_another) ;
-
+    // accounts
+    std::vector<std::shared_ptr<Account> > &getAccounts() ;
+    void setAccounts(std::vector<std::shared_ptr<Account> > &t_another) ;
+		// operations
+    std::vector<std::shared_ptr<BaseOperation> > &getOperations() ;
+    void setOperations(std::vector<std::shared_ptr<BaseOperation> > &t_another) ;
+    // group
+    std::vector<std::shared_ptr<Group> > &getGroups() ;
+    void setGroups(std::vector<std::shared_ptr<Group> > &t_another) ;
     /* operateur d'affectation */
     void operator=(const Employee &employee)
     {
         this->id = employee.id ;
         this->name = employee.name ;
         this->subordinate = std::move(employee.subordinate) ;
+        this->accounts = std::move(employee.accounts) ;
+        this->operations = std::move(employee.operations) ;
+        this->groups = std::move(employee.groups) ;
     }
 };
 
@@ -154,7 +230,7 @@ class Group
 private:
     long id ;
     std::string name ;
-    std::vector<std::shared_ptr<Employee> > member ;
+    std::vector<std::shared_ptr<Employee> > members ;
 public:
     /**
     * \fn Group(long _id = 0, std::string _name= "")
@@ -193,8 +269,8 @@ public:
     void push_back(Employee &employee) ;
 
     /* getters setters */
-    std::vector<std::shared_ptr<Employee> > &getMember() ;
-    void setMember(std::vector<std::shared_ptr<Employee> > &t_another) ;
+    std::vector<std::shared_ptr<Employee> > &getMembers() ;
+    void setMembers(std::vector<std::shared_ptr<Employee> > &t_another) ;
     void setId(long _id) ;
     long getId() const ;
     std::string getName() const ;
@@ -205,7 +281,7 @@ public:
     {
         this->id = group.id ;
         this->name = group.name ;
-        this->member = std::move(group.member) ;
+        this->members = std::move(group.members) ;
     }
 };
 
