@@ -24,18 +24,18 @@ int main(int argc, const char *argv[])
     std::cout << "Subordonnées du boss !\n" ;
     for(auto &e : boss.getSubordinate())
     {
-        std::cout << e.getId() << " " << e.getName() << std::endl ;
+        std::cout << e->getId() << " " << e->getName() << std::endl ;
     }
     boss2 = boss ;
     std::cout << "Subordonnées du boss !\n" ;
     for(auto &e : boss.getSubordinate())
     {
-        std::cout << e.getId() << " " << e.getName() << std::endl ;
+        std::cout << e->getId() << " " << e->getName() << std::endl ;
     }
     std::cout << "Subordonnées du boss2 !\n" ;
     for(auto &e : boss.getSubordinate())
     {
-        std::cout << e.getId() << " " << e.getName() << std::endl ;
+        std::cout << e->getId() << " " << e->getName() << std::endl ;
     }
     std::cout << "Autres !\n" ;
     std::cout << person.getId() << " " << person.getName() << std::endl ;

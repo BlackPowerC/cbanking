@@ -2,9 +2,10 @@
 #define PERSON_DEF
 
 #include <string>
-#include <list>
+#include <vector>
 #include <algorithm>
-
+#include <memory>
+#include <odb/core.hxx>
 /**
  * \file Persons.hpp
  * \author Jordy Fatigba fatigba72@gmail.com
@@ -15,6 +16,12 @@
 
 namespace Entity
 {
+/* forward class declaration */
+class Person ;
+class Customer ;
+class Group ;
+class Employee ;
+
 
 /**
  * \class Person
@@ -89,10 +96,10 @@ public:
 class Employee: public Person
 {
 private:
-    std::list<Employee> subordinate ; /*!< Liste des employés subordonnées */
+    std::vector<std::shared_ptr<Employee> > subordinate ; /*!< Liste des employés subordonnées */
 public:
     /**
-    * \fn Employee(long _id = 0, std::string _name= "", std::list<Employee> _subordonne)
+    * \fn Employee(long _id = 0, std::string _name= "", std::vector<Employee> _subordonne)
     * \brief Constructeur par défaut de la classe.
     * \param _id ID du l'employé, zéro par défaut.
     * \param _name nom de l'employé, "" par défaut.
@@ -123,11 +130,11 @@ public:
      * \brief Ajoute un employé à la fin de la liste.
      * \param t_another Employé à ajouter
      */
-    void push_back(Employee t_another) ;
+    void push_back(Employee &t_another) ;
 
     /* getters setters */
-    std::list<Employee> &getSubordinate() ;
-    void setSubordinate(const std::list<Employee> &t_another) ;
+    std::vector<std::shared_ptr<Employee> > &getSubordinate() ;
+    void setSubordinate(std::vector<std::shared_ptr<Employee> > &t_another) ;
 
     /* operateur d'affectation */
     void operator=(const Employee &employee)
@@ -147,7 +154,7 @@ class Group
 private:
     long id ;
     std::string name ;
-    std::list<Employee> member ;
+    std::vector<std::shared_ptr<Employee> > member ;
 public:
     /**
     * \fn Group(long _id = 0, std::string _name= "")
@@ -183,11 +190,11 @@ public:
      * \brief Ajoute un employé à la fin de la liste.
      * \param employee Employé à ajouter
      */
-    void push_back(Employee employee) ;
+    void push_back(Employee &employee) ;
 
     /* getters setters */
-    std::list<Employee> &getMember() ;
-    void setMember(const std::list<Employee> &t_another) ;
+    std::vector<std::shared_ptr<Employee> > &getMember() ;
+    void setMember(std::vector<std::shared_ptr<Employee> > &t_another) ;
     void setId(long _id) ;
     long getId() const ;
     std::string getName() const ;

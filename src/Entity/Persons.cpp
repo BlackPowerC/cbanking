@@ -58,21 +58,21 @@ Employee::Employee(const Employee *p_employee): Person(p_employee)
 Employee::Employee(const Employee &t_employee): Person(t_employee)
 {}
 
-void Employee::push_back(Employee t_another)
+void Employee::push_back(Employee &t_another)
 {
-    this->subordinate.push_back(t_another) ;
+    this->subordinate.push_back(std::make_shared<Employee>(t_another)) ;
 }
 
-std::list<Employee> &Employee::getSubordinate()
+std::vector<std::shared_ptr<Employee> > &Employee::getSubordinate()
 {
     return this->subordinate ;
 }
 
 void Employee::remove(long id)
 {
-    for(std::list<Employee>::iterator it(this->subordinate.begin()); it != this->subordinate.end(); it++)
+    for(std::vector<std::shared_ptr<Employee>>::iterator it(this->subordinate.begin()); it != this->subordinate.end(); it++)
     {
-        if(it->id == id)
+        if((*it)->id == id)
         {
             this->subordinate.erase(it) ;
             break ;
@@ -80,7 +80,7 @@ void Employee::remove(long id)
     }
 }
 
-void Employee::setSubordinate(const std::list<Employee> &t_another)
+void Employee::setSubordinate(std::vector<std::shared_ptr<Employee> > &t_another)
 {
     this->subordinate = std::move(t_another) ;
 }
@@ -99,21 +99,21 @@ Group::Group(const Group &t_group)
     *this = t_group ;
 }
 
-void Group::push_back(Employee employee)
+void Group::push_back(Employee &employee)
 {
-    this->member.push_back(employee) ;
+    this->member.push_back(std::make_shared<Employee>(&employee)) ;
 }
 
-std::list<Employee> &Group::getMember()
+std::vector<std::shared_ptr<Employee> > &Group::getMember()
 {
     return this->member ;
 }
 
 void Group::remove(long id)
 {
-    for(std::list<Employee>::iterator it(this->member.begin()); it != this->member.end(); it++)
+    for(std::vector<std::shared_ptr<Employee> >::iterator it(this->member.begin()); it != this->member.end(); it++)
     {
-        if(it->getId() == id)
+        if((*it)->getId() == id)
         {
             this->member.erase(it) ;
             break ;
@@ -121,7 +121,7 @@ void Group::remove(long id)
     }
 }
 
-void Group::setMember(const std::list<Employee> &t_another)
+void Group::setMember(std::vector<std::shared_ptr<Employee> > &t_another)
 {
     this->member = std::move(t_another) ;
 }
