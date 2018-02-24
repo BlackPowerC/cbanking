@@ -23,8 +23,8 @@ class BaseOperation
 {
 protected:
   long id ;
-  Account t_source ;
-  Employee t_employee ;
+  std::unique_ptr<Account> t_source ;
+  std::unique_ptr<Employee> t_employee ;
   std::string date ;
   double montant ;
 public:
@@ -36,10 +36,10 @@ public:
   void setId(long id) ;
 
   Account getAccountSource() const ;
-  void setAccountSource(const Account &another) ;
+  void setAccountSource(Account &another) ;
 
   Employee getEmployee() const ;
-  void setEmployee(const Employee &another) ;
+  void setEmployee(Employee &another) ;
 
   std::string getDate() const ;
   void setDate(std::string date) ;
@@ -65,14 +65,14 @@ public:
 class Virement: public BaseOperation
 {
 private:
-  Account t_destination ;
+  std::unique_ptr<Account> t_destination ;
 public:
   Virement(const Account &destination = Account()) ;
   Virement(const Virement &another) ;
   Virement(const Virement *another) ;
   /* getters setters */
   Account getAccountDestination() ;
-  void setAccountDestination(const Account &another) ;
+  void setAccountDestination(Account &another) ;
   virtual void doOperation() ;
 };
 

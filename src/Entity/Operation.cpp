@@ -8,8 +8,8 @@ BaseOperation::BaseOperation(long _id,
                              const Employee &employee,
                              std::string _date, double _montant):
     id(_id),
-    t_source(source),
-    t_employee(employee),
+    t_source(std::move(std::make_unique<Account>(source))),
+    t_employee(std::move(std::make_unique<Employee>(employee))),
     date(_date),
     montant(_montant)
 {
