@@ -3,9 +3,16 @@
 
 #include "Account.hpp"
 #include "Persons.hpp"
+#include <vector>
+#include <memory>
+#include <odb/core.hxx>
 
 namespace Entity
 {
+
+class BaseOperation ;
+class Operation ;
+class Virement ;
 
 enum class TypeOperation
 {

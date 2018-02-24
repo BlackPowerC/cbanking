@@ -20,8 +20,8 @@ BaseOperation::BaseOperation(const BaseOperation &bo)
 {
     this->id = bo.id;
     this->montant = bo.montant ;
-    this->t_employee = bo.t_employee ;
-    this->t_source = bo.t_source;
+    this->t_employee = std::move(bo.t_employee) ;
+    this->t_source = std::move(bo.t_source) ;
     this->date = bo.date ;
 }
 
@@ -29,8 +29,8 @@ BaseOperation::BaseOperation(const BaseOperation *bo)
 {
     this->id = bo->id;
     this->montant = bo->montant ;
-    this->t_employee = bo->t_employee ;
-    this->t_source = bo->t_source;
+    this->t_employee = std::move(bo->t_employee) ;
+    this->t_source = std::move(bo->t_source) ;
     this->date = bo->date ;
 }
 
@@ -39,9 +39,9 @@ Account BaseOperation::getAccountSource() const
     return this->t_source ;
 }
 
-void BaseOperation::setAccountSource(const Account &another)
+void BaseOperation::setAccountSource(Account &another)
 {
-    this->t_source = another ;
+    this->t_source = std::move(std::make_unique<Account>(another)) ;
 }
 
 Employee BaseOperation::getEmployee() const
@@ -49,9 +49,9 @@ Employee BaseOperation::getEmployee() const
     return this->t_employee ;
 }
 
-void BaseOperation::setEmployee(const Employee &another)
+void BaseOperation::setEmployee(Employee &another)
 {
-    this->t_employee = another ;
+    this->t_employee = std::move(std::make_unique<Employee>(another)) ;
 }
 
 std::string BaseOperation::getDate() const
@@ -114,9 +114,9 @@ Account Virement::getAccountDestination()
     return this->t_destination ;
 }
 
-void Virement::setAccountDestination(const Account &another)
+void Virement::setAccountDestination(Account &another)
 {
-    this->t_destination = another ;
+    this->t_destination = std::move(std::make_unique<Account>(another)) ; ;
 }
 
 void Virement::doOperation()
