@@ -2,6 +2,7 @@
 #define ACCOUNT_DEF
 
 #include "Persons.hpp"
+#include "Operation.hpp"
 
 namespace Entity
 {
@@ -14,6 +15,7 @@ protected:
   Employee t_employee ;
   double balance ;
   std::string creationDate ;
+  std::vector<std::shared_ptr<BaseOperation> > operations ;
 public:
   Account(long _id = 0,
 					const Customer &customer = Customer(),
@@ -21,6 +23,20 @@ public:
 					double _balance=0.0, std::string date="") ;
   Account(const Account &another) ;
   Account(const Account *another) ;
+  /* Opérations */
+  /**
+   * \fn void remove(long id)
+   * \brief Supprime un employé de la liste des membres.
+   * \param id ID de l'employé à supprimer ;
+   */
+  void remove(long id) ;
+
+  /**
+   * \fn void push_back(Employee &employee)
+   * \brief Ajoute un employé à la fin de la liste.
+   * \param employee Employé à ajouter
+   */
+  void push_back(BaseOperation &t_operation) ;
 
   /* getters && setters */
   long getId() const ;
@@ -37,6 +53,9 @@ public:
 
 	double getBalance() const ;
   void setBalance(double balance) ;
+
+  std::vector<std::shared_ptr<BaseOperation> > &getOperations() ;
+  void setOperations(std::vector<std::shared_ptr<BaseOperation> > &t_another) ;
 };
 
 class CurrentAccount: public Account

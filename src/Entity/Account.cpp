@@ -74,6 +74,33 @@ void Account::setBalance(double balance)
     this->balance = balance ;
 }
 
+void Account::push_back(BaseOperation &t_operation)
+{
+    this->operations.push_back(std::make_shared<BaseOperation>(t_operation)) ;
+}
+
+void Account::setOperations(std::vector<std::shared_ptr<BaseOperation> > &t_another)
+{
+    this->operations = std::move(t_another) ;
+}
+
+std::vector<std::shared_ptr<BaseOperation> > &Account::getOperations()
+{
+    return this->operations ;
+}
+
+void Account::remove(long id)
+{
+    for(std::vector<std::shared_ptr<BaseOperation> >::iterator it(this->operations.begin()); it != this->operations.end(); it++)
+    {
+        if((*it)->getId() == id)
+        {
+            this->operations.erase(it) ;
+            break ;
+        }
+    }
+}
+
 /* Classe  CurrentAcount*/
 CurrentAccount::CurrentAccount(const Account &account, double _overdraft):
     Account(account), overdraft(_overdraft)
