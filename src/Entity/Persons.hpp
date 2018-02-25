@@ -6,6 +6,9 @@
 #include <algorithm>
 #include <memory>
 #include <odb/core.hxx>
+#include "Account.hpp"
+#include "Operation.hpp"
+
 /**
  * \file Persons.hpp
  * \author Jordy Fatigba fatigba72@gmail.com
@@ -21,6 +24,10 @@ class Person ;
 class Customer ;
 class Group ;
 class Employee ;
+class Account ;
+class BaseOperation ;
+class Operation ;
+class Virement ;
 
 
 /**
@@ -106,6 +113,13 @@ public:
     /* getters setters */
     std::vector<std::shared_ptr<Account> > &getAccounts() ;
     void setAccounts(std::vector<std::shared_ptr<Account> > & another) ;
+
+    void operator=(const Customer &t_another)
+    {
+    	this->id = t_another.id ;
+    	this->name = t_another.name ;
+    	this->accounts = std::move(t_another.accounts) ;
+    }
 };
 
 /**
@@ -183,11 +197,18 @@ public:
     void addAccount(Account &t_account) ;
 
     /**
-     * \fn void addOperation(BaseOperation &t_operation)
-     * \brief Ajoute une opération à la liste des opérations.
+     * \fn void addOperation(Operation &t_operation)
+     * \brief Ajoute une opération (retrait ou dépot) à la liste des opérations.
      * \param t_operation L'opération à ajouter.
      */
-    void addOperation(BaseOperation &t_operation) ;
+    void addOperation(Operation &t_operation) ;
+
+    /**
+     * \fn void addVirement(Virement &t_virement)
+     * \brief Ajoute une opération (virement) à la liste des opérations.
+     * \param t_virement Le virement à ajouter.
+     */
+    void addVirement(Virement &t_virement) ;
 
     /**
      * \fn void addGroup(Group &t_group)

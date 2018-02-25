@@ -7,36 +7,46 @@
 namespace Entity
 {
 
+class Customer ;
+class Employee ;
+
 class Account
 {
 protected:
   long id ;
-  Customer t_customer ;
-  Employee t_employee ;
+  std::shared_ptr<Customer> t_customer ;
+  std::shared_ptr<Employee> t_employee ;
   double balance ;
   std::string creationDate ;
   std::vector<std::shared_ptr<BaseOperation> > operations ;
 public:
   Account(long _id = 0,
-					const Customer &customer = Customer(),
-          const Employee &employee = Employee(),
+					std::shared_ptr<Customer> customer = std::make_shared<Customer>(),
+          std::shared_ptr<Employee> employee = std::make_shared<Employee>(),
 					double _balance=0.0, std::string date="") ;
   Account(const Account &another) ;
   Account(const Account *another) ;
   /* Opérations */
   /**
    * \fn void remove(long id)
-   * \brief Supprime un employé de la liste des membres.
-   * \param id ID de l'employé à supprimer ;
+   * \brief Supprime un opération de la liste des opérations.
+   * \param id ID de l'opération à supprimer ;
    */
   void remove(long id) ;
 
   /**
-   * \fn void push_back(Employee &employee)
-   * \brief Ajoute un employé à la fin de la liste.
-   * \param employee Employé à ajouter
-   */
-  void push_back(BaseOperation &t_operation) ;
+    * \fn void addOperation(Operation &t_operation)
+    * \brief Ajoute une opération (retrait ou dépot) à la liste des opérations.
+    * \param t_operation L'opération à ajouter.
+    */
+  void addOperation(Operation &t_operation) ;
+
+  /**
+    * \fn void addVirement(Virement &t_virement)
+    * \brief Ajoute une opération (virement) à la liste des opérations.
+    * \param t_virement Le virement à ajouter.
+    */
+  void addVirement(Virement &t_virement) ;
 
   /* getters && setters */
   long getId() const ;
@@ -56,6 +66,16 @@ public:
 
   std::vector<std::shared_ptr<BaseOperation> > &getOperations() ;
   void setOperations(std::vector<std::shared_ptr<BaseOperation> > &t_another) ;
+
+  void operator=(const Account &t_another)
+  {
+    this->id = t_another.id ;
+    this->t_customer = std::move(t_another.t_customer) ;
+    this->t_employee = std::move(t_another.t_employee) ;
+    this->balance = t_another.balance ;
+    this->creationDate = t_another.creationDate;
+    this->operations = std::move(t_another.operations);
+  }
 };
 
 class CurrentAccount: public Account
@@ -69,6 +89,17 @@ public:
   /* getters && setters */
   double getOverdraft() const ;
   void setOverdraft(double overdraft) ;
+
+  void operator=(const CurrentAccount &t_another)
+  {
+    this->id = t_another.id ;
+    this->t_customer = std::move(t_another.t_customer) ;
+    this->t_employee = std::move(t_another.t_employee) ;
+    this->balance = t_another.balance ;
+    this->creationDate = t_another.creationDate;
+    this->operations = std::move(t_another.operations);
+    this->overdraft = t_another.overdraft ;
+  }
 };
 
 class SavingsAccount: public Account
@@ -82,6 +113,17 @@ public:
   /* getters && setters */
   double getRate() const ;
   void setRate(double rate) ;
+
+  void operator=(const SavingsAccount &t_another)
+  {
+    this->id = t_another.id ;
+    this->t_customer = t_another.t_customer ;
+    this->t_employee = t_another.t_employee ;
+    this->balance = t_another.balance ;
+    this->creationDate = t_another.creationDate;
+    this->operations = std::move(t_another.operations);
+    this->rate = t_another.rate ;
+  }
 };
 
 }

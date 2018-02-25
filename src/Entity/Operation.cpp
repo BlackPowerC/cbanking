@@ -4,12 +4,12 @@ namespace Entity
 {
 /* classe BaseOperation */
 BaseOperation::BaseOperation(long _id,
-                             const Account &source,
-                             const Employee &employee,
+                             std::shared_ptr<Account> source,
+                             std::shared_ptr<Employee> employee,
                              std::string _date, double _montant):
     id(_id),
-    t_source(std::move(std::make_unique<Account>(source))),
-    t_employee(std::move(std::make_unique<Employee>(employee))),
+    t_source(std::move(source)),
+    t_employee(std::move(employee)),
     date(_date),
     montant(_montant)
 {
@@ -36,22 +36,22 @@ BaseOperation::BaseOperation(const BaseOperation *bo)
 
 Account BaseOperation::getAccountSource() const
 {
-    return this->t_source ;
+    return *(this->t_source) ;
 }
 
 void BaseOperation::setAccountSource(Account &another)
 {
-    this->t_source = std::move(std::make_unique<Account>(another)) ;
+    this->t_source = std::move(std::make_shared<Account>(another)) ;
 }
 
 Employee BaseOperation::getEmployee() const
 {
-    return this->t_employee ;
+    return *(this->t_employee) ;
 }
 
 void BaseOperation::setEmployee(Employee &another)
 {
-    this->t_employee = std::move(std::make_unique<Employee>(another)) ;
+    this->t_employee = std::move(std::make_shared<Employee>(another)) ;
 }
 
 std::string BaseOperation::getDate() const
@@ -62,6 +62,16 @@ std::string BaseOperation::getDate() const
 void BaseOperation::setDate(std::string date)
 {
     this->date = date ;
+}
+
+long BaseOperation::getId() const
+{
+    return this->id ;
+}
+
+void BaseOperation::setId(long id)
+{
+    this->id = id;
 }
 
 double BaseOperation::getMontant() const
@@ -79,12 +89,12 @@ void BaseOperation::setMontant(double montant)
 Operation::Operation(const TypeOperation to) : BaseOperation(), typeOperation(to)
 {}
 
-Operation::Operation(const Operation &another)
+Operation::Operation(const Operation &another): BaseOperation()
 {
     *this = another ;
 }
 
-Operation::Operation(const Operation *another)
+Operation::Operation(const Operation *another): BaseOperation()
 {
     *this = *another ;
 }
@@ -95,28 +105,28 @@ void Operation::doOperation()
 }
 
 /* classe Virement */
-Virement::Virement(const Account &destination): BaseOperation(), t_destination(destination)
+Virement::Virement(std::shared_ptr<Account> destination): BaseOperation(), t_destination(destination)
 {
 
 }
 
-Virement::Virement(const Virement &another)
+Virement::Virement(const Virement &another): BaseOperation()
 {
     *this = another ;
 }
-Virement::Virement(const Virement *another)
+Virement::Virement(const Virement *another): BaseOperation()
 {
     *this = *another ;
 }
 
 Account Virement::getAccountDestination()
 {
-    return this->t_destination ;
+    return *(this->t_destination) ;
 }
 
 void Virement::setAccountDestination(Account &another)
 {
-    this->t_destination = std::move(std::make_unique<Account>(another)) ; ;
+    this->t_destination = std::move(std::make_shared<Account>(another)) ; ;
 }
 
 void Virement::doOperation()

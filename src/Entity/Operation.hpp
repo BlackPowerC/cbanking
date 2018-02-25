@@ -13,6 +13,8 @@ namespace Entity
 class BaseOperation ;
 class Operation ;
 class Virement ;
+class Account ;
+class Employee ;
 
 enum class TypeOperation
 {
@@ -23,12 +25,15 @@ class BaseOperation
 {
 protected:
   long id ;
-  std::unique_ptr<Account> t_source ;
-  std::unique_ptr<Employee> t_employee ;
+  std::shared_ptr<Account> t_source ;
+  std::shared_ptr<Employee> t_employee ;
   std::string date ;
   double montant ;
 public:
-  BaseOperation(long _id = 0, const Account &source = Account(), const Employee &employee = Employee(), std::string date = "", double _montant=0.0) ;
+  BaseOperation(long _id = 0,
+                std::shared_ptr<Account> source = std::make_shared<Account>(),
+                std::shared_ptr<Employee> employee = std::make_shared<Employee>(),
+                std::string date = "", double _montant=0.0) ;
   BaseOperation(const BaseOperation &bo) ;
   BaseOperation(const BaseOperation *bo) ;
   /* getters et setters */
@@ -60,20 +65,40 @@ public:
   Operation(const Operation &another) ;
   Operation(const Operation *another) ;
   virtual void doOperation() ;
+
+  void operator=(const Operation &t_another)
+  {
+    this->id = t_another.id ;
+    this->montant = t_another.montant ;
+    this->t_employee = std::move(t_another.t_employee) ;
+    this->t_source = std::move(t_another.t_source) ;
+    this->date = t_another.date ;
+    this->typeOperation = t_another.typeOperation ;
+  }
 };
 
 class Virement: public BaseOperation
 {
 private:
-  std::unique_ptr<Account> t_destination ;
+  std::shared_ptr<Account> t_destination ;
 public:
-  Virement(const Account &destination = Account()) ;
+  Virement(std::shared_ptr<Account> destination = std::make_shared<Account>()) ;
   Virement(const Virement &another) ;
   Virement(const Virement *another) ;
   /* getters setters */
   Account getAccountDestination() ;
   void setAccountDestination(Account &another) ;
   virtual void doOperation() ;
+
+  void operator=(const Virement &t_another)
+  {
+    this->id = t_another.id ;
+    this->montant = t_another.montant ;
+    this->t_employee = std::move(t_another.t_employee) ;
+    this->t_source = std::move(t_another.t_source) ;
+    this->date = t_another.date ;
+    this->t_destination = std::move(t_another.t_destination) ;
+  }
 };
 
 }

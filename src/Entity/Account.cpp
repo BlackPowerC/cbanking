@@ -4,12 +4,12 @@ namespace Entity
 {
 /* Classe Account */
 Account::Account(long _id,
-                 const Customer &customer,
-                 const Employee &employee,
+                 std::shared_ptr<Customer> customer,
+                 std::shared_ptr<Employee> employee,
                  double _balance, std::string date):
     id(_id),
-    t_customer(customer),
-    t_employee(employee),
+    t_customer(std::move(customer)),
+    t_employee(std::move(employee)),
     balance(_balance),
     creationDate(date)
 {}
@@ -36,22 +36,22 @@ void Account::setId(long id)
 
 Customer Account::getCustomer() const
 {
-    return this->t_customer;
+    return *(this->t_customer);
 }
 
 void Account::setCustomer(const Customer &customer)
 {
-    this->t_customer = customer ;
+    this->t_customer = std::make_shared<Customer>(customer) ;
 }
 
 Employee Account::getEmployee() const
 {
-    return this->t_employee ;
+    return *(this->t_employee) ;
 }
 
 void Account::setEmployee(const Employee &employee)
 {
-    this->t_employee = employee ;
+    this->t_employee = std::make_shared<Employee>(employee) ;
 }
 
 std::string Account::getCreationDate() const
@@ -74,11 +74,15 @@ void Account::setBalance(double balance)
     this->balance = balance ;
 }
 
-void Account::push_back(BaseOperation &t_operation)
+void Account::addOperation(Operation &t_operation)
 {
-    this->operations.push_back(std::make_shared<BaseOperation>(t_operation)) ;
+  this->operations.push_back(std::make_shared<Operation>(t_operation)) ;
 }
 
+void Account::addVirement(Virement &t_virement)
+{
+  this->operations.push_back(std::make_shared<Virement>(t_virement)) ;
+}
 void Account::setOperations(std::vector<std::shared_ptr<BaseOperation> > &t_another)
 {
     this->operations = std::move(t_another) ;
@@ -107,12 +111,12 @@ CurrentAccount::CurrentAccount(const Account &account, double _overdraft):
 {
 
 }
-CurrentAccount::CurrentAccount(const CurrentAccount &ca)
+CurrentAccount::CurrentAccount(const CurrentAccount &ca): Account()
 {
     *this = ca ;
 }
 
-CurrentAccount::CurrentAccount(const CurrentAccount *ca)
+CurrentAccount::CurrentAccount(const CurrentAccount *ca): Account()
 {
     *this = *ca ;
 }
@@ -133,12 +137,12 @@ SavingsAccount::SavingsAccount(const Account &account, double _rate):
 
 }
 
-SavingsAccount::SavingsAccount(const SavingsAccount &ca)
+SavingsAccount::SavingsAccount(const SavingsAccount &ca): Account()
 {
     *this = ca ;
 }
 
-SavingsAccount::SavingsAccount(const SavingsAccount *ca)
+SavingsAccount::SavingsAccount(const SavingsAccount *ca): Account()
 {
     *this = *ca ;
 }
