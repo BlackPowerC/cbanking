@@ -3,6 +3,7 @@
 
 #include "Persons.hpp"
 #include "Operation.hpp"
+#include <odb/core.hxx>
 
 namespace Entity
 {
@@ -10,14 +11,21 @@ namespace Entity
 class Customer ;
 class Employee ;
 
+#pragma db object polymorphic
 class Account
 {
 protected:
+  friend class odb::access ;
+
+  #pragma db id auto not_null
   long id ;
+  #pragma db not_null column("id_customer")
   std::shared_ptr<Customer> t_customer ;
+  #pragma db not_null column("id_employee")
   std::shared_ptr<Employee> t_employee ;
   double balance ;
   std::string creationDate ;
+  #pragma db value_null inverse(t_source) column("id_operation")
   std::vector<std::shared_ptr<BaseOperation> > operations ;
 public:
   Account(long _id = 0,
@@ -26,6 +34,7 @@ public:
 					double _balance=0.0, std::string date="") ;
   Account(const Account &another) ;
   Account(const Account *another) ;
+  virtual ~Account() {}
   /* Opérations */
   /**
    * \fn void remove(long id)
@@ -78,9 +87,11 @@ public:
   }
 };
 
+#pragma db object
 class CurrentAccount: public Account
 {
 private:
+  friend class odb::access ;
   double overdraft ;
 public:
   CurrentAccount(const Account &account = Account(), double _overdraft = 0.0) ;
@@ -102,9 +113,11 @@ public:
   }
 };
 
+#pragma db object
 class SavingsAccount: public Account
 {
 private:
+    friend class odb::access ;
   double rate ;
 public:
   SavingsAccount(const Account &account = Account(), double _rate = 0.0) ;

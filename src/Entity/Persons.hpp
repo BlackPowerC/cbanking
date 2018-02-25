@@ -34,11 +34,15 @@ class Virement ;
  * \class Person
  * \brief Classe représantant une personne.
  */
-
+#pragma db object polymorphic
 class Person
 {
 protected:
+	friend class odb::access ;
+
+		#pragma db id auto not_null
     long id ;
+    #pragma db value_type("VARCHAR(255)")
     std::string name ;
 public:
     /**
@@ -60,6 +64,7 @@ public:
      * \param p_person Pointeur sur une instance Person.
      */
     Person(const Person *p_person) ;
+		virtual ~Person() {}
     /* getters setters */
     void setId(long _id) ;
     long getId() const ;
@@ -71,9 +76,13 @@ public:
  * \class Customer
  * \brief Classe représentant un client.
  */
+#pragma db object
 class Customer: public Person
 {
 private:
+	friend class odb::access ;
+
+	#pragma db value_null inverse(t_customer)
   std::vector<std::shared_ptr<Account> > accounts ;
 public:
     /**
@@ -126,12 +135,22 @@ public:
  * \class Customer
  * \brief Classe représentant un employé.
  */
+#pragma db object
 class Employee: public Person
 {
 private:
+	friend class odb::access ;
+
+		#pragma db value_null column("id_subordinate")
     std::vector<std::shared_ptr<Employee> > subordinate ; /*!< Liste des employés subordonnées. */
+
+    #pragma db value_null column("id_account") inverse(t_employee)
     std::vector<std::shared_ptr<Account> > accounts ; /*!< Listes des comptes créés par l'employé. */
+
+		#pragma db value_null column("id_operation") inverse(t_employee)
     std::vector<std::shared_ptr<BaseOperation> > operations ;/*!< Listes des opérations éffectuées. */
+
+		#pragma db value_null column("id_group") inverse(members)
     std::vector<std::shared_ptr<Group> > groups ; /*!< Listes des groupes de l'employé. */
 public:
     /**
@@ -246,11 +265,15 @@ public:
  * \class Group
  * \brief Cette class représente un groupe d'employé
  */
+#pragma db object
 class Group
 {
 private:
+	friend class odb::access ;
+	#pragma db id auto not_null
     long id ;
     std::string name ;
+    #pragma db value_null column("id_group") unordered
     std::vector<std::shared_ptr<Employee> > members ;
 public:
     /**
