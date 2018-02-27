@@ -28,13 +28,15 @@ class Account ;
 class BaseOperation ;
 class Operation ;
 class Virement ;
+class SavingsAccount ;
+class CurrentAccount ;
 
 
 /**
  * \class Person
  * \brief Classe représantant une personne.
  */
-#pragma db object polymorphic
+#pragma db object polymorphic pointer(std::shared_ptr) session
 class Person
 {
 protected:
@@ -76,7 +78,7 @@ public:
  * \class Customer
  * \brief Classe représentant un client.
  */
-#pragma db object
+#pragma db object pointer(std::shared_ptr) session
 class Customer: public Person
 {
 private:
@@ -114,11 +116,19 @@ public:
     void remove(long id) ;
 
     /**
-     * \fn void push_back(Account &t_account)
-     * \brief Ajoute un compte à la fin de la liste des comptes.
+     * \fn void push_back(SavingsAccount &t_account)
+     * \brief Ajoute un compte d'épargne à la fin de la liste des comptes.
      * \param t_account Le compte à ajouter.
      */
-    void push_back(Account &t_account) ;
+    void push_back(SavingsAccount &t_account) ;
+
+	 /**
+		* \fn void push_back(CurrentAccount &t_account)
+		* \brief Ajoute un compte d'épargne à la fin de la liste des comptes.
+		* \param t_account Le compte à ajouter.
+		*/
+    void push_back(CurrentAccount &t_account) ;
+
     /* getters setters */
     std::vector<std::shared_ptr<Account> > &getAccounts() ;
     void setAccounts(std::vector<std::shared_ptr<Account> > & another) ;
@@ -135,7 +145,7 @@ public:
  * \class Customer
  * \brief Classe représentant un employé.
  */
-#pragma db object
+#pragma db object pointer(std::shared_ptr) session
 class Employee: public Person
 {
 private:
@@ -209,11 +219,18 @@ public:
     void addSubordinate(Employee &subordinate) ;
 
     /**
-     * \fn void addAccount(Account &t_account)
-     * \brief Ajoute un Compte à la liste des comptes.
+     * \fn void addAccount(SavingsAccount &t_account)
+     * \brief Ajoute un Compte d'épargne à la liste des comptes.
      * \param t_account Le compte à ajouter.
      */
-    void addAccount(Account &t_account) ;
+    void addAccount(SavingsAccount &t_account) ;
+
+	 /**
+		* \fn void addAccount(CurrentAccount &t_account)
+		* \brief Ajoute un Compte d'épargne à la liste des comptes.
+		* \param t_account Le compte à ajouter.
+		*/
+    void addAccount(CurrentAccount &t_account) ;
 
     /**
      * \fn void addOperation(Operation &t_operation)
@@ -265,7 +282,7 @@ public:
  * \class Group
  * \brief Cette class représente un groupe d'employé
  */
-#pragma db object
+#pragma db object pointer(std::shared_ptr) session
 class Group
 {
 private:

@@ -11,7 +11,7 @@ namespace Entity
 class Customer ;
 class Employee ;
 
-#pragma db object polymorphic
+#pragma db object polymorphic pointer(std::shared_ptr) session
 class Account
 {
 protected:
@@ -87,7 +87,7 @@ public:
   }
 };
 
-#pragma db object
+#pragma db object pointer(std::shared_ptr) session
 class CurrentAccount: public Account
 {
 private:
@@ -113,7 +113,7 @@ public:
   }
 };
 
-#pragma db object
+#pragma db object pointer(std::shared_ptr) session
 class SavingsAccount: public Account
 {
 private:

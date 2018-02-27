@@ -59,9 +59,14 @@ void Customer::remove(long id)
     }
 }
 
-void Customer::push_back(Account &t_account)
+void Customer::push_back(CurrentAccount &t_account)
 {
-  this->accounts.push_back(std::make_shared<Account>(t_account)) ;
+  this->accounts.push_back(std::make_shared<CurrentAccount>(t_account)) ;
+}
+
+void Customer::push_back(SavingsAccount &t_account)
+{
+  this->accounts.push_back(std::make_shared<SavingsAccount>(t_account)) ;
 }
 
 std::vector<std::shared_ptr<Account> > &Customer::getAccounts()
@@ -133,9 +138,14 @@ void Employee::addSubordinate(Employee &subordinate)
   this->subordinate.push_back(std::make_shared<Employee>(subordinate)) ;
 }
 
-void Employee::addAccount(Account &t_account)
+void Employee::addAccount(SavingsAccount &t_account)
 {
-  this->accounts.push_back(std::make_shared<Account>(t_account)) ;
+  this->accounts.push_back(std::make_shared<SavingsAccount>(t_account)) ;
+}
+
+void Employee::addAccount(CurrentAccount &t_account)
+{
+  this->accounts.push_back(std::make_shared<CurrentAccount>(t_account)) ;
 }
 
 void Employee::addOperation(Operation &t_operation)

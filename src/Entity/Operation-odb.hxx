@@ -29,7 +29,8 @@
 #include <odb/wrapper-traits.hxx>
 #include <odb/pointer-traits.hxx>
 #include <odb/container-traits.hxx>
-#include <odb/no-op-cache-traits.hxx>
+#include <odb/session.hxx>
+#include <odb/cache-traits.hxx>
 #include <odb/polymorphic-info.hxx>
 #include <odb/result.hxx>
 #include <odb/polymorphic-object-result.hxx>

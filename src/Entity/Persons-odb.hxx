@@ -29,7 +29,8 @@
 #include <odb/wrapper-traits.hxx>
 #include <odb/pointer-traits.hxx>
 #include <odb/container-traits.hxx>
-#include <odb/no-op-cache-traits.hxx>
+#include <odb/session.hxx>
+#include <odb/cache-traits.hxx>
 #include <odb/polymorphic-info.hxx>
 #include <odb/result.hxx>
 #include <odb/simple-object-result.hxx>
@@ -53,7 +54,7 @@ namespace odb
   {
     public:
     typedef ::Entity::Person object_type;
-    typedef ::Entity::Person* pointer_type;
+    typedef ::std::shared_ptr< ::Entity::Person > pointer_type;
     typedef odb::pointer_traits<pointer_type> pointer_traits;
 
     static const bool polymorphic = true;
@@ -75,11 +76,15 @@ namespace odb
     id (const object_type&);
 
     typedef
-    no_op_pointer_cache_traits<pointer_type>
+    odb::pointer_cache_traits<
+      pointer_type,
+      odb::session >
     pointer_cache_traits;
 
     typedef
-    no_op_reference_cache_traits<object_type>
+    odb::reference_cache_traits<
+      object_type,
+      odb::session >
     reference_cache_traits;
 
     static void
@@ -102,7 +107,7 @@ namespace odb
   {
     public:
     typedef ::Entity::Customer object_type;
-    typedef ::Entity::Customer* pointer_type;
+    typedef ::std::shared_ptr< ::Entity::Customer > pointer_type;
     typedef odb::pointer_traits<pointer_type> pointer_traits;
 
     static const bool polymorphic = true;
@@ -124,11 +129,15 @@ namespace odb
     id (const object_type&);
 
     typedef
-    no_op_pointer_cache_traits<object_traits<root_type>::pointer_type>
+    odb::pointer_cache_traits<
+      object_traits<root_type>::pointer_type,
+      odb::session >
     pointer_cache_traits;
 
     typedef
-    no_op_reference_cache_traits<root_type>
+    odb::reference_cache_traits<
+      root_type,
+      odb::session >
     reference_cache_traits;
 
     static void
@@ -151,7 +160,7 @@ namespace odb
   {
     public:
     typedef ::Entity::Employee object_type;
-    typedef ::Entity::Employee* pointer_type;
+    typedef ::std::shared_ptr< ::Entity::Employee > pointer_type;
     typedef odb::pointer_traits<pointer_type> pointer_traits;
 
     static const bool polymorphic = true;
@@ -173,11 +182,15 @@ namespace odb
     id (const object_type&);
 
     typedef
-    no_op_pointer_cache_traits<object_traits<root_type>::pointer_type>
+    odb::pointer_cache_traits<
+      object_traits<root_type>::pointer_type,
+      odb::session >
     pointer_cache_traits;
 
     typedef
-    no_op_reference_cache_traits<root_type>
+    odb::reference_cache_traits<
+      root_type,
+      odb::session >
     reference_cache_traits;
 
     static void
@@ -200,7 +213,7 @@ namespace odb
   {
     public:
     typedef ::Entity::Group object_type;
-    typedef ::Entity::Group* pointer_type;
+    typedef ::std::shared_ptr< ::Entity::Group > pointer_type;
     typedef odb::pointer_traits<pointer_type> pointer_traits;
 
     static const bool polymorphic = false;
@@ -215,11 +228,15 @@ namespace odb
     id (const object_type&);
 
     typedef
-    no_op_pointer_cache_traits<pointer_type>
+    odb::pointer_cache_traits<
+      pointer_type,
+      odb::session >
     pointer_cache_traits;
 
     typedef
-    no_op_reference_cache_traits<object_type>
+    odb::reference_cache_traits<
+      object_type,
+      odb::session >
     reference_cache_traits;
 
     static void
