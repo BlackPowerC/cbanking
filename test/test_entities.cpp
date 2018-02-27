@@ -11,12 +11,10 @@
  *				Les Personnes seront enregistrées dans la base de données.
  *				INSERTION DE COMPTE
  *        sam créera 3 comptes pour jordy (2 SavingsAccount et 1 CurrentAccount)
- *				sam créera ensuite 1 Compte Courant (CurrentAccount) pour ablavi.
  *        edem-kouakou créera 1 Compte Courant (CurrentAccount) pour ablavi.
  *				INSERTION DE GROUPE
  *				Deux groupes seront créer {groupe1, groupe2}.
  *        sam et edem-kouakou appartiendront chacun aux deux groupes.
- *				LECTURE DES DONNÉES ENREGISTRÉES
  *
  */
 
@@ -31,13 +29,87 @@ using namespace Entity ;
 
 int main(void)
 {
-	try
-	{
-		unique_ptr<odb::database> db = make_unique<odb::mysql::database("jordy", "dalila", "test_cbanking", "172.17.0.2", 3306) ;
- 	}catch(const odb::exception &e)
- 	{
- 		cerr << e.what() ;
- 		exit(-1) ;
- 	}
- 	return 0 ;
- }
+    try
+    {
+        unique_ptr<odb::database> p_database = make_unique<odb::mysql::database>("jordy", "dalila", "test_cbanking", "172.17.0.2", 3306) ;
+        odb::transaction t_transaction (p_database->begin()) ;
+        /* Persistence */
+        long jordy_id, ablavi_id, sam_id, edem_id ;
+        long goupe1_id, groupe2_id ;
+        long account1jojo_id, account2jojo_id, account3jojo_id ;
+        long account1ablavi_id, account2ablavi_id ;
+        {
+            /* Persistence des Personnes */
+            // Les groupes
+            Group group1(0, "group1") ;
+            Group group2(0, "group1") ;
+            // Les employés
+            Employee sam(0, "sam") ;
+            Employee edem(0, "edem-kouakou") ;
+            group1.push_back(sam) ;
+            group1.push_back(edem) ;
+            group2.push_back(sem) ;
+            group2.push_back(edem) ;
+            // Les clients
+            Customer jordy(0, "jordy") ;
+            Customer ablavi(0, "ablavi") ;
+            Customer koffi(0, "koffi") ;
+            // Persistence
+            sam_id = p_database->persist(sam) ;
+            edem_id = p_database->persist(edem);
+            jordy_id = p_database->persist(jordy);
+            p_database->persist(koffi);
+            ablavi_id = p_database->persist(ablavi);
+            p_database->persist(group1) ;
+            p_database->persist(group2) ;
+            t_transaction.commit() ;
+        }
+        /* Créations des comptes */
+        {
+            t_transaction.reset(p_database->begin()) ;
+            /* Lecture des clients  */
+            shared_ptr<Customer> jordy = shared_ptr<Customer>(p_database->load<Customer>(jordy_id)) ;
+            shared_ptr<Customer> ablavi = shared_ptr<Customer>(p_database->load<Customer>(ablavi_id)) ;
+            /* Lectures des employés */
+            shared_ptr<Employee> sam = shared_ptr<Employee>(p_database->load<Employee>(sam_id)) ;
+            shared_ptr<Employee> edem = shared_ptr<Employee>(p_database->load<Employee>(edem_id)) ;
+            // Création des comptes
+            Account base_edem(0, ablavi, edem, 1998.95, "26-02-2018") ;
+            Account base_sam(0, jordy, sam, 9064.95, "26-02-2018") ;
+            SavingsAccount sa1_jojo(base_sam, 1.5) ;
+            CurrentAccount ca1_jojo(base_sam) ;
+            CurrentAccount ca2_jojo(base_sam) ;
+            CurrentAccount ca1_ablavi(base_edem) ;
+            // Appartenance des comptes
+            // Les comptes de jordy créer par sam
+            jordy->push_back(sa1_jojo) ;
+            jordy->push_back(ca1_jojo) ;
+            jordy->push_back(ca2_jojo) ;
+            sam->addAccount(sa1_jojo) ;
+            sam->addAccount(ca1_ablavi) ;
+            sam->addAccount(ca2_jojo) ;
+            // Les comptes créer par edem pour ablavi
+            ablavi->push_back(ca1_ablavi) ;
+            edem->addAccount(ca1_ablavi) ;
+            /* Persistence des comptes */
+            p_database->persist(ca1_ablavi) ;
+            p_database->persist(ca1_jojo) ;
+            p_database->persist(sa1_jojo) ;
+            p_database->persist(ca2_jojo) ;
+            /* mise à jours des employées */
+            p_database->update<Employee>(sam) ;
+            p_database->update<Employee>(edem) ;
+            p_database->update<Customer>(jordy) ;
+            p_database->update<Customer>(ablavi) ;
+
+            t_transaction.commit() ;
+        }
+    }
+    catch(const exception &e)
+    {
+        puts(e.what()) ;
+        exit(-1) ;
+    }
+
+    return 0 ;
+}
