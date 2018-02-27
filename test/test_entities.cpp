@@ -23,32 +23,54 @@
 #include <odb/database.hxx>
 #include <odb/mysql/database.hxx>
 #include <odb/transaction.hxx>
+#include <odb/session.hxx>
+#include <iostream>
 
-using namespace std ;
 using namespace Entity ;
+
+// Lecture d'une personne
+std::ostream &operator<<(std::ostream &out, const Person &person)
+{
+    out << "ID: " << person.getId() << std::endl ;
+    out << "Nom: " << person.getName() << std::endl ;
+    return out ;
+}
+
+// Lecture d'un compte
+std::ostream &operator<<(std::ostream &out, const Account &account)
+{
+    out << "ID: " << account.getId() << std::endl;
+    out << "Date de création: " << account.getCreationDate() << std::endl;
+    out << "Solde: " << account.getBalance() << std::endl;
+    out << "Client proporiétaire: \n" << account.getCustomer() << std::endl;
+    out << "Employé créateur: \n" << account.getEmployee() << std::endl;
+
+    return out ;
+}
 
 int main(void)
 {
     try
     {
-        unique_ptr<odb::database> p_database = make_unique<odb::mysql::database>("jordy", "dalila", "test_cbanking", "172.17.0.2", 3306) ;
+        std::unique_ptr<odb::database> p_database = std::make_unique<odb::mysql::database>("jordy", "dalila", "test_cbanking", "172.17.0.2", 3306) ;
         odb::transaction t_transaction (p_database->begin()) ;
         /* Persistence */
         long jordy_id, ablavi_id, sam_id, edem_id ;
         long goupe1_id, groupe2_id ;
         long account1jojo_id, account2jojo_id, account3jojo_id ;
         long account1ablavi_id, account2ablavi_id ;
-        {
-            /* Persistence des Personnes */
+
+/*        {
+            //Persistence des Personnes
             // Les groupes
             Group group1(0, "group1") ;
-            Group group2(0, "group1") ;
+            Group group2(0, "group2") ;
             // Les employés
             Employee sam(0, "sam") ;
             Employee edem(0, "edem-kouakou") ;
             group1.push_back(sam) ;
             group1.push_back(edem) ;
-            group2.push_back(sem) ;
+            group2.push_back(edem) ;
             group2.push_back(edem) ;
             // Les clients
             Customer jordy(0, "jordy") ;
@@ -64,15 +86,17 @@ int main(void)
             p_database->persist(group2) ;
             t_transaction.commit() ;
         }
-        /* Créations des comptes */
-        {
+*/
+
+        // Créations des comptes
+/*        {
             t_transaction.reset(p_database->begin()) ;
-            /* Lecture des clients  */
-            shared_ptr<Customer> jordy = shared_ptr<Customer>(p_database->load<Customer>(jordy_id)) ;
-            shared_ptr<Customer> ablavi = shared_ptr<Customer>(p_database->load<Customer>(ablavi_id)) ;
-            /* Lectures des employés */
-            shared_ptr<Employee> sam = shared_ptr<Employee>(p_database->load<Employee>(sam_id)) ;
-            shared_ptr<Employee> edem = shared_ptr<Employee>(p_database->load<Employee>(edem_id)) ;
+            // Lecture des clients
+            std::shared_ptr<Customer> jordy(p_database->load<Customer>(jordy_id)) ;
+            std::shared_ptr<Customer> ablavi(p_database->load<Customer>(ablavi_id)) ;
+            // Lectures des employés
+            std::shared_ptr<Employee> sam(p_database->load<Employee>(sam_id)) ;
+            std::shared_ptr<Employee> edem(p_database->load<Employee>(edem_id)) ;
             // Création des comptes
             Account base_edem(0, ablavi, edem, 1998.95, "26-02-2018") ;
             Account base_sam(0, jordy, sam, 9064.95, "26-02-2018") ;
@@ -91,21 +115,46 @@ int main(void)
             // Les comptes créer par edem pour ablavi
             ablavi->push_back(ca1_ablavi) ;
             edem->addAccount(ca1_ablavi) ;
-            /* Persistence des comptes */
+            //* Persistence des comptes
             p_database->persist(ca1_ablavi) ;
             p_database->persist(ca1_jojo) ;
             p_database->persist(sa1_jojo) ;
             p_database->persist(ca2_jojo) ;
-            /* mise à jours des employées */
-            p_database->update<Employee>(sam) ;
-            p_database->update<Employee>(edem) ;
-            p_database->update<Customer>(jordy) ;
-            p_database->update<Customer>(ablavi) ;
+            // mise à jours des employées
+            p_database->update<Employee>(*sam) ;
+            p_database->update<Employee>(*edem) ;
+            p_database->update<Customer>(*jordy) ;
+            p_database->update<Customer>(*ablavi) ;
 
             t_transaction.commit() ;
         }
+*/
+        // Lecture des Personnes
+        {
+            odb::session s ;
+            t_transaction.reset(p_database->begin()) ;
+            odb::result<Person> t_result(p_database->query<Person>()) ;
+            for(auto it(t_result.begin()); it!= t_result.end(); it++)
+            {
+                std::shared_ptr<Person> p(it.load()) ;
+                std::cout << *p ;
+            }
+            t_transaction.commit() ;
+        }
+        // Lecture des comptes
+        {
+            odb::session s ;
+            t_transaction.reset(p_database->begin()) ;
+            odb::result<Account> t_result(p_database->query<Account>()) ;
+            for(odb::result<Account>::iterator it(t_result.begin()); it!= t_result.end(); it++)
+            {
+                std::shared_ptr<Account> a(it.load()) ;
+                std::cout << *a ;
+            }
+            t_transaction.commit() ;
+        }
     }
-    catch(const exception &e)
+    catch(const std::exception &e)
     {
         puts(e.what()) ;
         exit(-1) ;
