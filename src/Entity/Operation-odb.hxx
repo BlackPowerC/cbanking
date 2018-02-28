@@ -53,7 +53,7 @@ namespace odb
   {
     public:
     typedef ::Entity::BaseOperation object_type;
-    typedef ::Entity::BaseOperation* pointer_type;
+    typedef ::std::shared_ptr< ::Entity::BaseOperation > pointer_type;
     typedef odb::pointer_traits<pointer_type> pointer_traits;
 
     static const bool polymorphic = true;
@@ -76,11 +76,15 @@ namespace odb
     id (const object_type&);
 
     typedef
-    no_op_pointer_cache_traits<pointer_type>
+    odb::pointer_cache_traits<
+      pointer_type,
+      odb::session >
     pointer_cache_traits;
 
     typedef
-    no_op_reference_cache_traits<object_type>
+    odb::reference_cache_traits<
+      object_type,
+      odb::session >
     reference_cache_traits;
 
     static void
@@ -103,7 +107,7 @@ namespace odb
   {
     public:
     typedef ::Entity::Operation object_type;
-    typedef ::Entity::Operation* pointer_type;
+    typedef ::std::shared_ptr< ::Entity::Operation > pointer_type;
     typedef odb::pointer_traits<pointer_type> pointer_traits;
 
     static const bool polymorphic = true;
@@ -125,11 +129,15 @@ namespace odb
     id (const object_type&);
 
     typedef
-    no_op_pointer_cache_traits<object_traits<root_type>::pointer_type>
+    odb::pointer_cache_traits<
+      object_traits<root_type>::pointer_type,
+      odb::session >
     pointer_cache_traits;
 
     typedef
-    no_op_reference_cache_traits<root_type>
+    odb::reference_cache_traits<
+      root_type,
+      odb::session >
     reference_cache_traits;
 
     static void
@@ -152,7 +160,7 @@ namespace odb
   {
     public:
     typedef ::Entity::Virement object_type;
-    typedef ::Entity::Virement* pointer_type;
+    typedef ::std::shared_ptr< ::Entity::Virement > pointer_type;
     typedef odb::pointer_traits<pointer_type> pointer_traits;
 
     static const bool polymorphic = true;
@@ -174,11 +182,15 @@ namespace odb
     id (const object_type&);
 
     typedef
-    no_op_pointer_cache_traits<object_traits<root_type>::pointer_type>
+    odb::pointer_cache_traits<
+      object_traits<root_type>::pointer_type,
+      odb::session >
     pointer_cache_traits;
 
     typedef
-    no_op_reference_cache_traits<root_type>
+    odb::reference_cache_traits<
+      root_type,
+      odb::session >
     reference_cache_traits;
 
     static void

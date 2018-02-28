@@ -21,7 +21,7 @@ enum class TypeOperation
 	DEPOT, RETRAIT
 };
 
-#pragma db object polymorphic
+#pragma db object polymorphic pointer(std::shared_ptr) session
 class BaseOperation
 {
 protected:
@@ -63,7 +63,7 @@ public:
   virtual void doOperation() = 0 ;
 };
 
-#pragma db object
+#pragma db object pointer(std::shared_ptr) session
 class Operation: public BaseOperation
 {
 private:
@@ -87,7 +87,7 @@ public:
   }
 };
 
-#pragma db object
+#pragma db object pointer(std::shared_ptr) session
 class Virement: public BaseOperation
 {
 private:
