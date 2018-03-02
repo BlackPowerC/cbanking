@@ -1,5 +1,8 @@
 #include "PersonAPI.hpp"
 
+namespace API
+{
+
 // PersonAPI
 PersonAPI* PersonAPI::p_singleton = nullptr ;
 
@@ -51,3 +54,4 @@ EmployeeAPI* EmployeeAPI::getInstance()
 	return p_singleton ;
 }
 
+}

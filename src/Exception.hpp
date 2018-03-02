@@ -2,10 +2,11 @@
 #define EXCEPTION_HPP_INCLUDED
 
 #include <exception>
+#include <string>
 
 class BaseException: public std::exception
 {
-private:
+protected:
   std::string msg ;
 public:
 	BaseException(std::string msg_) noexcept ;

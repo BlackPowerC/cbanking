@@ -10,17 +10,9 @@
  *				Person, et Employee.
  */
 
-// Forward declaration
-// Les classes entités
-class Entity::Customer ;
-class Entity::Person ;
-class Entity::Employee ;
-
+#include "../Entity/Persons.hpp"
 #include <iostream>
 #include <exception>
-
-// La classe de connection à la base de données
-class Core::DBConnection ;
 
 namespace API
 {
