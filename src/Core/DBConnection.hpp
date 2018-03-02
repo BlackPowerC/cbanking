@@ -7,6 +7,7 @@
 #include <odb/transaction.hxx>
 #include <odb/result.hxx>
 #include <memory>
+#include <exception>
 
 
 // PLOG Journalisation
@@ -21,18 +22,20 @@
 class DBConnection
 {
 private:
-  std::unique_ptr<odb::database> connection ; /*!< Objet de connection à la base de données */
   std::string user ;
   std::string password ;
   std::string database ;
   std::string host ;
-  unsigned int port ;
+  uint port ;
+  std::unique_ptr<odb::database> p_connection ; /*!< Objet de connection à la base de données */
+  std::unique_ptr<odb::transaction> p_transaction ; /*!< Objet permettant de faire */
   static DBConnection *p_singleton ; /*!< Singleton */
   // Constructeur privée
   DBConnection(std::string user_, std::string password_,
 							std::string database_, std::string host_,
 							unsigned int port_) ;
 public:
+	~DBConnection() ;
 	static DBConnection *getInstance() ;
 
 	/**
@@ -44,12 +47,6 @@ public:
 	 * \warning  Le pointeur renvoyer ne doit pas être stocker.
 	 */
   std::unique_ptr<odb::database> &getConnection() ;
-
-  /**
-   * \fn void begin()
-   * \brief Débuter une transaction
-   */
-  void begin() ;
 
 	/**
    * \fn void commit()
