@@ -23,7 +23,7 @@
  *
  */
 
-#include "../src/Entity/Entity.hpp"
+#include "../../src/Entity/Entity.hpp"
 
 #include <odb/database.hxx>
 #include <odb/mysql/database.hxx>
@@ -69,11 +69,6 @@ std::ostream &operator<<(std::ostream &out, const Group &group)
 {
     out << "ID: "<< group.getId()<<"\n" ;
     out << "Nom: "<<group.getName()<<"\n" ;
-    out << "Membres: \n";
-    for(auto member : group.getMembers())
-    {
-        out << *member ;
-    }
     return out ;
 }
 
