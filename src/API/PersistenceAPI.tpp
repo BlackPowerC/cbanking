@@ -1,19 +1,3 @@
-#include <odb/query.hxx>
-#include <odb/result.hxx>
-#include <odb/exception.hxx>
-#include "../Core/DBConnection.hpp"
-
-// STL
-#include <string>
-#include <iostream>
-#include <exception>
-
-// Plog
-#include <plog/Log.h>
-
-// Exceptions personnalisées
-#include "../Exception.hpp"
-
 namespace API
 {
 
@@ -28,12 +12,12 @@ void PersistenceAPI::erase(long id)
 	}catch(const odb::exception &e)
 	{
     LOG_ERROR << e.what() ;
-    throw NotErasable("Impossible de supprimer la ressource ayant l'ID: "+std::to_string(t_obj.getId())) ;
+    throw NotErasable("Impossible de supprimer la ressource ayant l'ID: "+std::to_string(id)) ;
 	}
 }
 
 template <typename T>
-void PersistenceAPI::update(const T &t_obj)
+void PersistenceAPI::update(T &t_obj)
 {
 	try
 	{
