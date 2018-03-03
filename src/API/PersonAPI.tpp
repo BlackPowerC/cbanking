@@ -46,6 +46,7 @@ void PersonAPI::update(const T &t_person)
 	try
 	{
     DBConnection::getInstance()->getConnection()->update<T>(t_person) ;
+    DBConnection::getInstance()->commit() ;
 	}catch(const odb::exception &e)
 	{
     LOG_ERROR << e.what() ;
@@ -54,11 +55,13 @@ void PersonAPI::update(const T &t_person)
 }
 
 template <typename T>
-void PersonAPI::insert(const T &t_person)
+void PersonAPI::insert(T &t_person)
 {
 	try
 	{
+		DBConnection::getInstance()->reset() ;
     DBConnection::getInstance()->getConnection()->persist(t_person) ;
+    DBConnection::getInstance()->commit() ;
 	}catch(const odb::exception &e)
 	{
     LOG_ERROR << e.what() ;
@@ -70,14 +73,16 @@ std::vector<std::shared_ptr<T> > PersonAPI::findAll()
 {
 	try
 	{
+    odb::session t_session ;
 		std::vector<std::shared_ptr<T> > persons ;
     DBConnection *s = DBConnection::getInstance() ;
-
+		s->reset() ;
 		odb::result<T> t_result(s->getConnection()->query<T>()) ;
 		for(auto it = t_result.begin(); it!= t_result.end(); it++)
 		{
-			persons.push_back(std::make_shared<T>(it.load())) ;
+			persons.push_back(it.load()) ;
 		}
+		s->commit() ;
 		return persons;
 	}
 	catch(const odb::exception &e)
@@ -88,12 +93,16 @@ std::vector<std::shared_ptr<T> > PersonAPI::findAll()
 }
 
 template <typename T>
-std::unique_ptr<T> PersonAPI::findById(long id)
+std::shared_ptr<T> PersonAPI::findById(long id)
 {
   try
   {
+		odb::session t_session ;
     DBConnection *s = DBConnection::getInstance() ;
-    return std::make_unique<T>(s->getConnection()->load<T>()) ;
+    s->reset() ;
+    std::shared_ptr<T> person((s->getConnection()->load<T>(id))) ;
+    s->commit() ;
+    return person ;
   }
   catch(const odb::exception &e)
   {
@@ -107,6 +116,7 @@ std::vector<std::shared_ptr<T> > PersonAPI::findByName(const std::string &name)
 {
   try
   {
+		odb::session t_session ;
     std::vector<std::shared_ptr<T> > persons ;
     odb::query<T> t_query(odb::query<T>::name.like(name+"%")) ;
     odb::result<T> t_result(t_query) ;

@@ -36,7 +36,7 @@ public:
 	void update(const T &t_person) ;
 
 	template <typename T>
-  void insert(const T &t_person) ;
+ 	void insert(T &t_person) ;
 
 	/**
 	 * \fn std::vector<std::shared_ptr<T> > findAll()
@@ -57,7 +57,7 @@ public:
 	 * \return Un unique_ptr contenant l'instance de la classe.
 	 */
 	template <typename T>
-  std::unique_ptr<T> findById(long id) ;
+  std::shared_ptr<T> findById(long id) ;
 
   	/**
 	 * \fn std::unique_ptr<Entity::Person> findByName(const std::string &name, const TypeID typeID) ;
@@ -74,4 +74,7 @@ public:
 };
 
 }
+
+#include "PersonAPI.tpp"
+
 #endif // ENTITYAPI_HPP_INCLUDED
