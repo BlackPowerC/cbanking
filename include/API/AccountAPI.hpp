@@ -34,6 +34,9 @@ public:
    */
   template <typename T>
   std::vector<std::shared_ptr<T> > findByEmployeeId(long id) ;
+
+  // Fonction polymorphic
+  virtual void doNothing() {}
 };
 
 }

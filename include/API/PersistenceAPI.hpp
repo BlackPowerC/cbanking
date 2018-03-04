@@ -25,6 +25,7 @@ namespace API
 class PersistenceAPI
 {
 public:
+	virtual void doNothing() = 0;
 	/**
 	 * \brief Cette fonction supprime un entité de la base de données.
 	 * \param id L'ID de l'entité.

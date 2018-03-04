@@ -20,12 +20,19 @@ PersonAPI* PersonAPI::getInstance()
 
 PersonAPI::~PersonAPI()
 {
-	delete p_singleton ;
+	if(p_singleton)
+	{
+		delete p_singleton ;
+	}
 }
 
 template <typename T>
 std::vector<std::shared_ptr<T> > PersonAPI::findByName(const std::string &name)
 {
+	if(!name.size())
+  {
+    throw IllegalArgument("L'argument name ne peut être une chaine de caractères vide !'") ;
+  }
   try
   {
 		odb::session t_session ;

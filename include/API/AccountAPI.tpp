@@ -21,16 +21,23 @@ AccountAPI* AccountAPI::getInstance()
 
 AccountAPI::~AccountAPI()
 {
-    delete p_singleton ;
+	if(p_singleton)
+	{
+		delete p_singleton ;
+	}
 }
 
 template <typename T>
 std::vector<std::shared_ptr<T> > AccountAPI::findByCustomerId(long id)
 {
+  if(id <= 0)
+  {
+    throw IllegalArgument("L'argument doit être un entier positif non nul !") ;
+  }
 	try
 	{
 		// Contenu du résultat de recherche
-		std::vector<std::shared_ptr<T> > objects ; 
+		std::vector<std::shared_ptr<T> > objects ;
 		// Transaction et querying
 		DBConnection *s = DBConnection::getInstance() ;
 		s->reset() ;

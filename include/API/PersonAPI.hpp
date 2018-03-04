@@ -34,6 +34,9 @@ public:
 	 */
 	template <typename T>
   std::vector<std::shared_ptr<T> > findByName(const std::string &name) ;
+
+  // Fonction polymorphic
+  virtual void doNothing() {}
 };
 
 }
