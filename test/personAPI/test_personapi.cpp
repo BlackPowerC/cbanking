@@ -46,9 +46,39 @@ int main()
             p_papi->insert<Customer>(dalida) ;
             p_papi->insert<Customer>(nabine) ;
             p_papi->insert<Customer>(thierrno) ;
-            for(auto &c: p_papi->findAll<Customer>())
+
+            // Affiche de toutes les personnes
             {
-              std::cout << *c ;
+                for(auto &c: p_papi->findAll<Customer>())
+                {
+                    std::cout << *c ;
+                }
+            }
+            // Toutes les personnes dont les nom commence par j
+            {
+                try
+                {
+                    for(auto &c: p_papi->findByName<Customer>("j"))
+                    {
+                        std::cout << *c ;
+                    }
+                }
+                catch(const BaseException &ba)
+                {
+                    LOG_ERROR << ba.what() ;
+                }
+            }
+            // La personnes avec l'id 5 et l'id 200
+            {
+                try
+                {
+                    std::cout << *p_papi->findById<Person>(5) ;
+                    std::cout << *p_papi->findById<Person>(200) ;
+                }
+                catch(const BaseException &ba)
+                {
+                    LOG_ERROR << ba.what() ;
+                }
             }
         }
         catch(const BaseException &ba)
