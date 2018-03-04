@@ -6,14 +6,33 @@
 namespace API
 {
 
+/**
+ * \class AccountAPI
+ * \brief Cette classe est en charge de la persistence
+ *				des entités Acccount, CurrentAccount et SavingsAccount.
+ */
 class AccountAPI: public PersistenceAPI
 {
 private:
 	static AccountAPI *p_singleton ;
-	AccountAPI() ;
+	AccountAPI() {};
 public:
-  static AccountAPI *getInstance() ;
-	~AccountAPI() ;
+	AccountAPI* AccountAPI::getInstance()
+	{
+    if(!p_singleton)
+    {
+        p_singleton = new AccountAPI ;
+    }
+    return p_singleton ;
+	}
+
+	AccountAPI::~AccountAPI()
+	{
+		if(p_singleton)
+		{
+			delete p_singleton ;
+		}
+	}
 
   /**
    * \brief Cette fontion cherche tout les comptes
@@ -38,6 +57,8 @@ public:
   // Fonction polymorphic
   virtual void doNothing() {}
 };
+
+AccountAPI* AccountAPI::p_singleton = nullptr ;
 
 }
 

@@ -1,31 +1,6 @@
 namespace API
 {
 
-// PersonAPI
-PersonAPI* PersonAPI::p_singleton = nullptr ;
-
-PersonAPI::PersonAPI()
-{
-
-}
-
-PersonAPI* PersonAPI::getInstance()
-{
-	if(p_singleton == nullptr)
-	{
-		p_singleton = new PersonAPI ;
-	}
-	return p_singleton ;
-}
-
-PersonAPI::~PersonAPI()
-{
-	if(p_singleton)
-	{
-		delete p_singleton ;
-	}
-}
-
 template <typename T>
 std::vector<std::shared_ptr<T> > PersonAPI::findByName(const std::string &name)
 {

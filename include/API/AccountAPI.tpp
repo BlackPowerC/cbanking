@@ -3,30 +3,6 @@
 namespace API
 {
 
-AccountAPI* AccountAPI::p_singleton = nullptr ;
-
-AccountAPI::AccountAPI()
-{
-
-}
-
-AccountAPI* AccountAPI::getInstance()
-{
-    if(!p_singleton)
-    {
-        p_singleton = new AccountAPI ;
-    }
-    return p_singleton ;
-}
-
-AccountAPI::~AccountAPI()
-{
-	if(p_singleton)
-	{
-		delete p_singleton ;
-	}
-}
-
 template <typename T>
 std::vector<std::shared_ptr<T> > AccountAPI::findByCustomerId(long id)
 {
