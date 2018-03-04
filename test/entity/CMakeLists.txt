@@ -11,25 +11,25 @@ add_executable(
 
 	test_entities.cpp
 
-	../../src/Entity/Entity.hpp
+	../../include/Entity/Entity.hpp
 
 	../../src/Entity/Account-odb.cxx
-	../../src/Entity/Account-odb.hxx
+	../../include/Entity/Account-odb.hxx
 
 	../../src/Entity/Operation-odb.cxx
-	../../src/Entity/Operation-odb.hxx
+	../../include/Entity/Operation-odb.hxx
 
 	../../src/Entity/Persons-odb.cxx
-	../../src/Entity/Persons-odb.hxx
+	../../include/Entity/Persons-odb.hxx
 
 	../../src/Entity/Account.cpp
-	../../src/Entity/Account.hpp
+	../../include/Entity/Account.hpp
 
 	../../src/Entity/Operation.cpp
-	../../src/Entity/Operation.hpp
+	../../include/Entity/Operation.hpp
 
 	../../src/Entity/Persons.cpp
-	../../src/Entity/Persons.hpp
+	../../include/Entity/Persons.hpp
 )
 
 target_link_libraries(

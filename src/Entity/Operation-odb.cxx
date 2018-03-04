@@ -4,7 +4,7 @@
 
 #include <odb/pre.hxx>
 
-#include "Operation-odb.hxx"
+#include "../../include/Entity/Operation-odb.hxx"
 
 #include <cassert>
 #include <cstring>  // std::memcpy

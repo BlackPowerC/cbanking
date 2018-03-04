@@ -15,30 +15,30 @@ add_executable(
 
 	test_personapi.cpp
 
-	../../src/API/PersonAPI.hpp
+	../../include/API/PersonAPI.hpp
 
 	../../src/Exception.cpp
-	../../src/Exception.hpp
+	../../include/Exception.hpp
 
-	../../src/Core/DBConnection.hpp
+	../../include/Core/DBConnection.hpp
 	../../src/Core/DBConnection.cpp
 
-	../../src/Entity/Persons.hpp
+	../../include/Entity/Persons.hpp
 	../../src/Entity/Persons.cpp
 
 	../../src/Entity/Persons-odb.cxx
-	../../src/Entity/Persons-odb.hxx
+	../../include/Entity/Persons-odb.hxx
 
-	../../src/Entity/Operation.hpp
+	../../include/Entity/Operation.hpp
 	../../src/Entity/Operation.cpp
 
-	../../src/Entity/Operation-odb.hxx
+	../../include/Entity/Operation-odb.hxx
 	../../src/Entity/Operation-odb.cxx
 
-	../../src/Entity/Account.hpp
+	../../include/Entity/Account.hpp
 	../../src/Entity/Account.cpp
 
-	../../src/Entity/Account-odb.hxx
+	../../include/Entity/Account-odb.hxx
 	../../src/Entity/Account-odb.cxx
 
 )

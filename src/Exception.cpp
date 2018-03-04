@@ -1,4 +1,4 @@
-#include "Exception.hpp"
+#include "../include/Exception.hpp"
 
 // BaseException
 BaseException::BaseException(std::string msg_) noexcept : msg(msg_)

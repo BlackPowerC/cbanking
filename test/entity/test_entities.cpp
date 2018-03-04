@@ -23,7 +23,7 @@
  *
  */
 
-#include "../../src/Entity/Entity.hpp"
+#include "../../include/Entity/Entity.hpp"
 
 #include <odb/database.hxx>
 #include <odb/mysql/database.hxx>

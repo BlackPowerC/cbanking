@@ -1,4 +1,4 @@
-#include "Operation.hpp"
+#include "../../include/Entity/Operation.hpp"
 
 namespace Entity
 {

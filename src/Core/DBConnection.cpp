@@ -1,4 +1,4 @@
-#include "DBConnection.hpp"
+#include "../../include/Core/DBConnection.hpp"
 
 DBConnection *DBConnection::p_singleton = nullptr ;
 

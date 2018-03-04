@@ -7,9 +7,9 @@
  *        Toute les méthodes seront appelées.
  */
 
-#include "../../src/Exception.hpp"
-#include "../../src/Entity/Entity.hpp"
-#include "../../src/API/PersonAPI.hpp"
+#include "../../include/Exception.hpp"
+#include "../../include/Entity/Entity.hpp"
+#include "../../include/API/PersonAPI.hpp"
 #include <iostream>
 #include <exception>
 

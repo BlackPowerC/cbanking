@@ -14,7 +14,7 @@ add_executable(
 
 	test_dbconnection.cpp
 
-	../../src/Core/DBConnection.hpp
+	../../include/Core/DBConnection.hpp
 	../../src/Core/DBConnection.cpp
 )
 

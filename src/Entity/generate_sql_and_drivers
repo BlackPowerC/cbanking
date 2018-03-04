@@ -1,0 +1,14 @@
+SOURCE = Account.hpp Operation.hpp Persons.hpp
+DBTYPE = --database mysql
+OPTIONS = --std c++11 --generate-schema --generate-query
+SQLFILE = Account.sql Operation.sql Persons.sql
+
+all:
+	make -f generate_sql_and_drivers compile
+	make -f generate_sql_and_drivers move
+
+move: $(SQLFILE)
+	mv $(SQLFILE) ../../resources/sql
+
+compile: $(SOURCE)
+	odb $(DBTYPE) $(OPTIONS) $(SOURCE)

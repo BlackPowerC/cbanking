@@ -1,4 +1,4 @@
-#include "../../src/Core/DBConnection.hpp"
+#include "../../include/Core/DBConnection.hpp"
 
 #include <plog/Log.h>
 #include <plog/Appenders/ColorConsoleAppender.h>
