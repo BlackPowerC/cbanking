@@ -17,7 +17,7 @@ private:
 	static AccountAPI *p_singleton ;
 	AccountAPI() {};
 public:
-	AccountAPI* AccountAPI::getInstance()
+	static AccountAPI* getInstance()
 	{
     if(!p_singleton)
     {
@@ -26,7 +26,7 @@ public:
     return p_singleton ;
 	}
 
-	AccountAPI::~AccountAPI()
+	~AccountAPI()
 	{
 		if(p_singleton)
 		{

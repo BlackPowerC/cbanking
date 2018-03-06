@@ -19,7 +19,7 @@ private:
 	static PersonAPI *p_singleton ;
 	PersonAPI() {} ;
 public:
-  PersonAPI* PersonAPI::getInstance()
+  PersonAPI* getInstance()
 	{
 		if(p_singleton == nullptr)
 		{
@@ -28,7 +28,7 @@ public:
 		return p_singleton ;
 	}
 
-	PersonAPI::~PersonAPI()
+	~PersonAPI()
 	{
 		if(p_singleton)
 		{
