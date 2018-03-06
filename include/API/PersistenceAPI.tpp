@@ -42,6 +42,7 @@ void PersistenceAPI::insert(T &t_obj)
 	}catch(const odb::exception &e)
 	{
     LOG_ERROR << e.what() ;
+    throw std::exception() ;
 	}
 }
 

@@ -10,6 +10,8 @@ std::vector<std::shared_ptr<T> > PersonAPI::findByName(const std::string &name)
   }
   try
   {
+		DBConnection *s = DBConnection::getInstance() ;
+		s->reset() ;
 		odb::session t_session ;
     std::vector<std::shared_ptr<T> > persons ;
     odb::query<T> t_query(odb::query<T>::name.like(name+"%")) ;
@@ -18,6 +20,7 @@ std::vector<std::shared_ptr<T> > PersonAPI::findByName(const std::string &name)
 		{
 			persons.push_back(it.load()) ;
 		}
+		s->commit() ;
 		return persons ;
   }catch(const odb::exception &e)
   {

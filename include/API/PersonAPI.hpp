@@ -19,7 +19,7 @@ private:
 	static PersonAPI *p_singleton ;
 	PersonAPI() {} ;
 public:
-  PersonAPI* getInstance()
+  static PersonAPI* getInstance()
 	{
 		if(p_singleton == nullptr)
 		{
