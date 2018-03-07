@@ -35,6 +35,14 @@ TEST_F(Test, person_api_test1)
     ASSERT_TRUE(expected == pc.entityToJson(jordy)) ;
 }
 
+TEST_F(Test, person_api_test2)
+{
+    std::shared_ptr<Entity::Person> jordy = std::make_shared<Entity::Person>(6, "jordy") ;
+    Util::PersonConverter pc ;
+    std::string expected("{\"id\":6, \"name\":jordy}") ;
+    ASSERT_FALSE(expected == pc.entityToJson(jordy)) ;
+}
+
 int main(int argc, char *argv[])
 {
     ::testing::InitGoogleTest(&argc, argv) ;
