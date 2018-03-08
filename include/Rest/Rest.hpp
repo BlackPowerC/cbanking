@@ -5,11 +5,6 @@
 #ifndef REST_INCLUDED_HPP
 #define REST_INCLUDED_HPP
 
-// Entête pistache
-#include <pistache/endpoint.h>
-#include <pistache/router.h>
-#include <pistache/http.h>
-
 // Les entités
 #include "../../include/Entity/Entity.hpp"
 
@@ -27,43 +22,46 @@
 // Json
 #include <rapidjson/rapidjson.h>
 
+#include "RequestHandler.hpp"
+
 using namespace pistache ;
 
+namespace RestAPI
+{
 /**
  * \class Rest
  * \brief Cette classe joue le rôle d'un serveur REST.
  */
-class Rest
-{
-private:
-    // Les champs
-    Rest::Router t_router ; /*<! Le routeur du serveur */
-    std::shared_ptr<Http::Endpoint> p_endpoint ; /*<! Point de chute des requêtes HTTP */
-    // Les méthodes privées
-    /**
-     * \brief Cette fonction met en place le routage.
-     */
-    void routing() ;
+    class Rest
+    {
+    private:
+        // Les champs
+        std::shared_ptr <Http::Endpoint> p_endpoint; /*<! Point de chute des requêtes HTTP */
+        Rest::Router t_router; /*<! Le routeur du serveur */
+        RequestHandler t_rhandler ; /*<! Le conteneur de méthode distante */
+        // Les méthodes privées
+        /**
+         * \brief Cette fonction met en place le routage.
+         */
+        void routing();
 
-    /**
-     * @brief Cette fonction est un parseur interne de JSON.
-     * @param json Une chaine de caractère au format json.
-     * @param address Un pointeur sur une instance de Address.
-     * @param port Un pointeur sur une instance de Port.
-     */
-    void parseJson(const std::string &json, Address *address, Port *port) ;
-public:
-    /**
-     * \brief Constructeur de la classe.
-     * @param json Une chaine de caractères formatée en JSON.
-     */
-    Rest(const std::string &json = "{\"address\":\"localhost\", \"port\":8181}") ;
+        /**
+         * @brief Cette fonction est un parseur interne de JSON.
+         * @param json Une chaine de caractère au format json.
+         * @param address Un pointeur sur une instance de Address.
+         * @param port Un pointeur sur une instance de Port.
+         */
+        void parseJson(const std::string &json, Address *address, Port *port) ;
+    public:
+        /**
+         * \brief Constructeur de la classe.
+         * @param json Une chaine de caractères formatée en JSON.
+         */
+        Rest(const std::string &json = "{\"address\":\"localhost\", \"port\":8181}");
 
-    // Les fonctions de réponses
-    // Insertion
-    // Selection
-    // Mise à jour
-    // Suppression
-};
-
+        // Les fonctions de démarrage
+        void start() ;
+        void stop() ;
+    };
+}
 #endif //REST_INCLUDED_HPP
