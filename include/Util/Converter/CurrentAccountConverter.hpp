@@ -1,11 +1,11 @@
 #ifndef CACCOUNT_CONVERTER_HPP_INCLUDED
 #define CACCOUNT_CONVERTER_HPP_INCLUDED
 
-#include "Converter.hpp"
+#include "AccountConverter.hpp"
 
 namespace Util
 {
-    class CurrentAccountConverter: public Converter<Entity::CurrentAccount>
+    class CurrentAccountConverter: public AccountConverter
     {
     public:
         virtual std::string entityToJson(const Entity::CurrentAccount &entity) ;

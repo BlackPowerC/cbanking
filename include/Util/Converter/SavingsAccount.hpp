@@ -1,15 +1,16 @@
 #ifndef SACCOUNT_CONVERTER_HPP_INCLUDED
 #define SACCOUNT_CONVERTER_HPP_INCLUDED
 
-#include "Converter.hpp"
+#include "AccountConverter.hpp"
 
 namespace Util
 {
-    class SavingsAccountConverter: public Converter<Entity::SavingsAccount>
+    class SavingsAccountConverter: public AccountConverter
     {
     public:
         /**
-         * \brief Cette fonction convertit une entité en format JSON
+         * \brief Cette fonction convertit une instance
+         *        de SavingsAccount en format JSON
          * @param entity Une instance de SavingsAccount.
          * @return Une chaine de caractère formaté en JSON.
          */
