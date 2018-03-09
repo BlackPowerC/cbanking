@@ -60,6 +60,7 @@ public:
   void setMontant(double montant) ;
 
   /* Méthode virtuelle pure*/
+  virtual std::string getTypeOperation() const = 0 ;
   virtual void doOperation() = 0 ;
 };
 
@@ -75,6 +76,16 @@ public:
   Operation(const Operation &another) ;
   Operation(const Operation *another) ;
   virtual void doOperation() ;
+
+  std::string getTypeOperation() const
+  {
+    return (this->typeOperation == TypeOperation::DEPOT) ? "depot":"retrait" ;
+  }
+
+  void setTypeOperation(const TypeOperation to)
+  {
+    this->typeOperation = to;
+  }
 
   void operator=(const Operation &t_another)
   {
@@ -102,6 +113,11 @@ public:
   Account getAccountDestination() ;
   void setAccountDestination(Account &another) ;
   virtual void doOperation() ;
+
+        std::string getTypeOperation() const
+        {
+          return "virement" ;
+        }
 
   void operator=(const Virement &t_another)
   {
