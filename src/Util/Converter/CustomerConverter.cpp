@@ -8,24 +8,23 @@ namespace Util
 {
     std::string CustomerConverter::entityToJson(const Entity::Customer &entity)
     {
+        if(!entity.getAccounts().size())
+        {
+            return PersonConverter::entityToJson(entity) ;
+        }
         std::string json("{\n") ;
-        bool flag = false ;
         json += "\"id\":"+std::to_string(entity.getId())+",\n" ;
         json += "\"name\":\""+entity.getName()+"\",\n" ;
-        json += "\"accounts\":\n\t{\n" ;
+        json += "\"accounts\":\n\t[\n" ;
         for(auto &accounts: entity.getAccounts())
         {
-            flag = true ;
-            json += "\t[\"id\":"+std::to_string(accounts->getId())+",\n" ;
-            json += "\t\"creationDate\":\""+accounts->getCreationDate()+"\",\n" ;
-            json += "\t\"balance\":"+std::to_string(accounts->getBalance())+"],\n" ;
+            json += "\t{\"id\":"+std::to_string(accounts->getId())+", " ;
+            json += "\"creationDate\":\""+accounts->getCreationDate()+"\", " ;
+            json += "\"balance\":"+std::to_string(accounts->getBalance())+"},\n" ;
         }
-        if(flag)
-        {
-            json.pop_back() ;
-            json.pop_back() ;
-        }
-        json += "\n\t}\n}" ;
+        json.pop_back() ;
+        json.pop_back() ;
+        json += "\n\t]\n}" ;
 
         return json ;
     }
