@@ -2,6 +2,12 @@
 // Created by jordy on 06/03/18.
 //
 
+/**
+ * \file PersonConverter.hpp
+ * \brief Implémentation de la classe PersonConverter.
+ * \date 06/03/18
+ */
+
 #include "../../../include/Util/Converter/PersonConverter.hpp"
 
 namespace Util
