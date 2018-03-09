@@ -36,9 +36,9 @@ namespace RestAPI
     {
     private:
         // Les champs
-        std::shared_ptr <Http::Endpoint> p_endpoint; /*<! Point de chute des requêtes HTTP */
-        Rest::Router t_router; /*<! Le routeur du serveur */
-        RequestHandler t_rhandler ; /*<! Le conteneur de méthode distante */
+        std::shared_ptr <Http::Endpoint> p_endpoint; /*!< Point de chute des requêtes HTTP */
+        Rest::Router t_router; /*!< Le routeur du serveur */
+        RequestHandler t_rhandler ; /*!< Le conteneur de méthode distante */
         // Les méthodes privées
         /**
          * \brief Cette fonction met en place le routage.
