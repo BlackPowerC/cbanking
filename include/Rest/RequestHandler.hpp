@@ -18,7 +18,7 @@
 #include <pistache/router.h>
 #include <pistache/http.h>
 
-using namespace pistache;
+using namespace Pistache;
 
 /**
  * \namespace RestAPI
@@ -46,7 +46,7 @@ namespace RestAPI
         // Les routes DELETE
         void deletePerson(const Rest::Request &request, Http::ResponseWriter response) ;
         void deleteAccount(const Rest::Request &request, Http::ResponseWriter response) ;
-        void deleteAccount(const Rest::Request &request, Http::ResponseWriter response) ;
+        void deleteOperation(const Rest::Request &request, Http::ResponseWriter response) ;
 
         // Les routes POST
         void addCustomer(const Rest::Request &request, Http::ResponseWriter response) ;

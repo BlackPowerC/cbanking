@@ -12,7 +12,7 @@
 #include "../../include/Util/Converter/Converters.hpp"
 
 // La journalisation
-#include <plog/log.h>
+#include <plog/Log.h>
 
 // La STL
 #include <memory>
@@ -21,10 +21,11 @@
 
 // Json
 #include <rapidjson/rapidjson.h>
+#include <rapidjson/document.h>
 
 #include "RequestHandler.hpp"
 
-using namespace pistache ;
+using namespace Pistache ;
 
 namespace RestAPI
 {
@@ -32,7 +33,7 @@ namespace RestAPI
  * \class Rest
  * \brief Cette classe joue le rôle d'un serveur REST.
  */
-    class Rest
+    class RestServer
     {
     private:
         // Les champs
@@ -51,13 +52,13 @@ namespace RestAPI
          * @param address Un pointeur sur une instance de Address.
          * @param port Un pointeur sur une instance de Port.
          */
-        void parseJson(const std::string &json, Address *address, Port *port) ;
+        Address parseJson(const std::string &json) ;
     public:
         /**
          * \brief Constructeur de la classe.
          * @param json Une chaine de caractères formatée en JSON.
          */
-        Rest(const std::string &json = "{\"address\":\"localhost\", \"port\":8181}");
+        RestServer(const std::string &json = "{\"address\":\"localhost\", \"port\":8181}");
 
         // Les fonctions de démarrage
         void start() ;

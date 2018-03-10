@@ -6,12 +6,38 @@
 
 namespace RestAPI
 {
-    void Rest::routing()
+    void RestServer::routing()
     {
-        // Les route
+        /* Les routes GET */
+        // Un compte particulier
+        Rest::Routes::Get(this->t_router,"/account/get/:id",
+                          Rest::Routes::bind(&RequestHandler::getAccountById, &this->t_rhandler)) ;
+        // Les comptes d'un client
+        Rest::Routes::Get(this->t_router,"/customer/acount/get/:id",
+                          Rest::Routes::bind(&RequestHandler::getAccountByCustomerId, &this->t_rhandler)) ;
+        // Les comptes créer par un employee
+        Rest::Routes::Get(this->t_router, "/employee/account/get:id",
+                          Rest::Routes::bind(&RequestHandler::getAccountByEmployeeId, &this->t_rhandler)) ;
+        // Tout les employées
+        Rest::Routes::Get(this->t_router, "/employee/get/all",
+                          Rest::Routes::bind(&RequestHandler::getAllEmployees, &this->t_rhandler)) ;
+        // Un employee avec un id
+        Rest::Routes::Get(this->t_router, "/employee/get/:id",
+                          Rest::Routes::bind(&RequestHandler::getEmployeeById, &this->t_rhandler)) ;
+        // Tout les clients
+        Rest::Routes::Get(this->t_router, "/customer/get/all",
+                          Rest::Routes::bind(&RequestHandler::getAllCustomers, &this->t_rhandler)) ;
+        // Un client avec un id
+        Rest::Routes::Get(this->t_router, "/customer/get/:id",
+                          Rest::Routes::bind(&RequestHandler::getCustomerById, &this->t_rhandler)) ;
+        // Un client avec un nom
+        Rest::Routes::Get(this->t_router, "/customer/get/:name",
+                          Rest::Routes::bind(&RequestHandler::getCustomerByName, &this->t_rhandler)) ;
+
+        /* Les requetes POST */
     }
 
-    Address Rest::parseJson(const std::string &json)
+    Address RestServer::parseJson(const std::string &json)
     {
         rapidjson::Document doc ;
         if(doc.Parse(json.c_str()).HasParseError())
@@ -29,7 +55,7 @@ namespace RestAPI
         return Address(adr.GetString(), port.GetInt()) ;
     }
 
-    Rest::Rest(const std::string &json = "{\"address\":\"localhost\", \"port\":8181}")
+    RestServer::RestServer(const std::string &json = "{\"address\":\"localhost\", \"port\":8181}")
     {
         if(!json.size())
         {
@@ -51,12 +77,12 @@ namespace RestAPI
         this->p_endpoint = std::make_shared<Http::Endpoint>(address) ;
     }
 
-    void Rest::start()
+    void RestServer::start()
     {
 
     }
 
-    void Rest::stop()
+    void RestServer::stop()
     {
 
     }
