@@ -50,15 +50,17 @@ namespace RestAPI
             LOG_FATAL << "Impossible de lancer le serveur REST: configuration incorrect !\n" ;
             std::exit(EXIT_FAILURE) ;
         }
-        rapidjson::Value adr = doc["address"] ;
-        rapidjson::Value port = doc["port"] ;
+        rapidjson::Value &adr = doc["address"] ;
+        rapidjson::Value &port = doc["port"] ;
         return Address(adr.GetString(), port.GetInt()) ;
     }
 
-    RestServer::RestServer(const std::string &json = "{\"address\":\"localhost\", \"port\":8181}")
+    RestServer::RestServer(const std::string &json)
     {
+        Address adr ;
         if(!json.size())
         {
+            std::string json2 ;
             std::ifstream config("../../resources/config/rest/json") ;
             if(config.fail())
             {
@@ -67,14 +69,19 @@ namespace RestAPI
             }
             // je me position à la fin du fichier
             config.seekg(std::ios::end) ;
-            long filesize = config.tellg()+1 ;
-            json.resize(filesize) ;
+            long filesize = config.tellg()+ 1L ;
+            json2.resize(filesize) ;
             config.seekg(std::ios::beg) ;
-            config.read(&json[0], filesize) ;
+            config.read(&json2[0], filesize) ;
             config.close() ;
+            adr = this->parseJson(json2) ;
         }
-        Address address(this->parseJson(json)) ;
-        this->p_endpoint = std::make_shared<Http::Endpoint>(address) ;
+        else
+        {
+            adr = this->parseJson(json) ;
+        }
+
+        this->p_endpoint = std::make_shared<Http::Endpoint>(adr) ;
     }
 
     void RestServer::start()
