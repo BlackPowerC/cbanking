@@ -7,9 +7,11 @@
 
 #include "../../include/Rest/RequestHandler.hpp"
 #include "../../include/Exception.hpp"
+
 // API de persistence
 #include "../../include/API/PersistenceAPI.hpp"
 #include "../../include/API/AccountAPI.hpp"
+#include "../../include/API/PersonAPI.hpp"
 
 #include "../../include/Util/Converter/Converters.hpp"
 
@@ -88,7 +90,24 @@ namespace RestAPI
 
     void RequestHandler::getEmployeeById(const Rest::Request &request, Http::ResponseWriter response)
     {
-    	response.send(Http::Code::Ok, "Tout est OK", Http::Mime::MediaType::fromString("text/plain"));
+        /* Vérifions le paramettre */
+        try
+        {
+            long id = request.param(":id").as<int>() ;
+            std::shared_ptr<Employee> person = PersonAPI::getInstance()->findById<Employee>(id) ;
+            std::string json = EmployeeConverter().entityToJson(person.get());
+            response.send(Http::Code::Ok, json, MIME(Application, Json)) ;
+        }
+        catch(const NotFound &nf)
+        {
+            LOG_ERROR << nf.what() ;
+            response.send(Http::Code::Not_Found, nf.what(), MIME(Text, Plain)) ;
+        }
+        catch(const std::exception &e)
+        {
+            LOG_ERROR << e.what() ;
+            response.send(Http::Code::Not_Acceptable, e.what(), Http::Mime::MediaType::fromString("text/plain")) ;
+        }
     }
 
     void RequestHandler::getAllEmployees(const Rest::Request &request, Http::ResponseWriter response)
@@ -98,7 +117,24 @@ namespace RestAPI
 
     void RequestHandler::getCustomerById(const Rest::Request &request, Http::ResponseWriter response)
     {
-    	response.send(Http::Code::Ok, "Tout est OK", Http::Mime::MediaType::fromString("text/plain"));
+        /* Vérifions le paramettre */
+        try
+        {
+            long id = request.param(":id").as<int>() ;
+            std::shared_ptr<Customer> person = PersonAPI::getInstance()->findById<Customer>(id) ;
+            std::string json = CustomerConverter().entityToJson(person.get());
+            response.send(Http::Code::Ok, json, MIME(Application, Json)) ;
+        }
+        catch(const NotFound &nf)
+        {
+            LOG_ERROR << nf.what() ;
+            response.send(Http::Code::Not_Found, nf.what(), MIME(Text, Plain)) ;
+        }
+        catch(const std::exception &e)
+        {
+            LOG_ERROR << e.what() ;
+            response.send(Http::Code::Not_Acceptable, e.what(), Http::Mime::MediaType::fromString("text/plain")) ;
+        }
     }
 
     void RequestHandler::getAllCustomers(const Rest::Request &request, Http::ResponseWriter response)
