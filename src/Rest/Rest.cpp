@@ -52,6 +52,7 @@ namespace RestAPI
         }
         rapidjson::Value &adr = doc["address"] ;
         rapidjson::Value &port = doc["port"] ;
+        LOG_INFO << "Serveur REST sur " << adr.GetString() <<":"<<port.GetInt() << "\n" ;
         return Address(adr.GetString(), port.GetInt()) ;
     }
 
@@ -82,15 +83,22 @@ namespace RestAPI
         }
 
         this->p_endpoint = std::make_shared<Http::Endpoint>(adr) ;
+        this->routing() ;
     }
 
     void RestServer::start()
     {
-
+        auto opts = Http::Endpoint::options()
+                .threads(2)
+                .flags(Tcp::Options::InstallSignalHandler);
+        this->p_endpoint->init(opts);
+        this->routing() ;
+        this->p_endpoint->setHandler(this->t_router.handler()) ;
+        this->p_endpoint->serve() ;
     }
 
     void RestServer::stop()
     {
-
+        this->p_endpoint->shutdown();
     }
 }

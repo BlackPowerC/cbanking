@@ -6,9 +6,6 @@
 #define REQUESTHANDLER_HPP
 
 // Les APIS
-#include "../API/OperationAPI.hpp"
-#include "../API/PersonAPI.hpp"
-#include "../API/AccountAPI.hpp"
 
 // Les entitées
 #include "../Entity/Entity.hpp"
