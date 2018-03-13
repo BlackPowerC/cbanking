@@ -61,10 +61,16 @@ TEST_F(Test, persistence_api_select2)
   ASSERT_ANY_THROW(PersonAPI::getInstance()->findAll<Person>()) ;
 }
 
-// Test de selection 2
+// Test de selection 3
 TEST_F(Test, persistence_api_select3)
 {
   ASSERT_NO_THROW(PersonAPI::getInstance()->findAll<Customer>()) ;
+}
+
+// Test de selection 4
+TEST_F(Test, persistence_api_select4)
+{
+  ASSERT_NO_THROW(PersonAPI::getInstance()->findAll<Employee>()) ;
 }
 
 // Test de suppression 1
