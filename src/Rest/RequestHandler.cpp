@@ -227,17 +227,133 @@ namespace RestAPI
     // Les routes DELETE
     void RequestHandler::deletePerson(const Rest::Request &request, Http::ResponseWriter response)
     {
-    	response.send(Http::Code::Ok, "Tout est OK", Http::Mime::MediaType::fromString("text/plain"));
+        /* Vérifions le paramettre */
+        long id ;
+        try
+        {
+            id = request.param(":id").as<int>() ;
+        }catch(const std::exception &e)
+        {
+            LOG_ERROR << e.what() ;
+            response.send(Http::Code::Not_Acceptable, e.what(), Http::Mime::MediaType::fromString("text/plain")) ;
+            return ;
+        }
+        // Pas d'erreur on continue
+        bool flag = true ;
+        {
+            try
+            {
+                /* voyons voir si la personne est un client */
+                PersonAPI::getInstance()->erase<Customer>(id) ;
+            }catch(const NotErasable &ne)
+            {
+                flag = false ;
+            }
+        }
+        // Il n'y a pas de client avec cette ID, on essaie
+        // avec un Employee.
+        if(!flag)
+        {
+            try
+            {
+                /* voyons voir si la personne est un client */
+                PersonAPI::getInstance()->erase<Employee>(id) ;
+            }catch(const NotErasable &ne)
+            {
+                LOG_ERROR << ne.what() ;
+                response.send(Http::Code::Not_Found, ne.what(), MIME(Text, Plain)) ;
+                return ;
+            }
+        }
+        // peut importe qu'il s'agissent d'un client ou d'un employee
+        response.send(Http::Code::Ok) ;
     }
 
     void RequestHandler::deleteAccount(const Rest::Request &request, Http::ResponseWriter response)
     {
-    	response.send(Http::Code::Ok, "Tout est OK", Http::Mime::MediaType::fromString("text/plain"));
+        /* Vérifions le paramettre */
+        long id ;
+        try
+        {
+            id = request.param(":id").as<int>() ;
+        }catch(const std::exception &e)
+        {
+            LOG_ERROR << e.what() ;
+            response.send(Http::Code::Not_Acceptable, e.what(), Http::Mime::MediaType::fromString("text/plain")) ;
+            return ;
+        }
+        // Pas d'erreur on continue
+        bool flag = true ;
+        {
+            try
+            {
+                /* voyons voir si le compte est courant ou pas */
+                PersonAPI::getInstance()->erase<CurrentAccount>(id) ;
+            }catch(const NotErasable &ne)
+            {
+                flag = false ;
+            }
+        }
+        // Il n'y a pas de compte courant avec cette ID, on essaie
+        // avec un compte d'épargne.
+        if(!flag)
+        {
+            try
+            {
+                /* voyons voir si le compte est d'épargne */
+                PersonAPI::getInstance()->erase<SavingsAccount>(id) ;
+            }catch(const NotErasable &ne)
+            {
+                LOG_ERROR << ne.what() ;
+                response.send(Http::Code::Not_Found, ne.what(), MIME(Text, Plain)) ;
+                return ;
+            }
+        }
+        // peut importe qu'il s'agissent d'un compte courant ou d'épargne
+        response.send(Http::Code::Ok) ;
     }
 
     void RequestHandler::deleteOperation(const Rest::Request &request, Http::ResponseWriter response)
     {
-    	response.send(Http::Code::Ok, "Tout est OK", Http::Mime::MediaType::fromString("text/plain"));
+        /* Vérifions le paramettre */
+        long id ;
+        try
+        {
+            id = request.param(":id").as<int>() ;
+        }catch(const std::exception &e)
+        {
+            LOG_ERROR << e.what() ;
+            response.send(Http::Code::Not_Acceptable, e.what(), Http::Mime::MediaType::fromString("text/plain")) ;
+            return ;
+        }
+        // Pas d'erreur on continue
+        bool flag = true ;
+        {
+            try
+            {
+                /* voyons voir si l'opération est un virement ou pas' */
+                PersonAPI::getInstance()->erase<Virement>(id) ;
+            }catch(const NotErasable &ne)
+            {
+                flag = false ;
+            }
+        }
+        // Il n'y a pas de virement avec cette ID, on essaie
+        // avec une opération simple.
+        if(!flag)
+        {
+            try
+            {
+                /* voyons voir si l'opération est une opération simple */
+                PersonAPI::getInstance()->erase<Employee>(id) ;
+            }catch(const NotErasable &ne)
+            {
+                LOG_ERROR << ne.what() ;
+                response.send(Http::Code::Not_Found, ne.what(), MIME(Text, Plain)) ;
+                return ;
+            }
+        }
+        response.send(Http::Code::Ok) ;
     }
 
     // Les routes POST

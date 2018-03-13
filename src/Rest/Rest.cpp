@@ -35,6 +35,16 @@ namespace RestAPI
                           Rest::Routes::bind(&RequestHandler::getCustomerByName, &this->t_rhandler)) ;
 
         /* Les requetes POST */
+        /* Les requetes DELETE */
+        // Un client
+        Rest::Routes::Delete(this->t_router, "/person/delete/:id",
+                             Rest::Routes::bind(&RequestHandler::deletePerson, &this->t_rhandler)) ;
+        // Un compte
+        Rest::Routes::Delete(this->t_router, "/account/delete/:id",
+                             Rest::Routes::bind(&RequestHandler::deleteAccount, &this->t_rhandler)) ;
+        // Une operation
+        Rest::Routes::Delete(this->t_router, "/operation/delete/:id",
+                             Rest::Routes::bind(&RequestHandler::deleteOperation, &this->t_rhandler)) ;    
     }
 
     Address RestServer::parseJson(const std::string &json)
