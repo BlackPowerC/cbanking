@@ -13,10 +13,10 @@ namespace RestAPI
         Rest::Routes::Get(this->t_router,"/account/get/:id",
                           Rest::Routes::bind(&RequestHandler::getAccountById, &this->t_rhandler)) ;
         // Les comptes d'un client
-        Rest::Routes::Get(this->t_router,"/customer/acount/get/:id",
+        Rest::Routes::Get(this->t_router,"/customer/account/get/:id",
                           Rest::Routes::bind(&RequestHandler::getAccountByCustomerId, &this->t_rhandler)) ;
         // Les comptes créer par un employee
-        Rest::Routes::Get(this->t_router, "/employee/account/get:id",
+        Rest::Routes::Get(this->t_router, "/employee/account/get/:id",
                           Rest::Routes::bind(&RequestHandler::getAccountByEmployeeId, &this->t_rhandler)) ;
         // Tout les employées
         Rest::Routes::Get(this->t_router, "/employee/get/all",

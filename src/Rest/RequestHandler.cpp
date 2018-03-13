@@ -77,12 +77,58 @@ namespace RestAPI
 
     void RequestHandler::getAccountByCustomerId(const Rest::Request &request, Http::ResponseWriter response)
     {
-    	response.send(Http::Code::Ok, "Tout est OK", Http::Mime::MediaType::fromString("text/plain"));
+        try
+        {
+            long id = request.param(":id").as<int>() ;
+            std::vector<std::shared_ptr<Account> > accounts = AccountAPI::getInstance()->findByCustomerId<Account>(id) ;
+            std::string json("[\n\t") ;
+            for(auto &account : accounts)
+            {
+                json += AccountConverter().entityToJson(account)+",\n";
+            }
+            json.pop_back() ;
+            json.pop_back() ;
+            json += "\t]\n";
+            response.send(Http::Code::Ok, json, MIME(Application, Json)) ;
+        }
+        catch(const NotFound &nf)
+        {
+            LOG_ERROR << nf.what() ;
+            response.send(Http::Code::Not_Found, nf.what(), MIME(Text, Plain)) ;
+        }
+        catch(const std::exception &e)
+        {
+            LOG_ERROR << e.what() ;
+            response.send(Http::Code::Not_Acceptable, e.what(), Http::Mime::MediaType::fromString("text/plain")) ;
+        }
     }
 
     void RequestHandler::getAccountByEmployeeId(const Rest::Request &request, Http::ResponseWriter response)
     {
-    	response.send(Http::Code::Ok, "Tout est OK", Http::Mime::MediaType::fromString("text/plain"));
+        try
+        {
+            long id = request.param(":id").as<int>() ;
+            std::vector<std::shared_ptr<Account> > accounts = AccountAPI::getInstance()->findByEmployeeId<Account>(id) ;
+            std::string json("[\n\t") ;
+            for(auto &account : accounts)
+            {
+                json += AccountConverter().entityToJson(account)+",\n";
+            }
+            json.pop_back() ;
+            json.pop_back() ;
+            json += "\t]\n";
+            response.send(Http::Code::Ok, json, MIME(Application, Json)) ;
+        }
+        catch(const NotFound &nf)
+        {
+            LOG_ERROR << nf.what() ;
+            response.send(Http::Code::Not_Found, nf.what(), MIME(Text, Plain)) ;
+        }
+        catch(const std::exception &e)
+        {
+            LOG_ERROR << e.what() ;
+            response.send(Http::Code::Not_Acceptable, e.what(), Http::Mime::MediaType::fromString("text/plain")) ;
+        }
     }
 
     void RequestHandler::getEmployeeById(const Rest::Request &request, Http::ResponseWriter response)
