@@ -1,0 +1,7 @@
+13-03-2018
+On Delete Bug [bug #0001].
+La suppression d'un employee n'entraine pas la suppression
+de ses comptes crées. Mais les-dits comptes sont introuvables
+pour l'ORM.
+Resolution possible
+1- Rendre les champs nullable pour les clés étrangères et l'indiquer à l'ORM
