@@ -12,16 +12,25 @@ std::vector<std::shared_ptr<T> > AccountAPI::findByCustomerId(long id)
   }
   try
   {
+    odb::session s ;
+
     DBConnection *connection = DBConnection::getInstance() ;
     connection->reset();
-    odb::query<T> t_query(odb::query<T>::id_customer == id) ;
+
+    odb::query<T> t_query(odb::query<T>::t_customer == id) ;
     odb::result<T> t_result(connection->getConnection()->query<T>(t_query)) ;
+
     std::vector<std::shared_ptr<T> > accounts ;
-    for(auto it(accounts.begin()); it != accounts.end(); it++)
+    if(!t_result.size())
+    {
+          throw NotFound("Recherche infructueuse !") ;
+    }
+    for(auto it(t_result.begin()); it != t_result.end(); it++)
     {
         accounts.push_back(it.load()) ;
     }
-      return  accounts ;
+    connection->commit() ;
+    return  accounts ;
   }
   catch(const odb::exception &e)
   {
@@ -39,15 +48,24 @@ std::vector<std::shared_ptr<T> > AccountAPI::findByEmployeeId(long id)
     }
     try
     {
+        odb::session s ;
+
         DBConnection *connection = DBConnection::getInstance() ;
         connection->reset();
-        odb::query<T> t_query(odb::query<T>::id_employee == id) ;
+
+        odb::query<T> t_query(odb::query<T>::t_employee == id) ;
         odb::result<T> t_result(connection->getConnection()->query<T>(t_query)) ;
+
         std::vector<std::shared_ptr<T> > accounts ;
-        for(auto it(accounts.begin()); it != accounts.end(); it++)
+        if(!t_result.size())
+        {
+            throw NotFound("Recherche infructueuse !") ;
+        }
+        for(auto it(t_result.begin()); it != t_result.end(); it++)
         {
             accounts.push_back(it.load()) ;
         }
+        connection->commit() ;
         return  accounts ;
     }
     catch(const odb::exception &e)

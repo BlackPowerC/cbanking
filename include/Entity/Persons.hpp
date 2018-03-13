@@ -139,6 +139,11 @@ public:
     	this->name = t_another.name ;
     	this->accounts = std::move(t_another.accounts) ;
     }
+
+    bool operator==(const Customer &t_another)
+    {
+        return this->id == t_another.id ;
+    }
 };
 
 /**

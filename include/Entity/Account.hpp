@@ -85,6 +85,11 @@ public:
     this->creationDate = t_another.creationDate;
     this->operations = std::move(t_another.operations);
   }
+
+  bool operator==(const Account &t_another)
+  {
+      return this->id == t_another.id ;
+  }
 };
 
 #pragma db object pointer(std::shared_ptr) session
