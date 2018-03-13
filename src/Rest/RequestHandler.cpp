@@ -39,7 +39,6 @@ namespace RestAPI
         }
         // Pas d'erreur on continue
         bool flag = true ;
-        std::string error ;
         std::string json ;
         std::shared_ptr<Account> account ;
         {
@@ -50,8 +49,6 @@ namespace RestAPI
             }catch(const NotFound &nf)
             {
                 flag = false ;
-                error = std::string(nf.what()) ;
-                LOG_ERROR << nf.what() ;
             }
         }
         // Il n'y a pas de compte courant avec cette ID, on essaie
@@ -112,7 +109,24 @@ namespace RestAPI
 
     void RequestHandler::getAllEmployees(const Rest::Request &request, Http::ResponseWriter response)
     {
-    	response.send(Http::Code::Ok, "Tout est OK", Http::Mime::MediaType::fromString("text/plain"));
+        try
+        {
+            std::vector<std::shared_ptr<Employee> > employees = PersonAPI::getInstance()->findAll<Employee>() ;
+            std::string json("[\n\t") ;
+            for(auto &employee : employees)
+            {
+                json += EmployeeConverter().entityToJson(employee)+",\n";
+            }
+            json.pop_back() ;
+            json.pop_back() ;
+            json += "\t]\n";
+            response.send(Http::Code::Ok, json, MIME(Application, Json)) ;
+        }
+        catch(const NotFound &nf)
+        {
+            LOG_ERROR << nf.what() ;
+            response.send(Http::Code::Not_Found, nf.what(), MIME(Text, Plain)) ;
+        }
     }
 
     void RequestHandler::getCustomerById(const Rest::Request &request, Http::ResponseWriter response)
@@ -139,7 +153,24 @@ namespace RestAPI
 
     void RequestHandler::getAllCustomers(const Rest::Request &request, Http::ResponseWriter response)
     {
-    	response.send(Http::Code::Ok, "Tout est OK", Http::Mime::MediaType::fromString("text/plain"));
+        try
+        {
+            std::vector<std::shared_ptr<Customer> > customers = PersonAPI::getInstance()->findAll<Customer>() ;
+            std::string json("[\n\t") ;
+            for(auto &customer : customers)
+            {
+                json += CustomerConverter().entityToJson(customer)+",\n";
+            }
+            json.pop_back() ;
+            json.pop_back() ;
+            json += "\t]\n";
+            response.send(Http::Code::Ok, json, MIME(Application, Json)) ;
+        }
+        catch(const NotFound &nf)
+        {
+            LOG_ERROR << nf.what() ;
+            response.send(Http::Code::Not_Found, nf.what(), MIME(Text, Plain)) ;
+        }
     }
 
     void RequestHandler::getCustomerByName(const Rest::Request &request, Http::ResponseWriter response)

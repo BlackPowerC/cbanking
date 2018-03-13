@@ -52,7 +52,7 @@ namespace RestAPI
         }
         rapidjson::Value &adr = doc["address"] ;
         rapidjson::Value &port = doc["port"] ;
-        LOG_INFO << "Serveur REST sur " << adr.GetString() <<":"<<port.GetInt() << "\n" ;
+        LOG_INFO << "Serveur REST sur " << adr.GetString() <<":"<<port.GetInt() << " !\n" ;
         return Address(adr.GetString(), port.GetInt()) ;
     }
 
