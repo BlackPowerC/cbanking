@@ -1,4 +1,4 @@
-SOURCE = Account.hpp Operation.hpp Persons.hpp
+SOURCE = ../../include/Entity/Account.hpp ../../include/Entity/Operation.hpp ../../include/Entity/Persons.hpp
 DBTYPE = --database mysql
 OPTIONS = --std c++11 --generate-schema --generate-query
 SQLFILE = Account.sql Operation.sql Persons.sql

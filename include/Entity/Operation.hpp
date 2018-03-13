@@ -110,7 +110,7 @@ public:
   Virement(const Virement &another) ;
   Virement(const Virement *another) ;
   /* getters setters */
-  Account getAccountDestination() ;
+  Account getAccountDestination() const;
   void setAccountDestination(Account &another) ;
   virtual void doOperation() ;
 

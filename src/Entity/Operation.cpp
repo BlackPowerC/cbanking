@@ -119,7 +119,7 @@ Virement::Virement(const Virement *another): BaseOperation()
     *this = *another ;
 }
 
-Account Virement::getAccountDestination()
+Account Virement::getAccountDestination() const
 {
     return *(this->t_destination) ;
 }

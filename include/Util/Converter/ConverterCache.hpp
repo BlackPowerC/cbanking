@@ -10,6 +10,19 @@
 
 namespace Util
 {
+    /**
+     * Enumération pour Convertisseur.
+     * Il s'agit d'énumération pour identifier les classes.
+     */
+    enum ConverterTypeID
+    {
+        ACCOUNT_CONVERTER,
+        PERSON_CONVERTER,
+        CUSTOMER_CONVERTER,
+        EMPLOYEE_CONVERTER,
+        CURRENT_ACCOUNT_CONVERTER,
+        SAVINGS_ACCOUNT_CONVERTER
+    };
   /**
     * \class ConverterCache
     * \brief Cette classe implémente le patron de conception
@@ -50,12 +63,15 @@ namespace Util
          *        d'un convertisseur.
          * @tparam ConverterType Ce type paramettré doit
          *         Correspondre à un des convertisseurs.
+         * \param type_id Identifiant de la classe convertisseur.
          * @return Un std::unique_ptr
          * @warning L'objet retourné ne doit pas être affecté à une variable.
          */
         template <typename ConverterType>
-        std::unique_ptr<ConverterType> getConverter() ;
+        std::unique_ptr<ConverterType> getConverter(const ConverterTypeID type_id) ;
     };
-
 }
+
+#include "ConverterCache.tpp"
+
 #endif //CONVERTERCACHE_HPP
