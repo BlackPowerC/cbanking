@@ -28,10 +28,10 @@ namespace RestAPI
         Rest::Routes::Get(this->t_router, "/customer/get/all",
                           Rest::Routes::bind(&RequestHandler::getAllCustomers, &this->t_rhandler)) ;
         // Un client avec un id
-        Rest::Routes::Get(this->t_router, "/customer/get/:id",
+        Rest::Routes::Get(this->t_router, "/customer/get/id/:value",
                           Rest::Routes::bind(&RequestHandler::getCustomerById, &this->t_rhandler)) ;
         // Un client avec un nom
-        Rest::Routes::Get(this->t_router, "/customer/get/:name",
+        Rest::Routes::Get(this->t_router, "/customer/get/name/:value",
                           Rest::Routes::bind(&RequestHandler::getCustomerByName, &this->t_rhandler)) ;
 
         /* Les requetes POST */
