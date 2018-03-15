@@ -180,7 +180,7 @@ namespace RestAPI
         /* Vérifions le paramettre */
         try
         {
-            long id = request.param(":id").as<int>() ;
+            long id = request.param(":value").as<int>() ;
             std::shared_ptr<Customer> person = PersonAPI::getInstance()->findById<Customer>(id) ;
             std::string json = CustomerConverter().entityToJson(person.get());
             response.send(Http::Code::Ok, json, MIME(Application, Json)) ;
@@ -221,7 +221,31 @@ namespace RestAPI
 
     void RequestHandler::getCustomerByName(const Rest::Request &request, Http::ResponseWriter response)
     {
-    	response.send(Http::Code::Ok, "Tout est OK", Http::Mime::MediaType::fromString("text/plain"));
+    	try
+        {
+            std::string name_pattern = request.param(":value").as<std::string>() ;
+            std::vector<std::shared_ptr<Customer> > customers = PersonAPI::getInstance()->findByName<Customer>(name_pattern) ;
+            CustomerConverter cc ;
+            std::string json("[\n\t") ;
+            for(auto &customer : customers)
+            {
+                json += cc.entityToJson(customer)+",\n";
+            }
+            json.pop_back() ;
+            json.pop_back() ;
+            json += "\t]\n";
+            response.send(Http::Code::Ok, json, MIME(Application, Json)) ;
+
+        }catch(const NotFound &nf)
+        {
+            LOG_ERROR << nf.what() ;
+            response.send(Http::Code::Not_Found, nf.what(), MIME(Text, Plain)) ;
+        }
+        catch(const std::exception &e)
+        {
+            LOG_ERROR << e.what() ;
+            response.send(Http::Code::Not_Acceptable, e.what(), MIME(Text, Plain)) ;
+        }
     }
 
     // Les routes DELETE

@@ -12,13 +12,15 @@
 
 // PLOG Journalisation
 #include <plog/Log.h>
-
+/*
+namespace Core
+{
+*/
 /**
  * \class DBConnection
  * \brief Cette classe repésente une connection
- *				à une base de données MYSQL.
+ *		  à une base de données MYSQL.
  */
-
 class DBConnection
 {
 private:
@@ -61,4 +63,5 @@ public:
   void reset() ;
 };
 
+//}
 #endif // DBCONNECTION_HPP_INCLUDED

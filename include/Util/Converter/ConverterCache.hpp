@@ -14,7 +14,8 @@ namespace Util
      * Enumération pour Convertisseur.
      * Il s'agit d'énumération pour identifier les classes.
      */
-    enum ConverterTypeID
+    enum
+    class ConverterTypeID
     {
         ACCOUNT_CONVERTER,
         PERSON_CONVERTER,
