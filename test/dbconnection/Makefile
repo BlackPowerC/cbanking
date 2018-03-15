@@ -48,10 +48,10 @@ RM = /usr/local/clion-2017.3.3/bin/cmake/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/jordy/Documents/2017-2018/JBanking
+CMAKE_SOURCE_DIR = /home/jordy/Documents/2017-2018/cbanking.git
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/jordy/Documents/2017-2018/JBanking
+CMAKE_BINARY_DIR = /home/jordy/Documents/2017-2018/cbanking.git
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -80,14 +80,14 @@ edit_cache/fast: edit_cache
 
 # The main all target
 all: cmake_check_build_system
-	cd /home/jordy/Documents/2017-2018/JBanking && $(CMAKE_COMMAND) -E cmake_progress_start /home/jordy/Documents/2017-2018/JBanking/CMakeFiles /home/jordy/Documents/2017-2018/JBanking/test/dbconnection/CMakeFiles/progress.marks
-	cd /home/jordy/Documents/2017-2018/JBanking && $(MAKE) -f CMakeFiles/Makefile2 test/dbconnection/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/jordy/Documents/2017-2018/JBanking/CMakeFiles 0
+	cd /home/jordy/Documents/2017-2018/cbanking.git && $(CMAKE_COMMAND) -E cmake_progress_start /home/jordy/Documents/2017-2018/cbanking.git/CMakeFiles /home/jordy/Documents/2017-2018/cbanking.git/test/dbconnection/CMakeFiles/progress.marks
+	cd /home/jordy/Documents/2017-2018/cbanking.git && $(MAKE) -f CMakeFiles/Makefile2 test/dbconnection/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/jordy/Documents/2017-2018/cbanking.git/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
 clean:
-	cd /home/jordy/Documents/2017-2018/JBanking && $(MAKE) -f CMakeFiles/Makefile2 test/dbconnection/clean
+	cd /home/jordy/Documents/2017-2018/cbanking.git && $(MAKE) -f CMakeFiles/Makefile2 test/dbconnection/clean
 .PHONY : clean
 
 # The main clean target
@@ -97,22 +97,22 @@ clean/fast: clean
 
 # Prepare targets for installation.
 preinstall: all
-	cd /home/jordy/Documents/2017-2018/JBanking && $(MAKE) -f CMakeFiles/Makefile2 test/dbconnection/preinstall
+	cd /home/jordy/Documents/2017-2018/cbanking.git && $(MAKE) -f CMakeFiles/Makefile2 test/dbconnection/preinstall
 .PHONY : preinstall
 
 # Prepare targets for installation.
 preinstall/fast:
-	cd /home/jordy/Documents/2017-2018/JBanking && $(MAKE) -f CMakeFiles/Makefile2 test/dbconnection/preinstall
+	cd /home/jordy/Documents/2017-2018/cbanking.git && $(MAKE) -f CMakeFiles/Makefile2 test/dbconnection/preinstall
 .PHONY : preinstall/fast
 
 # clear depends
 depend:
-	cd /home/jordy/Documents/2017-2018/JBanking && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
+	cd /home/jordy/Documents/2017-2018/cbanking.git && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
 .PHONY : depend
 
 # Convenience name for target.
 test/dbconnection/CMakeFiles/test_dbconnection.dir/rule:
-	cd /home/jordy/Documents/2017-2018/JBanking && $(MAKE) -f CMakeFiles/Makefile2 test/dbconnection/CMakeFiles/test_dbconnection.dir/rule
+	cd /home/jordy/Documents/2017-2018/cbanking.git && $(MAKE) -f CMakeFiles/Makefile2 test/dbconnection/CMakeFiles/test_dbconnection.dir/rule
 .PHONY : test/dbconnection/CMakeFiles/test_dbconnection.dir/rule
 
 # Convenience name for target.
@@ -122,7 +122,7 @@ test_dbconnection: test/dbconnection/CMakeFiles/test_dbconnection.dir/rule
 
 # fast build rule for target.
 test_dbconnection/fast:
-	cd /home/jordy/Documents/2017-2018/JBanking && $(MAKE) -f test/dbconnection/CMakeFiles/test_dbconnection.dir/build.make test/dbconnection/CMakeFiles/test_dbconnection.dir/build
+	cd /home/jordy/Documents/2017-2018/cbanking.git && $(MAKE) -f test/dbconnection/CMakeFiles/test_dbconnection.dir/build.make test/dbconnection/CMakeFiles/test_dbconnection.dir/build
 .PHONY : test_dbconnection/fast
 
 __/__/src/Core/DBConnection.o: __/__/src/Core/DBConnection.cpp.o
@@ -131,7 +131,7 @@ __/__/src/Core/DBConnection.o: __/__/src/Core/DBConnection.cpp.o
 
 # target to build an object file
 __/__/src/Core/DBConnection.cpp.o:
-	cd /home/jordy/Documents/2017-2018/JBanking && $(MAKE) -f test/dbconnection/CMakeFiles/test_dbconnection.dir/build.make test/dbconnection/CMakeFiles/test_dbconnection.dir/__/__/src/Core/DBConnection.cpp.o
+	cd /home/jordy/Documents/2017-2018/cbanking.git && $(MAKE) -f test/dbconnection/CMakeFiles/test_dbconnection.dir/build.make test/dbconnection/CMakeFiles/test_dbconnection.dir/__/__/src/Core/DBConnection.cpp.o
 .PHONY : __/__/src/Core/DBConnection.cpp.o
 
 __/__/src/Core/DBConnection.i: __/__/src/Core/DBConnection.cpp.i
@@ -140,7 +140,7 @@ __/__/src/Core/DBConnection.i: __/__/src/Core/DBConnection.cpp.i
 
 # target to preprocess a source file
 __/__/src/Core/DBConnection.cpp.i:
-	cd /home/jordy/Documents/2017-2018/JBanking && $(MAKE) -f test/dbconnection/CMakeFiles/test_dbconnection.dir/build.make test/dbconnection/CMakeFiles/test_dbconnection.dir/__/__/src/Core/DBConnection.cpp.i
+	cd /home/jordy/Documents/2017-2018/cbanking.git && $(MAKE) -f test/dbconnection/CMakeFiles/test_dbconnection.dir/build.make test/dbconnection/CMakeFiles/test_dbconnection.dir/__/__/src/Core/DBConnection.cpp.i
 .PHONY : __/__/src/Core/DBConnection.cpp.i
 
 __/__/src/Core/DBConnection.s: __/__/src/Core/DBConnection.cpp.s
@@ -149,7 +149,7 @@ __/__/src/Core/DBConnection.s: __/__/src/Core/DBConnection.cpp.s
 
 # target to generate assembly for a file
 __/__/src/Core/DBConnection.cpp.s:
-	cd /home/jordy/Documents/2017-2018/JBanking && $(MAKE) -f test/dbconnection/CMakeFiles/test_dbconnection.dir/build.make test/dbconnection/CMakeFiles/test_dbconnection.dir/__/__/src/Core/DBConnection.cpp.s
+	cd /home/jordy/Documents/2017-2018/cbanking.git && $(MAKE) -f test/dbconnection/CMakeFiles/test_dbconnection.dir/build.make test/dbconnection/CMakeFiles/test_dbconnection.dir/__/__/src/Core/DBConnection.cpp.s
 .PHONY : __/__/src/Core/DBConnection.cpp.s
 
 test_dbconnection.o: test_dbconnection.cpp.o
@@ -158,7 +158,7 @@ test_dbconnection.o: test_dbconnection.cpp.o
 
 # target to build an object file
 test_dbconnection.cpp.o:
-	cd /home/jordy/Documents/2017-2018/JBanking && $(MAKE) -f test/dbconnection/CMakeFiles/test_dbconnection.dir/build.make test/dbconnection/CMakeFiles/test_dbconnection.dir/test_dbconnection.cpp.o
+	cd /home/jordy/Documents/2017-2018/cbanking.git && $(MAKE) -f test/dbconnection/CMakeFiles/test_dbconnection.dir/build.make test/dbconnection/CMakeFiles/test_dbconnection.dir/test_dbconnection.cpp.o
 .PHONY : test_dbconnection.cpp.o
 
 test_dbconnection.i: test_dbconnection.cpp.i
@@ -167,7 +167,7 @@ test_dbconnection.i: test_dbconnection.cpp.i
 
 # target to preprocess a source file
 test_dbconnection.cpp.i:
-	cd /home/jordy/Documents/2017-2018/JBanking && $(MAKE) -f test/dbconnection/CMakeFiles/test_dbconnection.dir/build.make test/dbconnection/CMakeFiles/test_dbconnection.dir/test_dbconnection.cpp.i
+	cd /home/jordy/Documents/2017-2018/cbanking.git && $(MAKE) -f test/dbconnection/CMakeFiles/test_dbconnection.dir/build.make test/dbconnection/CMakeFiles/test_dbconnection.dir/test_dbconnection.cpp.i
 .PHONY : test_dbconnection.cpp.i
 
 test_dbconnection.s: test_dbconnection.cpp.s
@@ -176,7 +176,7 @@ test_dbconnection.s: test_dbconnection.cpp.s
 
 # target to generate assembly for a file
 test_dbconnection.cpp.s:
-	cd /home/jordy/Documents/2017-2018/JBanking && $(MAKE) -f test/dbconnection/CMakeFiles/test_dbconnection.dir/build.make test/dbconnection/CMakeFiles/test_dbconnection.dir/test_dbconnection.cpp.s
+	cd /home/jordy/Documents/2017-2018/cbanking.git && $(MAKE) -f test/dbconnection/CMakeFiles/test_dbconnection.dir/build.make test/dbconnection/CMakeFiles/test_dbconnection.dir/test_dbconnection.cpp.s
 .PHONY : test_dbconnection.cpp.s
 
 # Help Target
@@ -205,6 +205,6 @@ help:
 # No rule that depends on this can have commands that come from listfiles
 # because they might be regenerated.
 cmake_check_build_system:
-	cd /home/jordy/Documents/2017-2018/JBanking && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
+	cd /home/jordy/Documents/2017-2018/cbanking.git && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
 .PHONY : cmake_check_build_system
 

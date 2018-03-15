@@ -265,4 +265,46 @@ std::string Group::getName() const
     return this->name ;
 }
 
+// Token
+    Token::Token() {}
+
+    Token::Token(const Token *p_another)
+    {
+        *this = *p_another ;
+    }
+
+    Token::Token(const Token &t_another)
+    {
+        *this = p_another ;
+    }
+
+    int Token::getId() const
+    {
+        return this->id ;
+    }
+
+    void Token::setId(int id)
+    {
+        this->id = id ;
+    }
+
+    const std::shared_ptr<Person> &Token::getPerson() const
+    {
+        return this->t_person ;
+    }
+
+    void Token::setPerson(const std::shared_ptr<Person> &t_person)
+    {
+        this->t_person = std::move(t_person) ;
+    }
+
+    std::string Token::getToken() const
+    {
+        return this->token;
+    }
+
+    void Token::setToken(const std::string &token)
+    {
+        this->token = token ;
+    }
 }

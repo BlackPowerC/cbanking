@@ -351,5 +351,71 @@ public:
     }
 };
 
+/**
+ * \class Cette classe représente un jeu de jetton
+ *        associant une personne (Person) à un token.
+ */
+#pragma db object polymorphic pointer(std::shared_ptr) session
+class Token
+{
+private:
+    friend class odb::access ;
+    #pragma db id auto not_null
+    int id ;
+    #pragma db value_null type("INT") column("id_person")
+    std::shared_ptr<Person> t_person ;
+    std::string token ; /*!< Jetton unique */
+public:
+    Token() ;
+    Token(const Token *p_another) ;
+    Token(const Token &t_another) ;
+    /* getters setters */
+    int getId() const ;
+
+    void setId(int id) ;
+
+    const std::shared_ptr<Person> &getPerson() const ;
+
+    void setPerson(const std::shared_ptr<Person> &t_person) ;
+
+    std::string getToken() const ;
+
+    void setToken(const std::string &token) ;
+
+    virtual void doNothing() = 0 ;
+}
+
+/**
+ * \class Session
+ * \brief Cette classe représente une session d'utilisateur.
+ *        Un client ou un employée inscrit en possède.
+ */
+#pragma db object pointer(std::shared_ptr) session
+class Session: public Token
+{
+private:
+    friend class odb::access ;
+    std::string begin_ ;
+    std::string end_ ;
+public:
+    // Les constructeurs
+    Session() ;
+    Session(const UserAccount *p_another) ;
+    Session(const UserAccount &t_another) ;
+
+    // Getters et setters
+    std::string getBegin() const ;
+
+    void setBegin(std::string begin_) ;
+
+    std::string getEnd() const ;
+
+    void setEnd_(const std::string &end) ;
+
+    bool operator==(const UserAccount &rhs) const;
+}
+
+};
+
 }
 #endif // PERSON_DEF
