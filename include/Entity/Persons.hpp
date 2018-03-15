@@ -358,7 +358,7 @@ public:
 #pragma db object polymorphic pointer(std::shared_ptr) session
 class Token
 {
-private:
+protected:
     friend class odb::access ;
     #pragma db id auto not_null
     int id ;
@@ -369,6 +369,8 @@ public:
     Token() ;
     Token(const Token *p_another) ;
     Token(const Token &t_another) ;
+    // desctruteur virtuel
+    virtual ~Token() ;
     /* getters setters */
     int getId() const ;
 
@@ -383,7 +385,7 @@ public:
     void setToken(const std::string &token) ;
 
     virtual void doNothing() = 0 ;
-}
+};
 
 /**
  * \class Session
@@ -395,26 +397,69 @@ class Session: public Token
 {
 private:
     friend class odb::access ;
-    std::string begin_ ;
-    std::string end_ ;
+
+    #pragma db value_not_null column("begin")
+    ulong begin_ ; /*<! Date de création de la session sous forme de timestamp*/
+    #pragma db value_not_null column("end")
+    ulong end_ ; /*<! Fin de validité de la session sous form de timestamp*/
 public:
     // Les constructeurs
     Session() ;
-    Session(const UserAccount *p_another) ;
-    Session(const UserAccount &t_another) ;
+    Session(const Session *p_another) ;
+    Session(const Session &t_another) ;
 
     // Getters et setters
-    std::string getBegin() const ;
+    ulong getBegin() const ;
 
-    void setBegin(std::string begin_) ;
+    void setBegin(ulong begin_) ;
 
-    std::string getEnd() const ;
+    ulong getEnd() const ;
 
-    void setEnd_(const std::string &end) ;
+    void setEnd(const ulong end) ;
 
-    bool operator==(const UserAccount &rhs) const;
-}
+    bool operator==(const Session &rhs) const
+    {
+        return this->id == rhs.id;
+    }
 
+    void operator=(const Session &rhs)
+    {
+        this->id = rhs.id ;
+        this->t_person = std::move(rhs.t_person) ;
+        this->token = rhs.token ;
+        this->begin_ = rhs.begin_ ;
+        this->end_ = rhs.end_ ;
+    }
+
+    virtual void doNothing() {}
+};
+
+/**
+ * Cette classe représente une demande de réactivation de session
+ */
+#pragma db object pointer(std::shared_ptr) session
+class ReloadSession: public Token
+{
+private:
+    friend class odb::access ;
+    #pragma db value_not_null
+    bool reloaded ; /*<! la session est-elle rechargée */
+public:
+    ReloadSession(bool reloaded=false) ;
+
+     bool operator==(const ReloadSession &t_another)
+    {
+        return this->id == t_another.id ;
+    }
+    void operator=(const ReloadSession &rhs)
+    {
+        this->id = rhs.id ;
+        this->t_person = std::move(rhs.t_person) ;
+        this->token = rhs.token ;
+        this->reloaded = rhs.reloaded ;
+    }
+
+    virtual void doNothing() {}
 };
 
 }

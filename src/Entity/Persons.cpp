@@ -268,6 +268,8 @@ std::string Group::getName() const
 // Token
     Token::Token() {}
 
+    Token::~Token() {}
+
     Token::Token(const Token *p_another)
     {
         *this = *p_another ;
@@ -275,7 +277,7 @@ std::string Group::getName() const
 
     Token::Token(const Token &t_another)
     {
-        *this = p_another ;
+        *this = t_another ;
     }
 
     int Token::getId() const
@@ -306,5 +308,49 @@ std::string Group::getName() const
     void Token::setToken(const std::string &token)
     {
         this->token = token ;
+    }
+
+    // Session
+    Session::Session()
+    {
+
+    }
+
+    Session::Session(const Session *p_another) : Token(p_another)
+    {
+        this->begin_ = p_another->begin_ ;
+        this->end_ = p_another->end_ ;
+    }
+
+    Session::Session(const Session &t_another) : Token(t_another)
+    {
+        this->begin_ = t_another.begin_ ;
+        this->end_ = t_another.end_ ;
+    }
+
+    ulong Session::getBegin() const
+    {
+        return this->begin_;
+    }
+
+    void Session::setBegin(ulong begin_)
+    {
+        this->begin_ = begin_ ;
+    }
+
+    ulong Session::getEnd() const
+    {
+        return this->end_ ;
+    }
+
+    void Session::setEnd(const ulong end)
+    {
+        this->end_ = end_ ;
+    }
+
+    // ReloadSession
+    ReloadSession::ReloadSession(bool reloaded) : reloaded(reloaded)
+    {
+
     }
 }
