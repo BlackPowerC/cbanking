@@ -24,6 +24,7 @@ protected:
   #pragma db not_null column("id_employee")
   std::shared_ptr<Employee> t_employee ;
   double balance ;
+#pragma db type("VARCHAR(512)")
   std::string creationDate ;
   #pragma db value_null inverse(t_source) column("id_operation")
   std::vector<std::shared_ptr<BaseOperation> > operations ;

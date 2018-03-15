@@ -2,6 +2,12 @@
  * compiler for C++.
  */
 
+DROP TABLE IF EXISTS `ReloadSession`;
+
+DROP TABLE IF EXISTS `Session`;
+
+DROP TABLE IF EXISTS `Token`;
+
 DROP TABLE IF EXISTS `Group_members`;
 
 DROP TABLE IF EXISTS `Group`;
@@ -17,8 +23,13 @@ DROP TABLE IF EXISTS `Person`;
 CREATE TABLE `Person` (
   `id` BIGINT NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `typeid` VARCHAR(255) NOT NULL,
-  `name` TEXT NOT NULL)
+  `name` VARCHAR(512) NOT NULL,
+  `email` VARCHAR(512) NOT NULL,
+  `passwd` VARCHAR(2048) NOT NULL)
  ENGINE=InnoDB;
+
+CREATE UNIQUE INDEX `email_i`
+  ON `Person` (`email`);
 
 CREATE TABLE `Customer` (
   `id` BIGINT NOT NULL PRIMARY KEY,
@@ -59,7 +70,7 @@ CREATE INDEX `index_i`
 
 CREATE TABLE `Group` (
   `id` BIGINT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-  `name` TEXT NOT NULL)
+  `name` VARCHAR(512) NOT NULL)
  ENGINE=InnoDB;
 
 CREATE TABLE `Group_members` (
@@ -78,4 +89,38 @@ CREATE TABLE `Group_members` (
 
 CREATE INDEX `object_id_i`
   ON `Group_members` (`object_id`);
+
+CREATE TABLE `Token` (
+  `id` INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  `typeid` VARCHAR(255) NOT NULL,
+  `id_person` INT NULL,
+  `token` VARCHAR(1024) NOT NULL
+  /*
+  CONSTRAINT `Token_id_person_fk`
+    FOREIGN KEY (`id_person`)
+    REFERENCES `Person` (`id`)
+  */)
+ ENGINE=InnoDB;
+
+CREATE UNIQUE INDEX `token_i`
+  ON `Token` (`token`);
+
+CREATE TABLE `Session` (
+  `id` INT NOT NULL PRIMARY KEY,
+  `begin` BIGINT UNSIGNED NOT NULL,
+  `end` BIGINT UNSIGNED NOT NULL,
+  CONSTRAINT `Session_id_fk`
+    FOREIGN KEY (`id`)
+    REFERENCES `Token` (`id`)
+    ON DELETE CASCADE)
+ ENGINE=InnoDB;
+
+CREATE TABLE `ReloadSession` (
+  `id` INT NOT NULL PRIMARY KEY,
+  `reloaded` TINYINT(1) NOT NULL,
+  CONSTRAINT `ReloadSession_id_fk`
+    FOREIGN KEY (`id`)
+    REFERENCES `Token` (`id`)
+    ON DELETE CASCADE)
+ ENGINE=InnoDB;
 

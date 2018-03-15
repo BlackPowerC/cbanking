@@ -44,9 +44,9 @@ protected:
 
 		#pragma db id auto not_null
     long id ;
-    #pragma db type("VARCHAR(1024)")
+#pragma db type("VARCHAR(512)")
     std::string name ;
-#pragma db type("VARCHAR(1024)")
+#pragma db type("VARCHAR(512)") unique
     std::string email ;
 #pragma db type("VARCHAR(2048)")
     std::string passwd ;
@@ -325,6 +325,7 @@ private:
 	friend class odb::access ;
 	#pragma db id auto not_null
     long id ;
+    #pragma db type("VARCHAR(512)")
     std::string name ;
     #pragma db value_null column("id_group") unordered
     std::vector<std::shared_ptr<Employee> > members ;
@@ -395,6 +396,7 @@ protected:
     int id ;
     #pragma db value_null type("INT") column("id_person")
     std::shared_ptr<Person> t_person ;
+    #pragma db value_not_null type("VARCHAR(2048)") unique
     std::string token ; /*!< Jetton unique */
 public:
     Token() ;

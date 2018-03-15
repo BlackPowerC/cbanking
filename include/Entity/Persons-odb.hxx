@@ -245,6 +245,165 @@ namespace odb
     static void
     callback (database&, const object_type&, callback_event);
   };
+
+  // Token
+  //
+  template <>
+  struct class_traits< ::Entity::Token >
+  {
+    static const class_kind kind = class_object;
+  };
+
+  template <>
+  class access::object_traits< ::Entity::Token >
+  {
+    public:
+    typedef ::Entity::Token object_type;
+    typedef ::std::shared_ptr< ::Entity::Token > pointer_type;
+    typedef odb::pointer_traits<pointer_type> pointer_traits;
+
+    static const bool polymorphic = true;
+
+    typedef ::Entity::Token root_type;
+    typedef ::std::string discriminator_type;
+    typedef polymorphic_map<object_type> map_type;
+    typedef polymorphic_concrete_info<object_type> info_type;
+
+    static const std::size_t depth = 1UL;
+
+    typedef int id_type;
+
+    static const bool auto_id = true;
+
+    static const bool abstract = false;
+
+    static id_type
+    id (const object_type&);
+
+    typedef
+    odb::pointer_cache_traits<
+      pointer_type,
+      odb::session >
+    pointer_cache_traits;
+
+    typedef
+    odb::reference_cache_traits<
+      object_type,
+      odb::session >
+    reference_cache_traits;
+
+    static void
+    callback (database&, object_type&, callback_event);
+
+    static void
+    callback (database&, const object_type&, callback_event);
+  };
+
+  // Session
+  //
+  template <>
+  struct class_traits< ::Entity::Session >
+  {
+    static const class_kind kind = class_object;
+  };
+
+  template <>
+  class access::object_traits< ::Entity::Session >
+  {
+    public:
+    typedef ::Entity::Session object_type;
+    typedef ::std::shared_ptr< ::Entity::Session > pointer_type;
+    typedef odb::pointer_traits<pointer_type> pointer_traits;
+
+    static const bool polymorphic = true;
+
+    typedef ::Entity::Token root_type;
+    typedef ::Entity::Token base_type;
+    typedef object_traits<root_type>::discriminator_type discriminator_type;
+    typedef polymorphic_concrete_info<root_type> info_type;
+
+    static const std::size_t depth = 2UL;
+
+    typedef object_traits< ::Entity::Token >::id_type id_type;
+
+    static const bool auto_id = false;
+
+    static const bool abstract = false;
+
+    static id_type
+    id (const object_type&);
+
+    typedef
+    odb::pointer_cache_traits<
+      object_traits<root_type>::pointer_type,
+      odb::session >
+    pointer_cache_traits;
+
+    typedef
+    odb::reference_cache_traits<
+      root_type,
+      odb::session >
+    reference_cache_traits;
+
+    static void
+    callback (database&, object_type&, callback_event);
+
+    static void
+    callback (database&, const object_type&, callback_event);
+  };
+
+  // ReloadSession
+  //
+  template <>
+  struct class_traits< ::Entity::ReloadSession >
+  {
+    static const class_kind kind = class_object;
+  };
+
+  template <>
+  class access::object_traits< ::Entity::ReloadSession >
+  {
+    public:
+    typedef ::Entity::ReloadSession object_type;
+    typedef ::std::shared_ptr< ::Entity::ReloadSession > pointer_type;
+    typedef odb::pointer_traits<pointer_type> pointer_traits;
+
+    static const bool polymorphic = true;
+
+    typedef ::Entity::Token root_type;
+    typedef ::Entity::Token base_type;
+    typedef object_traits<root_type>::discriminator_type discriminator_type;
+    typedef polymorphic_concrete_info<root_type> info_type;
+
+    static const std::size_t depth = 2UL;
+
+    typedef object_traits< ::Entity::Token >::id_type id_type;
+
+    static const bool auto_id = false;
+
+    static const bool abstract = false;
+
+    static id_type
+    id (const object_type&);
+
+    typedef
+    odb::pointer_cache_traits<
+      object_traits<root_type>::pointer_type,
+      odb::session >
+    pointer_cache_traits;
+
+    typedef
+    odb::reference_cache_traits<
+      root_type,
+      odb::session >
+    reference_cache_traits;
+
+    static void
+    callback (database&, object_type&, callback_event);
+
+    static void
+    callback (database&, const object_type&, callback_event);
+  };
 }
 
 #include <odb/details/buffer.hxx>
@@ -297,6 +456,30 @@ namespace odb
     name_type_;
 
     static const name_type_ name;
+
+    // email
+    //
+    typedef
+    mysql::query_column<
+      mysql::value_traits<
+        ::std::string,
+        mysql::id_string >::query_type,
+      mysql::id_string >
+    email_type_;
+
+    static const email_type_ email;
+
+    // passwd
+    //
+    typedef
+    mysql::query_column<
+      mysql::value_traits<
+        ::std::string,
+        mysql::id_string >::query_type,
+      mysql::id_string >
+    passwd_type_;
+
+    static const passwd_type_ passwd;
   };
 
   template <typename A>
@@ -313,6 +496,16 @@ namespace odb
   const typename query_columns< ::Entity::Person, id_mysql, A >::name_type_
   query_columns< ::Entity::Person, id_mysql, A >::
   name (A::table_name, "`name`", 0);
+
+  template <typename A>
+  const typename query_columns< ::Entity::Person, id_mysql, A >::email_type_
+  query_columns< ::Entity::Person, id_mysql, A >::
+  email (A::table_name, "`email`", 0);
+
+  template <typename A>
+  const typename query_columns< ::Entity::Person, id_mysql, A >::passwd_type_
+  query_columns< ::Entity::Person, id_mysql, A >::
+  passwd (A::table_name, "`passwd`", 0);
 
   template <typename A>
   struct pointer_query_columns< ::Entity::Person, id_mysql, A >:
@@ -367,6 +560,18 @@ namespace odb
       unsigned long name_size;
       my_bool name_null;
 
+      // email
+      //
+      details::buffer email_value;
+      unsigned long email_size;
+      my_bool email_null;
+
+      // passwd
+      //
+      details::buffer passwd_value;
+      unsigned long passwd_size;
+      my_bool passwd_null;
+
       std::size_t version;
     };
 
@@ -416,7 +621,7 @@ namespace odb
 
     typedef mysql::query_base query_base_type;
 
-    static const std::size_t column_count = 3UL;
+    static const std::size_t column_count = 5UL;
     static const std::size_t id_column_count = 1UL;
     static const std::size_t inverse_column_count = 0UL;
     static const std::size_t readonly_column_count = 1UL;
@@ -1428,6 +1633,664 @@ namespace odb
   {
   };
 
+  // Token
+  //
+  template <typename A>
+  struct pointer_query_columns< ::Entity::Token, id_mysql, A >
+  {
+    // id
+    //
+    typedef
+    mysql::query_column<
+      mysql::value_traits<
+        int,
+        mysql::id_long >::query_type,
+      mysql::id_long >
+    id_type_;
+
+    static const id_type_ id;
+
+    // typeid_
+    //
+    typedef
+    mysql::query_column<
+      mysql::value_traits<
+        ::std::string,
+        mysql::id_string >::query_type,
+      mysql::id_string >
+    typeid__type_;
+
+    static const typeid__type_ typeid_;
+
+    // t_person
+    //
+    typedef
+    mysql::query_column<
+      mysql::value_traits<
+        long int,
+        mysql::id_long >::query_type,
+      mysql::id_long >
+    t_person_type_;
+
+    static const t_person_type_ t_person;
+
+    // token
+    //
+    typedef
+    mysql::query_column<
+      mysql::value_traits<
+        ::std::string,
+        mysql::id_string >::query_type,
+      mysql::id_string >
+    token_type_;
+
+    static const token_type_ token;
+  };
+
+  template <typename A>
+  const typename pointer_query_columns< ::Entity::Token, id_mysql, A >::id_type_
+  pointer_query_columns< ::Entity::Token, id_mysql, A >::
+  id (A::table_name, "`id`", 0);
+
+  template <typename A>
+  const typename pointer_query_columns< ::Entity::Token, id_mysql, A >::typeid__type_
+  pointer_query_columns< ::Entity::Token, id_mysql, A >::
+  typeid_ (A::table_name, "`typeid`", 0);
+
+  template <typename A>
+  const typename pointer_query_columns< ::Entity::Token, id_mysql, A >::t_person_type_
+  pointer_query_columns< ::Entity::Token, id_mysql, A >::
+  t_person (A::table_name, "`id_person`", 0);
+
+  template <typename A>
+  const typename pointer_query_columns< ::Entity::Token, id_mysql, A >::token_type_
+  pointer_query_columns< ::Entity::Token, id_mysql, A >::
+  token (A::table_name, "`token`", 0);
+
+  template <>
+  class access::object_traits_impl< ::Entity::Token, id_mysql >:
+    public access::object_traits< ::Entity::Token >
+  {
+    public:
+    typedef polymorphic_entry<object_type, id_mysql> entry_type;
+    typedef object_traits_impl<root_type, id_mysql> root_traits;
+
+    struct discriminator_image_type
+    {
+      details::buffer discriminator_value;
+      unsigned long discriminator_size;
+      my_bool discriminator_null;
+
+      std::size_t version;
+    };
+
+    struct id_image_type
+    {
+      int id_value;
+      my_bool id_null;
+
+      std::size_t version;
+    };
+
+    static map_type* map;
+    static const info_type info;
+
+    struct image_type
+    {
+      // id
+      //
+      int id_value;
+      my_bool id_null;
+
+      // typeid_
+      //
+      details::buffer typeid_value;
+      unsigned long typeid_size;
+      my_bool typeid_null;
+
+      // t_person
+      //
+      int t_person_value;
+      my_bool t_person_null;
+
+      // token
+      //
+      details::buffer token_value;
+      unsigned long token_size;
+      my_bool token_null;
+
+      std::size_t version;
+    };
+
+    struct extra_statement_cache_type;
+
+    struct t_person_tag;
+
+    using object_traits<object_type>::id;
+
+    static id_type
+    id (const id_image_type&);
+
+    static id_type
+    id (const image_type&);
+
+    static discriminator_type
+    discriminator (const image_type&);
+
+    static bool
+    grow (image_type&,
+          my_bool*);
+
+    static void
+    bind (MYSQL_BIND*,
+          image_type&,
+          mysql::statement_kind);
+
+    static void
+    bind (MYSQL_BIND*, id_image_type&);
+
+    static bool
+    init (image_type&,
+          const object_type&,
+          mysql::statement_kind);
+
+    static void
+    init (object_type&,
+          const image_type&,
+          database*);
+
+    static void
+    init (id_image_type&, const id_type&);
+
+    typedef
+    mysql::polymorphic_root_object_statements<object_type>
+    statements_type;
+
+    typedef statements_type root_statements_type;
+
+    typedef mysql::query_base query_base_type;
+
+    static const std::size_t column_count = 4UL;
+    static const std::size_t id_column_count = 1UL;
+    static const std::size_t inverse_column_count = 0UL;
+    static const std::size_t readonly_column_count = 1UL;
+    static const std::size_t managed_optimistic_column_count = 0UL;
+    static const std::size_t discriminator_column_count = 1UL;
+
+    static const std::size_t separate_load_column_count = 0UL;
+    static const std::size_t separate_update_column_count = 0UL;
+
+    static const bool versioned = false;
+
+    static const char persist_statement[];
+    static const char find_statement[];
+    static const char find_discriminator_statement[];
+    static const char update_statement[];
+    static const char erase_statement[];
+    static const char query_statement[];
+    static const char erase_query_statement[];
+
+    static const char table_name[];
+
+    static void
+    persist (database&, object_type&, bool top = true, bool dyn = true);
+
+    static pointer_type
+    find (database&, const id_type&);
+
+    static bool
+    find (database&, const id_type&, object_type&, bool dyn = true);
+
+    static bool
+    reload (database&, object_type&, bool dyn = true);
+
+    static void
+    update (database&, const object_type&, bool top = true, bool dyn = true);
+
+    static void
+    erase (database&, const id_type&, bool top = true, bool dyn = true);
+
+    static void
+    erase (database&, const object_type&, bool top = true, bool dyn = true);
+
+    static result<object_type>
+    query (database&, const query_base_type&);
+
+    static unsigned long long
+    erase_query (database&, const query_base_type&);
+
+    public:
+    static bool
+    find_ (statements_type&,
+           const id_type*);
+
+    static void
+    load_ (statements_type&,
+           object_type&,
+           bool reload);
+
+    static void
+    discriminator_ (statements_type&,
+                    const id_type&,
+                    discriminator_type*);
+  };
+
+  template <>
+  class access::object_traits_impl< ::Entity::Token, id_common >:
+    public access::object_traits_impl< ::Entity::Token, id_mysql >
+  {
+  };
+
+  // Session
+  //
+  template <typename A>
+  struct pointer_query_columns< ::Entity::Session, id_mysql, A >:
+    pointer_query_columns< ::Entity::Token, id_mysql, typename A::base_traits >
+  {
+    // Token
+    //
+    typedef pointer_query_columns< ::Entity::Token, id_mysql, typename A::base_traits > Token;
+
+    // id
+    //
+    typedef
+    mysql::query_column<
+      mysql::value_traits<
+        int,
+        mysql::id_long >::query_type,
+      mysql::id_long >
+    id_type_;
+
+    static const id_type_ id;
+
+    // begin
+    //
+    typedef
+    mysql::query_column<
+      mysql::value_traits<
+        ::ulong,
+        mysql::id_ulonglong >::query_type,
+      mysql::id_ulonglong >
+    begin_type_;
+
+    static const begin_type_ begin;
+
+    // end
+    //
+    typedef
+    mysql::query_column<
+      mysql::value_traits<
+        ::ulong,
+        mysql::id_ulonglong >::query_type,
+      mysql::id_ulonglong >
+    end_type_;
+
+    static const end_type_ end;
+  };
+
+  template <typename A>
+  const typename pointer_query_columns< ::Entity::Session, id_mysql, A >::id_type_
+  pointer_query_columns< ::Entity::Session, id_mysql, A >::
+  id (A::table_name, "`id`", 0);
+
+  template <typename A>
+  const typename pointer_query_columns< ::Entity::Session, id_mysql, A >::begin_type_
+  pointer_query_columns< ::Entity::Session, id_mysql, A >::
+  begin (A::table_name, "`begin`", 0);
+
+  template <typename A>
+  const typename pointer_query_columns< ::Entity::Session, id_mysql, A >::end_type_
+  pointer_query_columns< ::Entity::Session, id_mysql, A >::
+  end (A::table_name, "`end`", 0);
+
+  template <>
+  class access::object_traits_impl< ::Entity::Session, id_mysql >:
+    public access::object_traits< ::Entity::Session >
+  {
+    public:
+    typedef polymorphic_entry<object_type, id_mysql> entry_type;
+    typedef object_traits_impl<root_type, id_mysql> root_traits;
+    typedef object_traits_impl<base_type, id_mysql> base_traits;
+
+    typedef root_traits::id_image_type id_image_type;
+
+    static const info_type info;
+
+    struct image_type
+    {
+      base_traits::image_type* base;
+
+      // id
+      //
+      int id_value;
+      my_bool id_null;
+
+      // begin_
+      //
+      unsigned long long begin_value;
+      my_bool begin_null;
+
+      // end_
+      //
+      unsigned long long end_value;
+      my_bool end_null;
+
+      std::size_t version;
+    };
+
+    struct extra_statement_cache_type;
+
+    using object_traits<object_type>::id;
+
+    static bool
+    grow (image_type&,
+          my_bool*,
+          std::size_t = depth);
+
+    static void
+    bind (MYSQL_BIND*,
+          const MYSQL_BIND* id,
+          std::size_t id_size,
+          image_type&,
+          mysql::statement_kind);
+
+    static void
+    bind (MYSQL_BIND*, id_image_type&);
+
+    static bool
+    init (image_type&,
+          const object_type&,
+          mysql::statement_kind);
+
+    static void
+    init (object_type&,
+          const image_type&,
+          database*,
+          std::size_t = depth);
+
+    static void
+    init (id_image_type&, const id_type&);
+
+    static bool
+    check_version (const std::size_t*, const image_type&);
+
+    static void
+    update_version (std::size_t*, const image_type&, mysql::binding*);
+
+    typedef
+    mysql::polymorphic_derived_object_statements<object_type>
+    statements_type;
+
+    typedef
+    mysql::polymorphic_root_object_statements<root_type>
+    root_statements_type;
+
+    typedef mysql::query_base query_base_type;
+
+    static const std::size_t column_count = 3UL;
+    static const std::size_t id_column_count = 1UL;
+    static const std::size_t inverse_column_count = 0UL;
+    static const std::size_t readonly_column_count = 0UL;
+    static const std::size_t managed_optimistic_column_count = 0UL;
+
+    static const std::size_t separate_load_column_count = 0UL;
+    static const std::size_t separate_update_column_count = 0UL;
+
+    static const bool versioned = false;
+
+    static const char persist_statement[];
+    static const char* const find_statements[depth];
+    static const std::size_t find_column_counts[depth];
+    static const char update_statement[];
+    static const char erase_statement[];
+    static const char query_statement[];
+    static const char erase_query_statement[];
+
+    static const char table_name[];
+
+    static void
+    persist (database&, object_type&, bool top = true, bool dyn = true);
+
+    static pointer_type
+    find (database&, const id_type&);
+
+    static bool
+    find (database&, const id_type&, object_type&, bool dyn = true);
+
+    static bool
+    reload (database&, object_type&, bool dyn = true);
+
+    static void
+    update (database&, const object_type&, bool top = true, bool dyn = true);
+
+    static void
+    erase (database&, const id_type&, bool top = true, bool dyn = true);
+
+    static void
+    erase (database&, const object_type&, bool top = true, bool dyn = true);
+
+    static result<object_type>
+    query (database&, const query_base_type&);
+
+    static unsigned long long
+    erase_query (database&, const query_base_type&);
+
+    public:
+    static bool
+    find_ (statements_type&,
+           const id_type*,
+           std::size_t = depth);
+
+    static void
+    load_ (statements_type&,
+           object_type&,
+           bool reload,
+           std::size_t = depth);
+
+    static void
+    load_ (database&, root_type&, std::size_t);
+  };
+
+  template <>
+  class access::object_traits_impl< ::Entity::Session, id_common >:
+    public access::object_traits_impl< ::Entity::Session, id_mysql >
+  {
+  };
+
+  // ReloadSession
+  //
+  template <typename A>
+  struct pointer_query_columns< ::Entity::ReloadSession, id_mysql, A >:
+    pointer_query_columns< ::Entity::Token, id_mysql, typename A::base_traits >
+  {
+    // Token
+    //
+    typedef pointer_query_columns< ::Entity::Token, id_mysql, typename A::base_traits > Token;
+
+    // id
+    //
+    typedef
+    mysql::query_column<
+      mysql::value_traits<
+        int,
+        mysql::id_long >::query_type,
+      mysql::id_long >
+    id_type_;
+
+    static const id_type_ id;
+
+    // reloaded
+    //
+    typedef
+    mysql::query_column<
+      mysql::value_traits<
+        bool,
+        mysql::id_tiny >::query_type,
+      mysql::id_tiny >
+    reloaded_type_;
+
+    static const reloaded_type_ reloaded;
+  };
+
+  template <typename A>
+  const typename pointer_query_columns< ::Entity::ReloadSession, id_mysql, A >::id_type_
+  pointer_query_columns< ::Entity::ReloadSession, id_mysql, A >::
+  id (A::table_name, "`id`", 0);
+
+  template <typename A>
+  const typename pointer_query_columns< ::Entity::ReloadSession, id_mysql, A >::reloaded_type_
+  pointer_query_columns< ::Entity::ReloadSession, id_mysql, A >::
+  reloaded (A::table_name, "`reloaded`", 0);
+
+  template <>
+  class access::object_traits_impl< ::Entity::ReloadSession, id_mysql >:
+    public access::object_traits< ::Entity::ReloadSession >
+  {
+    public:
+    typedef polymorphic_entry<object_type, id_mysql> entry_type;
+    typedef object_traits_impl<root_type, id_mysql> root_traits;
+    typedef object_traits_impl<base_type, id_mysql> base_traits;
+
+    typedef root_traits::id_image_type id_image_type;
+
+    static const info_type info;
+
+    struct image_type
+    {
+      base_traits::image_type* base;
+
+      // id
+      //
+      int id_value;
+      my_bool id_null;
+
+      // reloaded
+      //
+      signed char reloaded_value;
+      my_bool reloaded_null;
+
+      std::size_t version;
+    };
+
+    struct extra_statement_cache_type;
+
+    using object_traits<object_type>::id;
+
+    static bool
+    grow (image_type&,
+          my_bool*,
+          std::size_t = depth);
+
+    static void
+    bind (MYSQL_BIND*,
+          const MYSQL_BIND* id,
+          std::size_t id_size,
+          image_type&,
+          mysql::statement_kind);
+
+    static void
+    bind (MYSQL_BIND*, id_image_type&);
+
+    static bool
+    init (image_type&,
+          const object_type&,
+          mysql::statement_kind);
+
+    static void
+    init (object_type&,
+          const image_type&,
+          database*,
+          std::size_t = depth);
+
+    static void
+    init (id_image_type&, const id_type&);
+
+    static bool
+    check_version (const std::size_t*, const image_type&);
+
+    static void
+    update_version (std::size_t*, const image_type&, mysql::binding*);
+
+    typedef
+    mysql::polymorphic_derived_object_statements<object_type>
+    statements_type;
+
+    typedef
+    mysql::polymorphic_root_object_statements<root_type>
+    root_statements_type;
+
+    typedef mysql::query_base query_base_type;
+
+    static const std::size_t column_count = 2UL;
+    static const std::size_t id_column_count = 1UL;
+    static const std::size_t inverse_column_count = 0UL;
+    static const std::size_t readonly_column_count = 0UL;
+    static const std::size_t managed_optimistic_column_count = 0UL;
+
+    static const std::size_t separate_load_column_count = 0UL;
+    static const std::size_t separate_update_column_count = 0UL;
+
+    static const bool versioned = false;
+
+    static const char persist_statement[];
+    static const char* const find_statements[depth];
+    static const std::size_t find_column_counts[depth];
+    static const char update_statement[];
+    static const char erase_statement[];
+    static const char query_statement[];
+    static const char erase_query_statement[];
+
+    static const char table_name[];
+
+    static void
+    persist (database&, object_type&, bool top = true, bool dyn = true);
+
+    static pointer_type
+    find (database&, const id_type&);
+
+    static bool
+    find (database&, const id_type&, object_type&, bool dyn = true);
+
+    static bool
+    reload (database&, object_type&, bool dyn = true);
+
+    static void
+    update (database&, const object_type&, bool top = true, bool dyn = true);
+
+    static void
+    erase (database&, const id_type&, bool top = true, bool dyn = true);
+
+    static void
+    erase (database&, const object_type&, bool top = true, bool dyn = true);
+
+    static result<object_type>
+    query (database&, const query_base_type&);
+
+    static unsigned long long
+    erase_query (database&, const query_base_type&);
+
+    public:
+    static bool
+    find_ (statements_type&,
+           const id_type*,
+           std::size_t = depth);
+
+    static void
+    load_ (statements_type&,
+           object_type&,
+           bool reload,
+           std::size_t = depth);
+
+    static void
+    load_ (database&, root_type&, std::size_t);
+  };
+
+  template <>
+  class access::object_traits_impl< ::Entity::ReloadSession, id_common >:
+    public access::object_traits_impl< ::Entity::ReloadSession, id_mysql >
+  {
+  };
+
   // Person
   //
   // Customer
@@ -1436,6 +2299,225 @@ namespace odb
   //
   // Group
   //
+  // Token
+  //
+  template <>
+  struct alias_traits<
+    ::Entity::Person,
+    id_mysql,
+    access::object_traits_impl< ::Entity::Token, id_mysql >::t_person_tag>
+  {
+    static const char table_name[];
+  };
+
+  template <>
+  struct query_columns_base< ::Entity::Token, id_mysql >
+  {
+    // t_person
+    //
+    typedef
+    odb::alias_traits<
+      ::Entity::Person,
+      id_mysql,
+      access::object_traits_impl< ::Entity::Token, id_mysql >::t_person_tag>
+    t_person_alias_;
+  };
+
+  template <typename A>
+  struct query_columns< ::Entity::Token, id_mysql, A >:
+    query_columns_base< ::Entity::Token, id_mysql >
+  {
+    // id
+    //
+    typedef
+    mysql::query_column<
+      mysql::value_traits<
+        int,
+        mysql::id_long >::query_type,
+      mysql::id_long >
+    id_type_;
+
+    static const id_type_ id;
+
+    // typeid_
+    //
+    typedef
+    mysql::query_column<
+      mysql::value_traits<
+        ::std::string,
+        mysql::id_string >::query_type,
+      mysql::id_string >
+    typeid__type_;
+
+    static const typeid__type_ typeid_;
+
+    // t_person
+    //
+    typedef
+    mysql::query_column<
+      mysql::value_traits<
+        long int,
+        mysql::id_long >::query_type,
+      mysql::id_long >
+    t_person_column_type_;
+
+    typedef
+    odb::query_pointer<
+      odb::pointer_query_columns<
+        ::Entity::Person,
+        id_mysql,
+        t_person_alias_ > >
+    t_person_pointer_type_;
+
+    struct t_person_type_: t_person_pointer_type_, t_person_column_type_
+    {
+      t_person_type_ (const char* t, const char* c, const char* conv)
+        : t_person_column_type_ (t, c, conv)
+      {
+      }
+    };
+
+    static const t_person_type_ t_person;
+
+    // token
+    //
+    typedef
+    mysql::query_column<
+      mysql::value_traits<
+        ::std::string,
+        mysql::id_string >::query_type,
+      mysql::id_string >
+    token_type_;
+
+    static const token_type_ token;
+  };
+
+  template <typename A>
+  const typename query_columns< ::Entity::Token, id_mysql, A >::id_type_
+  query_columns< ::Entity::Token, id_mysql, A >::
+  id (A::table_name, "`id`", 0);
+
+  template <typename A>
+  const typename query_columns< ::Entity::Token, id_mysql, A >::typeid__type_
+  query_columns< ::Entity::Token, id_mysql, A >::
+  typeid_ (A::table_name, "`typeid`", 0);
+
+  template <typename A>
+  const typename query_columns< ::Entity::Token, id_mysql, A >::t_person_type_
+  query_columns< ::Entity::Token, id_mysql, A >::
+  t_person (A::table_name, "`id_person`", 0);
+
+  template <typename A>
+  const typename query_columns< ::Entity::Token, id_mysql, A >::token_type_
+  query_columns< ::Entity::Token, id_mysql, A >::
+  token (A::table_name, "`token`", 0);
+
+  // Session
+  //
+  template <typename A>
+  struct query_columns< ::Entity::Session, id_mysql, A >:
+    query_columns< ::Entity::Token, id_mysql, typename A::base_traits >
+  {
+    // Token
+    //
+    typedef query_columns< ::Entity::Token, id_mysql, typename A::base_traits > Token;
+
+    // id
+    //
+    typedef
+    mysql::query_column<
+      mysql::value_traits<
+        int,
+        mysql::id_long >::query_type,
+      mysql::id_long >
+    id_type_;
+
+    static const id_type_ id;
+
+    // begin
+    //
+    typedef
+    mysql::query_column<
+      mysql::value_traits<
+        ::ulong,
+        mysql::id_ulonglong >::query_type,
+      mysql::id_ulonglong >
+    begin_type_;
+
+    static const begin_type_ begin;
+
+    // end
+    //
+    typedef
+    mysql::query_column<
+      mysql::value_traits<
+        ::ulong,
+        mysql::id_ulonglong >::query_type,
+      mysql::id_ulonglong >
+    end_type_;
+
+    static const end_type_ end;
+  };
+
+  template <typename A>
+  const typename query_columns< ::Entity::Session, id_mysql, A >::id_type_
+  query_columns< ::Entity::Session, id_mysql, A >::
+  id (A::table_name, "`id`", 0);
+
+  template <typename A>
+  const typename query_columns< ::Entity::Session, id_mysql, A >::begin_type_
+  query_columns< ::Entity::Session, id_mysql, A >::
+  begin (A::table_name, "`begin`", 0);
+
+  template <typename A>
+  const typename query_columns< ::Entity::Session, id_mysql, A >::end_type_
+  query_columns< ::Entity::Session, id_mysql, A >::
+  end (A::table_name, "`end`", 0);
+
+  // ReloadSession
+  //
+  template <typename A>
+  struct query_columns< ::Entity::ReloadSession, id_mysql, A >:
+    query_columns< ::Entity::Token, id_mysql, typename A::base_traits >
+  {
+    // Token
+    //
+    typedef query_columns< ::Entity::Token, id_mysql, typename A::base_traits > Token;
+
+    // id
+    //
+    typedef
+    mysql::query_column<
+      mysql::value_traits<
+        int,
+        mysql::id_long >::query_type,
+      mysql::id_long >
+    id_type_;
+
+    static const id_type_ id;
+
+    // reloaded
+    //
+    typedef
+    mysql::query_column<
+      mysql::value_traits<
+        bool,
+        mysql::id_tiny >::query_type,
+      mysql::id_tiny >
+    reloaded_type_;
+
+    static const reloaded_type_ reloaded;
+  };
+
+  template <typename A>
+  const typename query_columns< ::Entity::ReloadSession, id_mysql, A >::id_type_
+  query_columns< ::Entity::ReloadSession, id_mysql, A >::
+  id (A::table_name, "`id`", 0);
+
+  template <typename A>
+  const typename query_columns< ::Entity::ReloadSession, id_mysql, A >::reloaded_type_
+  query_columns< ::Entity::ReloadSession, id_mysql, A >::
+  reloaded (A::table_name, "`reloaded`", 0);
 }
 
 #include "Persons-odb.ixx"

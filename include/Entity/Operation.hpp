@@ -32,7 +32,7 @@ protected:
   std::shared_ptr<Account> t_source ;
   #pragma db not_null column("id_employee")
   std::shared_ptr<Employee> t_employee ;
-  #pragma db value_type("VARCHAR(255)")
+  #pragma db type("VARCHAR(255)")
   std::string date ;
   double montant ;
 public:

@@ -13,7 +13,7 @@ CREATE TABLE `BaseOperation` (
   `typeid` VARCHAR(255) NOT NULL,
   `id_account` BIGINT NOT NULL,
   `id_employee` BIGINT NOT NULL,
-  `date` TEXT NOT NULL,
+  `date` VARCHAR(255) NOT NULL,
   `montant` DOUBLE NOT NULL)
  ENGINE=InnoDB;
 

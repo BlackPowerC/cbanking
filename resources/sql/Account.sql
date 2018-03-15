@@ -14,7 +14,7 @@ CREATE TABLE `Account` (
   `id_customer` BIGINT NOT NULL,
   `id_employee` BIGINT NOT NULL,
   `balance` DOUBLE NOT NULL,
-  `creationDate` TEXT NOT NULL)
+  `creationDate` VARCHAR(512) NOT NULL)
  ENGINE=InnoDB;
 
 CREATE TABLE `CurrentAccount` (
