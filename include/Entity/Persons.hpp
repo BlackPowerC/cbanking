@@ -44,8 +44,12 @@ protected:
 
 		#pragma db id auto not_null
     long id ;
-    #pragma db value_type("VARCHAR(255)")
+    #pragma db type("VARCHAR(1024)")
     std::string name ;
+#pragma db type("VARCHAR(1024)")
+    std::string email ;
+#pragma db type("VARCHAR(2048)")
+    std::string passwd ;
 public:
     /**
      * \fn Person(long _id = 0, std::string _name= "")
@@ -53,7 +57,7 @@ public:
      * \param _id ID de la personne, zéro par défaut.
      * \param _name name de la personne, "" par défaut.
      */
-    Person(long _id =0, std::string _name = "") ;
+    Person(long _id =0, std::string _name = "", std::string _email ="", std::string _passwd="") ;
     /**
      * \fn Person(Person &t_person)
      * \brief Constructeur par recopie de la classe.
@@ -66,12 +70,32 @@ public:
      * \param p_person Pointeur sur une instance Person.
      */
     Person(const Person *p_person) ;
-		virtual ~Person() {}
+
+    virtual ~Person() {}
     /* getters setters */
     void setId(long _id) ;
+
     long getId() const ;
+
     std::string getName() const ;
+
     void setName(std::string _name) ;
+
+    std::string getEmail() const ;
+
+    void setEmail(std::string _email) ;
+
+    std::string getPasswd() const ;
+
+    void setPasswd(std::string _passwd) ;
+
+    void operator=(const Person &person)
+    {
+        this->id = person.id ;
+        this->name = person.name ;
+        this->email = person.email ;
+        this->passwd = person.passwd ;
+    }
 };
 
 /**
@@ -93,7 +117,7 @@ public:
     * \param _id ID du client, zéro par défaut.
     * \param _name nom du client, "" par défaut.
     */
-    Customer(long _id =0, std::string _name = "") ;
+    Customer(long _id=0, std::string _name="", std::string _email="", std::string _passwd="");
     /**
      * \fn Customer(Customer &t_Customer)
      * \brief Constructeur par recopie de la classe.
@@ -174,7 +198,7 @@ public:
     * \param _id ID du l'employé, zéro par défaut.
     * \param _name nom de l'employé, "" par défaut.
     */
-    Employee(long _id =0, std::string _name = "") ;
+    Employee(long _id =0, std::string _name = "", std::string _email ="", std::string _passwd="") ;
     /**
      * \fn Employee(Employee &t_employee)
      * \brief Constructeur par recopie de la classe.
@@ -265,7 +289,7 @@ public:
     // accounts
     std::vector<std::shared_ptr<Account> > &getAccounts() ;
     void setAccounts(std::vector<std::shared_ptr<Account> > &t_another) ;
-		// operations
+	// operations
     std::vector<std::shared_ptr<BaseOperation> > &getOperations() ;
     void setOperations(std::vector<std::shared_ptr<BaseOperation> > &t_another) ;
     // group
@@ -276,10 +300,17 @@ public:
     {
         this->id = employee.id ;
         this->name = employee.name ;
+        this->email = employee.email;
+        this->passwd = employee.passwd ;
         this->subordinate = std::move(employee.subordinate) ;
         this->accounts = std::move(employee.accounts) ;
         this->operations = std::move(employee.operations) ;
         this->groups = std::move(employee.groups) ;
+    }
+
+    bool operator==(const Employee &employee)
+    {
+        return this->id == employee.id ;
     }
 };
 
@@ -384,7 +415,7 @@ public:
 
     void setToken(const std::string &token) ;
 
-    virtual void doNothing() = 0 ;
+//  virtual void doNothing() = 0 ;
 };
 
 /**
@@ -431,7 +462,7 @@ public:
         this->end_ = rhs.end_ ;
     }
 
-    virtual void doNothing() {}
+//  virtual void doNothing() {}
 };
 
 /**
@@ -447,7 +478,7 @@ private:
 public:
     ReloadSession(bool reloaded=false) ;
 
-     bool operator==(const ReloadSession &t_another)
+    bool operator==(const ReloadSession &t_another)
     {
         return this->id == t_another.id ;
     }
@@ -459,7 +490,7 @@ public:
         this->reloaded = rhs.reloaded ;
     }
 
-    virtual void doNothing() {}
+//  virtual void doNothing() {}
 };
 
 }

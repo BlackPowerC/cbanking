@@ -3,19 +3,18 @@
 namespace Entity
 {
 /* Classe Person */
-Person::Person(long _id, std::string _name): id(_id), name(_name)
+Person::Person(long _id, std::string _name, std::string _email, std::string _passwd):
+        id(_id), name(_name), email(_email), passwd(_passwd)
 {}
 
 Person::Person(const Person &t_person)
 {
-    this->id = t_person.id ;
-    this->name = t_person.name ;
+    *this = t_person ;
 }
 
 Person::Person(const Person *p_person)
 {
-    this->id = p_person->id ;
-    this->name = p_person->name ;
+    *this = *p_person ;
 }
 
 void Person::setId(long _id)
@@ -38,8 +37,29 @@ std::string Person::getName() const
     return this->name ;
 }
 
+std::string Person::getEmail() const
+{
+    return this->email;
+}
+
+void Person::setEmail(std::string _email)
+{
+    this->email = _email ;
+}
+
+std::string Person::getPasswd() const
+{
+    return this->passwd;
+}
+
+void Person::setPasswd(std::string _passwd)
+{
+    this->passwd = _passwd;
+}
+
 /* Classe Customer */
-Customer::Customer(long _id, std::string _name): Person(_id, _name)
+Customer::Customer(long _id, std::string _name, std::string _email, std::string _passwd):
+        Person(_id, _name, _email, _passwd)
 {}
 
 Customer::Customer(const Customer *p_customer): Person(p_customer)
@@ -80,7 +100,8 @@ void Customer::setAccounts(std::vector<std::shared_ptr<Account> > & another)
 }
 
 /* Classe Employe */
-Employee::Employee(long _id, std::string _name): Person(_id, _name)
+Employee::Employee(long _id, std::string _name, std::string _email, std::string _passwd):
+        Person(_id, _name, _email, _passwd)
 {}
 
 Employee::Employee(const Employee *p_employee): Person(p_employee)
