@@ -11,6 +11,7 @@ namespace API
  * \class OperationAPI
  * \brief Cette classe est en charge de la persistence
  *				des entités BaseOperation, Operation et Virement.
+ *				La classe est un singleton.
  */
 class OperationAPI: public PersistenceAPI
 {

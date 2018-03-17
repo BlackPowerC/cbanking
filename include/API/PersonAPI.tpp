@@ -29,4 +29,33 @@ std::vector<std::shared_ptr<T> > PersonAPI::findByName(const std::string &name)
   }
 }
 
+template <typename T>
+std::shared_ptr<T> PersonAPI::findByCredentials(const std::string &email, const std::string &passwd)
+{
+    if(email.empty() || passwd.empty())
+    {
+        throw IllegalArgument("Un des arguments est invalide !") ;
+    }
+    try
+    {
+        odb::session s ;
+        DBConnection *c = DBConnection::getInstance() ;
+        c->reset() ;
+        odb::query<T> t_query(odb::query<T>::email == email && odb::query<T>::passwd == passwd);
+        odb::result<T> t_result(c->getConnection()->query(t_query)) ;
+        if(t_result.empty())
+        {
+            throw NotFound("Recherche infructeuse !") ;
+        }
+        std::shared_ptr<T> person(t_result.begin().load()) ;
+        c->commit() ;
+        return person ;
+
+    }catch(const odb::exception &nf)
+    {
+        LOG_ERROR << nf.what() ;
+        throw NotFound("Recherche infructeuse !") ;
+    }
+}
+
 }

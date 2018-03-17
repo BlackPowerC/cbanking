@@ -10,6 +10,7 @@ namespace API
  * \class AccountAPI
  * \brief Cette classe est en charge de la persistence
  *				des entités Acccount, CurrentAccount et SavingsAccount.
+ *				La classe est un singleton.
  */
 class AccountAPI: public PersistenceAPI
 {
