@@ -67,7 +67,7 @@ public:
 	 * \return Un shared_ptr contenant l'instance de la classe persistante.
 	 */
 	template <typename T>
-  virtual std::shared_ptr<T> findById(long id) ;
+    std::shared_ptr<T> findById(long id) ;
 };
 
 }

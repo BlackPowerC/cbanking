@@ -12,11 +12,20 @@
 #include "../../include/API/PersistenceAPI.hpp"
 #include "../../include/API/AccountAPI.hpp"
 #include "../../include/API/PersonAPI.hpp"
+#include "../../include/API/SessionAPI.hpp"
 
 #include "../../include/Util/Converter/Converters.hpp"
 
 #include <exception>
 #include <plog/Log.h>
+
+// api JSON
+#include <rapidjson/rapidjson.h>
+#include <rapidjson/document.h>
+
+// STL
+#include <memory>
+#include <ctime>
 
 using namespace Entity ;
 using namespace API ;
@@ -404,6 +413,49 @@ namespace RestAPI
     // Les routes pour l'authentification
     void RequestHandler::authentification(const Rest::Request &request, Http::ResponseWriter response)
     {
-    	response.send(Http::Code::Ok, "Tout est OK", Http::Mime::MediaType::fromString("text/plain"));
+        std::shared_ptr<Session> session ;
+        try
+        {
+            rapidjson::Document doc ;
+            if(doc.Parse(request.body().c_str()).HasParseError())
+            {
+                LOG_INFO << request.body() ;
+                response.send(Http::Code::Bad_Request) ;
+                return ;
+            }
+            if(!doc.HasMember("passwd") || !doc.HasMember("email"))
+            {
+                LOG_INFO << request.body() ;
+                response.send(Http::Code::Bad_Request) ;
+                return ;
+            }
+            rapidjson::Value &passwd = doc["passwd"] ;
+            rapidjson::Value &email = doc["email"] ;
+            // Récupérons la person avec les credentials
+            std::shared_ptr<Person> person = PersonAPI::getInstance()
+                                                ->findByCredentials<Person>(
+                                                    std::string(email.GetString()), std::string(passwd.GetString())) ;
+            // On récupère sa session
+            session = SessionAPI::getInstance()->findById<Session>(person->getId()) ;
+            // On vérifie la validité de la session grâce au timestamp courant
+            std::time_t current_time = std::time(nullptr) ;
+            ulong timestamp = (ulong) current_time ;
+            if(session->getEnd() < current_time)
+            {
+                std::string err_msg = "" ;
+                response.send(Http::Code::Unauthorized, err_msg, MIME(Application, Json)) ;
+                return ;
+            }
+            // Envoie du jeton
+            std::string msg = "{\"token\":\""+session->getToken()+"\"}" ;
+            response.send(Http::Code::Ok, msg, MIME(Application, Json)) ;
+        }
+        catch(const NotFound &nf)
+        {
+            LOG_WARNING << "Tentative frauduleuse de connexion !" ;
+            response.send(Http::Code::Unauthorized) ;
+            return ;
+        }
+    	response.send(Http::Code::Ok, session->getToken(), Http::Mime::MediaType::fromString("text/plain"));
     }
 }

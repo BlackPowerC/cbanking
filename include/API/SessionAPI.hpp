@@ -50,8 +50,13 @@ public:
      * @return Un pointeur intélligent.
      */
     template <typename T>
-    virtual std::shared_ptr<T> findById(long id) ;
+    std::shared_ptr<T> findById(long id) ;
+
+    // Fonction polymorphic
+    virtual void doNothing() {}
 };
+
+SessionAPI* SessionAPI::p_singleton = nullptr ;
 
 }
 #include "SessionAPI.tpp"

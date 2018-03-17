@@ -35,6 +35,9 @@ namespace RestAPI
                           Rest::Routes::bind(&RequestHandler::getCustomerByName, &this->t_rhandler)) ;
 
         /* Les requetes POST */
+        // La route route pour l'authentification
+        Rest::Routes::Post(this->t_router, "/authentification",
+                            Rest::Routes::bind(&RequestHandler::authentification, &this->t_rhandler)) ;
         /* Les requetes DELETE */
         // Un client
         Rest::Routes::Delete(this->t_router, "/person/delete/:id",
