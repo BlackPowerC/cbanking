@@ -410,7 +410,7 @@ namespace RestAPI
     	response.send(Http::Code::Ok, "Tout est OK", Http::Mime::MediaType::fromString("text/plain"));
     }
 
-    // Les routes pour l'authentification
+    // Les routes pour la connexion
     void RequestHandler::authentification(const Rest::Request &request, Http::ResponseWriter response)
     {
         std::shared_ptr<Session> session ;
@@ -457,5 +457,11 @@ namespace RestAPI
             return ;
         }
     	response.send(Http::Code::Ok, session->getToken(), Http::Mime::MediaType::fromString("text/plain"));
+    }
+
+    // La route pour l'inscription
+    void RequestHandler::subscription(const Rest::Request &request, Http::ResponseWriter response)
+    {
+        response.send(Http::Code::Ok, request.param("?token").name(), Http::Mime::MediaType::fromString("text/plain"));
     }
 }
