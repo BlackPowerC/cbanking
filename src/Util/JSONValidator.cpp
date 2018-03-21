@@ -26,7 +26,7 @@ namespace Util
         else
         {
             rapidjson::StringBuffer buffer ;
-            schemaValidator.GetInvalidSchemaPointer().StringifyUriFragment(buffer)) ;
+            schemaValidator.GetInvalidSchemaPointer().StringifyUriFragment(buffer) ;
             LOG_ERROR << buffer.GetString() ;
             return false ;
         }
