@@ -51,8 +51,9 @@ namespace RestAPI
         void addAccount(const Rest::Request &request, Http::ResponseWriter response) ;
         void addOperation(const Rest::Request &request, Http::ResponseWriter response) ;
 
-        // Les routes pour l'authentification
+        // Les routes pour l'authentification et l'inscription
         void authentification(const Rest::Request &request, Http::ResponseWriter response) ;
+        void subscription(const Rest::Request &request, Http::ResponseWriter response) ;
     };
 }
 

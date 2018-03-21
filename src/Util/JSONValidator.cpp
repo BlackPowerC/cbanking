@@ -19,7 +19,7 @@ namespace Util
         rapidjson::Document document ; document.Parse(schema.c_str()) ;
         rapidjson::SchemaDocument schemaDocument(document) ;
         rapidjson::SchemaValidator schemaValidator(schemaDocument) ;
-        if(document.Accept(schemaValidator))
+        if(controlDocument.Accept(schemaValidator))
         {
             return true ;
         }
@@ -28,6 +28,7 @@ namespace Util
             rapidjson::StringBuffer buffer ;
             schemaValidator.GetInvalidSchemaPointer().StringifyUriFragment(buffer) ;
             LOG_ERROR << buffer.GetString() ;
+            LOG_ERROR << schemaValidator.GetInvalidSchemaKeyword() ;
             return false ;
         }
     }
