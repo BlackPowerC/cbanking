@@ -15,6 +15,7 @@ add_executable(
 
         test_crypto.cpp
         ../../../src/Util/Crypto.cpp
+        ../../../src/Exception.cpp
 )
 
 target_link_libraries(
