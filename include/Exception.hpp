@@ -37,4 +37,24 @@ public:
 	NotUpdatable(std::string msg_) ;
 };
 
+/**
+ * @class OutOfMemory
+ * @brief Classe d'exception en cas de mémoire insuffisante.
+ */
+class OutOfMemory: public BaseException
+{
+public:
+    OutOfMemory(std::string msg_) ;
+};
+
+/**
+ * @class OutOfMemory
+ * @brief Classe d'exception en cas d'erreur d'allocation de mémoire
+ */
+class BadMalloc: public BaseException
+{
+public:
+    BadMalloc(std::string msg_) ;
+};
+
 #endif // EXCEPTION_HPP_INCLUDED

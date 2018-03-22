@@ -34,3 +34,15 @@ NotUpdatable::NotUpdatable(std::string msg_): BaseException(msg_)
 {
 
 }
+
+// OutOfMemory
+OutOfMemory::OutOfMemory(std::string msg_): BaseException(msg_)
+{
+
+}
+
+// BadMalloc
+BadMalloc::BadMalloc(std::string msg_): BaseException(msg_)
+{
+
+}
