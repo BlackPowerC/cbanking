@@ -22,7 +22,9 @@ namespace Util
      * @throw OutOfMemory en cas d'erreur de l'algorithme.
      * @throw BadMalloc en cas d'erreur d'allocation de mémoire.
      */
-    std::string hashArgon2(const std::string &passwsd) ;
+    std::string hashArgon2(const std::string &passwd) ;
+
+    bool verifyArgon2Hash(const std::string &hash, const std::string &passwd) ;
 
     /**
     * Cette fonction hash un mot de passe avec l'algorithme argon2i.

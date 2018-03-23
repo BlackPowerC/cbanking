@@ -45,6 +45,15 @@ TEST_F(MyTest, verifyArgonHash2)
     ASSERT_FALSE(Util::verifyArgon2Hash(hash, "jordy")) ;
 }
 
+TEST_F(MyTest, hashSha512_1)
+{
+    std::string passwd = "toto";
+    std::string hash ;
+    hash = Util::hashSha512(passwd) ;
+    ASSERT_FALSE(hash.empty()) ;
+    std::cout << hash+"\n";
+}
+
 int main(int argc, char *argv[])
 {
     if(sodium_init())
