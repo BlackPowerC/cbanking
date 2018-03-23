@@ -41,7 +41,7 @@ std::shared_ptr<T> PersonAPI::findByCredentials(const std::string &email, const 
         odb::session s ;
         DBConnection *c = DBConnection::getInstance() ;
         c->reset() ;
-        odb::query<T> t_query(odb::query<T>::email == email && odb::query<T>::passwd == passwd);
+        odb::query<T> t_query(odb::query<T>::email == email/* && odb::query<T>::passwd == passwd*/);
         odb::result<T> t_result(c->getConnection()->query(t_query)) ;
         if(t_result.empty())
         {

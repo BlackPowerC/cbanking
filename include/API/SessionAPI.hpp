@@ -52,6 +52,9 @@ public:
     template <typename T>
     std::shared_ptr<T> findById(long id) ;
 
+    template <typename T>
+    std::shared_ptr<T> findByToken(const std::string &token) ;
+
     // Fonction polymorphic
     virtual void doNothing() {}
 };
@@ -60,5 +63,18 @@ SessionAPI* SessionAPI::p_singleton = nullptr ;
 
 }
 #include "SessionAPI.tpp"
+
+#include "../Entity/Entity.hpp"
+
+namespace Util
+{
+    /**
+     * Cetter fonction créer une session pour employée ou un client.
+     * @param p_person Un smart_ptr contenant une réfénce de Customer
+     *        ou Employee.
+     * @return Une instance de session
+     */
+    Entity::Session initSession(const std::shared_ptr<Entity::Person> p_person) ;
+}
 
 #endif //CBANKING_SERVER_SESSIONAPI_HPP

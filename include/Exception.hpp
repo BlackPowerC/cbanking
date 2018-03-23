@@ -49,12 +49,23 @@ public:
 
 /**
  * @class OutOfMemory
- * @brief Classe d'exception en cas d'erreur d'allocation de mémoire
+ * @brief Classe d'exception en cas d'erreur d'allocation de mémoire.
  */
 class BadMalloc: public BaseException
 {
 public:
     BadMalloc(std::string msg_) ;
+};
+
+
+/**
+ * @class FileStreamError
+ * @brief Classe d'exception relative au fichier normaux.
+ */
+class FileStreamError: public BaseException
+{
+public:
+    FileStreamError(std::string msg_) ;
 };
 
 #endif // EXCEPTION_HPP_INCLUDED

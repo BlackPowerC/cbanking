@@ -46,3 +46,9 @@ BadMalloc::BadMalloc(std::string msg_): BaseException(msg_)
 {
 
 }
+
+// FileStreamError
+FileStreamError::FileStreamError(std::string msg_): BaseException(msg_)
+{
+
+}
