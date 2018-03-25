@@ -20,7 +20,7 @@ std::shared_ptr<T> SessionAPI::findById(long id)
         {
             throw NotFound("Impossible de trouver la ressource à l'ID "+std::to_string(id)) ;
         }
-        std::shared_ptr<T> token(c->getConnection()->load<T>(id)) ;
+        std::shared_ptr<T> token(t_result.begin().load()) ;
         c->commit() ;
         return token ;
     }
@@ -50,7 +50,7 @@ std::shared_ptr<T> SessionAPI::findByToken(const std::string &token)
         {
             throw NotFound("Impossible de trouver la session au jetton "+token) ;
         }
-        std::shared_ptr<T> token(c->getConnection()->load<T>(id)) ;
+        std::shared_ptr<T> token(t_result.begin().load()) ;
         c->commit() ;
         return token ;
     }

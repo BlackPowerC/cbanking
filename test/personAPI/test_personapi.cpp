@@ -40,9 +40,9 @@ int main()
         // Lecture de tout les customers
         try
         {
-            Customer dalida(0, "dalida") ;
-            Customer thierrno(0, "thierrno") ;
-            Customer nabine(0, "nabine") ;
+            Customer dalida(0, "dalida", "dalida@gmail.com") ;
+            Customer thierrno(0, "thierrno", "thierrno@gmail.com") ;
+            Customer nabine(0, "nabine", "nabin@gmail.com") ;
             p_papi->insert<Customer>(dalida) ;
             p_papi->insert<Customer>(nabine) ;
             p_papi->insert<Customer>(thierrno) ;

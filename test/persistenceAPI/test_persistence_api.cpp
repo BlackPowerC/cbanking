@@ -29,12 +29,12 @@ using namespace API ;
 // Test d'insertion
 TEST_F(Test, persistence_api_insert)
 {
-    Customer titi(0, "titianne") ;
-    Customer baba(0, "baba") ;
-    Customer barry(0, "thierrno") ;
-    Employee souley(0, "souleymane") ;
-    Employee adoum(0, "adoum") ;
-    Employee abide(0, "abidé") ;
+    Customer titi(0, "titianne", "titianne@gmail.com") ;
+    Customer baba(0, "baba", "baba@gmail.com") ;
+    Customer barry(0, "thierrno", "thierrno@gmail.com") ;
+    Employee souley(0, "souleymane", "soul@gmail.com") ;
+    Employee adoum(0, "adoum", "adoum@gmail.com") ;
+    Employee abide(0, "abidé", "abidé@gmail.com") ;
 
     souley.addSubordinate(adoum) ;
     souley.addSubordinate(abide) ;
@@ -48,7 +48,7 @@ TEST_F(Test, persistence_api_insert)
 }
 
 // Test de selection 1
-TEST_F(Test, persistence_api_select1)
+TEST_F(Test, persistence_api_find_employee_by_name_a)
 {
   std::vector<std::shared_ptr<Employee> > employees ;
   employees = PersonAPI::getInstance()->findByName<Employee>("a") ;
@@ -56,21 +56,33 @@ TEST_F(Test, persistence_api_select1)
 }
 
 // Test de selection 2
-TEST_F(Test, persistence_api_select2)
+TEST_F(Test, persistence_api_find_all_person)
 {
-  ASSERT_ANY_THROW(PersonAPI::getInstance()->findAll<Person>()) ;
+  ASSERT_NO_THROW(PersonAPI::getInstance()->findAll<Person>()) ;
 }
 
 // Test de selection 3
-TEST_F(Test, persistence_api_select3)
+TEST_F(Test, persistence_api_find_all_customer)
 {
   ASSERT_NO_THROW(PersonAPI::getInstance()->findAll<Customer>()) ;
 }
 
 // Test de selection 4
-TEST_F(Test, persistence_api_select4)
+TEST_F(Test, persistence_api_find_all_employee)
 {
   ASSERT_NO_THROW(PersonAPI::getInstance()->findAll<Employee>()) ;
+}
+
+// Test de selection 5
+TEST_F(Test, persistence_api_find_by_credentials_1)
+{
+  ASSERT_ANY_THROW(PersonAPI::getInstance()->findByCredentials<Person>("root@gmail.com", "454")) ;
+}
+
+// Test de selection 6
+TEST_F(Test, persistence_api_find_by_credentials_2)
+{
+  ASSERT_NO_THROW(PersonAPI::getInstance()->findByCredentials<Person>("root@root.com", "454")) ;
 }
 
 // Test de suppression 1
@@ -88,7 +100,7 @@ TEST_F(Test, persistence_api_delete2)
 int main(int argc, char *argv[])
 {
     ::testing::InitGoogleTest(&argc, argv) ;
-    static plog::ColorConsoleAppender<plog::TxtFormatter> consoleAppender;
-	plog::init(plog::verbose, &consoleAppender);
+//    static plog::ColorConsoleAppender<plog::TxtFormatter> consoleAppender;
+//	plog::init(plog::verbose, &consoleAppender);
     return RUN_ALL_TESTS() ;
 }

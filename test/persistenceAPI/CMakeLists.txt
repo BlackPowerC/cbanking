@@ -56,9 +56,9 @@ target_link_libraries(
         test_persistence_api
         libodb-2.4.so
         libodb-mysql-2.4.so
-        gtest
-        gtest_main
-        pthread
+        libgtest.a
+        libgtest_main.a
+        libpthread.so
 )
 
 target_compile_features(test_persistence_api PUBLIC cxx_std_14)

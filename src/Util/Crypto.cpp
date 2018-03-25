@@ -7,9 +7,8 @@
  * \brief Implémentation des fonctions de Crypto.hpp
  */
 
-#include <plog/Log.h>
-#include "../../include/Util/Crypto.hpp"
 #include <algorithm>
+#include "../../include/Util/Crypto.hpp"
 
 namespace Util
 {
@@ -35,17 +34,15 @@ namespace Util
 
         std::copy(passwd.begin(), passwd.end(), in) ;
 
-        std::string hash; hash.resize(crypto_hash_sha512_BYTES) ;
+        std::string hash;
         if(crypto_hash_sha512(out, in, (unsigned long long) in_size)!=0)
         {
             return std::string() ;
         }
         for(int i=0; i<crypto_hash_sha512_BYTES; i++)
         {
-            if(out[i] > 127)
-                out[i] -= 128 ;
+            hash += std::to_string((int) out[i]) ;
         }
-        std::copy(out, out+crypto_hash_sha512_BYTES, hash.begin()) ;
         return hash ;
     }
 
