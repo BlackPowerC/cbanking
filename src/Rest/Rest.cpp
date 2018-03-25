@@ -38,7 +38,7 @@ namespace RestAPI
         // La route pour l'authentification
         Rest::Routes::Post(this->t_router, "/authentification",
                             Rest::Routes::bind(&RequestHandler::authentification, &this->t_rhandler)) ;
-        Rest::Routes::Post(this->t_router, "/subscription",
+        Rest::Routes::Post(this->t_router, "/subscription/:token",
                             Rest::Routes::bind(&RequestHandler::subscription, &this->t_rhandler));
         /* Les requetes DELETE */
         // Un client

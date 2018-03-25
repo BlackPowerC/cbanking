@@ -7,6 +7,8 @@
 
 #include "../../include/Rest/RequestHandler.hpp"
 #include "../../include/Exception.hpp"
+#include "../../include/Util/JSONValidator.hpp"
+#include "../../include/Util/RegularFile.hpp"
 
 // API de persistence
 #include "../../include/API/PersistenceAPI.hpp"
@@ -24,6 +26,7 @@
 #include <rapidjson/document.h>
 
 // STL
+#include <cstring>
 #include <memory>
 #include <ctime>
 
@@ -416,33 +419,25 @@ namespace RestAPI
         std::shared_ptr<Session> session ;
         try
         {
-            rapidjson::Document doc ;
-            if(doc.Parse(request.body().c_str()).HasParseError())
+            if(!Util::json_is_valid(fromFileToString("resources/json schema/signin.schema.json"), request.body()))
             {
-                LOG_INFO << request.body() ;
                 response.send(Http::Code::Bad_Request) ;
                 return ;
             }
-            if(!doc.HasMember("passwd") || !doc.HasMember("email"))
-            {
-                LOG_INFO << request.body() ;
-                response.send(Http::Code::Bad_Request) ;
-                return ;
-            }
+            rapidjson::Document doc ; doc.Parse(request.body().c_str()) ;
             rapidjson::Value &passwd = doc["passwd"] ;
             rapidjson::Value &email = doc["email"] ;
             // Récupérons la person avec les credentials
             std::shared_ptr<Person> person = PersonAPI::getInstance()
                                                 ->findByCredentials<Person>(
                                                     std::string(email.GetString()), std::string(passwd.GetString())) ;
-            // On récupère sa session
-            session = SessionAPI::getInstance()->findById<Session>(person->getId()) ;
+
+            Session *session = dynamic_cast<Session*>(person->getToken()) ;
             // On vérifie la validité de la session grâce au timestamp courant
-            std::time_t current_time = std::time(nullptr) ;
-            ulong timestamp = (ulong) current_time ;
+            ulong current_time = std::time(nullptr) ;
             if(session->getEnd() < current_time)
             {
-                std::string err_msg = "" ;
+                std::string err_msg = "{\"erreur\":[\"message\":\"session expirée\"]}" ;
                 response.send(Http::Code::Unauthorized, err_msg, MIME(Application, Json)) ;
                 return ;
             }
@@ -452,16 +447,95 @@ namespace RestAPI
         }
         catch(const NotFound &nf)
         {
-            LOG_WARNING << "Tentative frauduleuse de connexion !" ;
-            response.send(Http::Code::Unauthorized) ;
+            LOG_WARNING << nf.what() ;
+            std::string err_msg = "{\"erreur\":[\"message\":\"non authorisé sur cet API\"]}" ;
+            response.send(Http::Code::Unauthorized, err_msg, MIME(Application, Json)) ;
             return ;
         }
-    	response.send(Http::Code::Ok, session->getToken(), Http::Mime::MediaType::fromString("text/plain"));
     }
 
     // La route pour l'inscription
     void RequestHandler::subscription(const Rest::Request &request, Http::ResponseWriter response)
     {
-        response.send(Http::Code::Ok, request.param("?token").name(), Http::Mime::MediaType::fromString("text/plain"));
+        try
+        {
+            std::string token = request.param(":token").as<std::string>() ;
+            // Vérification JSON
+            if(!json_is_valid(fromFileToString("resources/json schema/signup.schema.json"), request.body()))
+            {
+                LOG_WARNING << request.body() ;
+                response.send(Http::Code::Bad_Request) ;
+                return ;
+            }
+            // Vérification de session du requester
+            std::shared_ptr<Session> p_userSession = SessionAPI::getInstance()->findByToken<Session>(token) ;
+            if(p_userSession->getEnd() < (ulong) std::time(nullptr))
+            {
+                std::string err_msg = "{\"erreur\":[\"message\":\"session expirée\"]}" ;
+                response.send(Http::Code::Unauthorized, err_msg, MIME(Application, Json)) ;
+                return ;
+            }
+            // Parse JSON
+            rapidjson::Document doc ; doc.Parse(request.body().c_str()) ;
+            rapidjson::Value &name = doc["name"] ;
+            rapidjson::Value &passwd = doc["passwd"] ;
+            rapidjson::Value &email = doc["email"] ;
+            rapidjson::Value &type = doc["type"] ;
+            // Création de la session
+            Session t_new_user_session ;
+            long id ;
+            if(!std::strcmp(type.GetString(), "customer"))
+            {
+                Customer customer(0,std::string(name.GetString()),
+                                  std::string(email.GetString()),
+                                  hashArgon2(std::string(passwd.GetString()))) ;
+                t_new_user_session = initSession(std::make_shared<Customer>(customer)) ;
+                customer.setToken(t_new_user_session) ;
+                // Enregistrement de l'employé et de sa session
+                id = PersonAPI::getInstance()->insert<Customer>(customer) ;
+                t_new_user_session.getPerson()->setId(id) ;
+                SessionAPI::getInstance()->insert<Session>(t_new_user_session) ;
+                LOG_INFO << "Customer inscription en cours..." ;
+            }
+            else
+            {
+                Employee employee(0,std::string(name.GetString()),
+                                  std::string(email.GetString()),
+                                  hashArgon2(std::string(passwd.GetString()))) ;
+                t_new_user_session = initSession(std::make_shared<Employee>(employee)) ;
+                employee.setToken(t_new_user_session) ;
+                // Mise à jour du requester
+                Employee* to_update = dynamic_cast<Employee*>(p_userSession->getPerson()) ;
+                to_update->addSubordinate(employee) ;
+                PersonAPI::getInstance()->update<Employee>(*to_update) ; to_update = nullptr ;
+                // Enregistrement de l'employé et de sa session
+                id = PersonAPI::getInstance()->insert<Employee>(employee) ;
+                t_new_user_session.getPerson()->setId(id) ;
+                SessionAPI::getInstance()->insert<Session>(t_new_user_session) ;
+                LOG_INFO << "Employee inscription en cours..." ;
+            }
+            // Envoie d'un email
+        }
+        catch(const NotFound &nf)
+        {
+            LOG_WARNING << nf.what() ;
+            std::string err_msg = "{\"erreur\":[\"message\":\"non authorisé sur cet API\"]}" ;
+            response.send(Http::Code::Unauthorized, err_msg, MIME(Application, Json)) ;
+            return ;
+        }
+        catch(const FileStreamError &fsr)
+        {
+            LOG_WARNING << fsr.what() ;
+            response.send(Http::Code::Internal_Server_Error) ;
+            return ;
+        }
+        catch(const std::exception &e)
+        {
+            LOG_WARNING << e.what() ;
+            response.send(Http::Code::Internal_Server_Error) ;
+            return ;
+        }
+        LOG_INFO << "Utilisateur inscrit" ;
+        response.send(Http::Code::Ok) ;
     }
 }

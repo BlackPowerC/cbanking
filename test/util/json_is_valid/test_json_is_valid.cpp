@@ -92,7 +92,7 @@ TEST_F(Test, testSignupSchema4)
     json_schema.resize(filesize) ;
     json_schema_file.seekg(std::ios::beg) ;
     json_schema_file.read(&json_schema[0], filesize) ;
-    std::string inputJson("{\"name\":\"\", \"email\":\"fatigba72gmailcom\", \"passwd\":\"op\", \"type\":\"customer\"}") ;
+    std::string inputJson("{\"name\":\"\", \"email\":\"fatigba72gmail.com\", \"passwd\":\"op\", \"type\":\"customer\"}") ;
 
     ASSERT_FALSE(Util::json_is_valid(json_schema, inputJson)) ;
 }
