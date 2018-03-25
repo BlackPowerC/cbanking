@@ -31,6 +31,11 @@ namespace odb
   // Person
   //
 
+  const char alias_traits<  ::Entity::Token,
+    id_mysql,
+    access::object_traits_impl< ::Entity::Person, id_mysql >::p_token_tag>::
+  table_name[] = "`id_token_Token`";
+
   struct access::object_traits_impl< ::Entity::Person, id_mysql >::extra_statement_cache_type
   {
     extra_statement_cache_type (
@@ -149,6 +154,10 @@ namespace odb
       grew = true;
     }
 
+    // p_token
+    //
+    t[5UL] = 0;
+
     return grew;
   }
 
@@ -215,6 +224,14 @@ namespace odb
       i.passwd_value.capacity ());
     b[n].length = &i.passwd_size;
     b[n].is_null = &i.passwd_null;
+    n++;
+
+    // p_token
+    //
+    b[n].buffer_type = MYSQL_TYPE_LONG;
+    b[n].is_unsigned = 0;
+    b[n].buffer = &i.p_token_value;
+    b[n].is_null = &i.p_token_null;
     n++;
   }
 
@@ -340,6 +357,31 @@ namespace odb
       grew = grew || (cap != i.passwd_value.capacity ());
     }
 
+    // p_token
+    //
+    {
+      ::std::shared_ptr< ::Entity::Token > const& v =
+        o.p_token;
+
+      typedef object_traits< ::Entity::Token > obj_traits;
+      typedef odb::pointer_traits< ::std::shared_ptr< ::Entity::Token > > ptr_traits;
+
+      bool is_null (ptr_traits::null_ptr (v));
+      if (!is_null)
+      {
+        const obj_traits::id_type& id (
+          obj_traits::id (ptr_traits::get_ref (v)));
+
+        mysql::value_traits<
+            obj_traits::id_type,
+            mysql::id_long >::set_image (
+          i.p_token_value, is_null, id);
+        i.p_token_null = is_null;
+      }
+      else
+        i.p_token_null = 1;
+    }
+
     return grew;
   }
 
@@ -410,6 +452,37 @@ namespace odb
         i.passwd_size,
         i.passwd_null);
     }
+
+    // p_token
+    //
+    {
+      ::std::shared_ptr< ::Entity::Token >& v =
+        o.p_token;
+
+      typedef object_traits< ::Entity::Token > obj_traits;
+      typedef odb::pointer_traits< ::std::shared_ptr< ::Entity::Token > > ptr_traits;
+
+      if (i.p_token_null)
+        v = ptr_traits::pointer_type ();
+      else
+      {
+        obj_traits::id_type id;
+        mysql::value_traits<
+            obj_traits::id_type,
+            mysql::id_long >::set_value (
+          id,
+          i.p_token_value,
+          i.p_token_null);
+
+        // If a compiler error points to the line below, then
+        // it most likely means that a pointer used in a member
+        // cannot be initialized from an object pointer.
+        //
+        v = ptr_traits::pointer_type (
+          static_cast<mysql::database*> (db)->load<
+            obj_traits::object_type > (id));
+      }
+    }
   }
 
   void access::object_traits_impl< ::Entity::Person, id_mysql >::
@@ -447,9 +520,10 @@ namespace odb
   "`typeid`, "
   "`name`, "
   "`email`, "
-  "`passwd`) "
+  "`passwd`, "
+  "`id_token`) "
   "VALUES "
-  "(?, ?, ?, ?, ?)";
+  "(?, ?, ?, ?, ?, ?)";
 
   const char access::object_traits_impl< ::Entity::Person, id_mysql >::find_statement[] =
   "SELECT "
@@ -457,7 +531,8 @@ namespace odb
   "`Person`.`typeid`, "
   "`Person`.`name`, "
   "`Person`.`email`, "
-  "`Person`.`passwd` "
+  "`Person`.`passwd`, "
+  "`Person`.`id_token` "
   "FROM `Person` "
   "WHERE `Person`.`id`=?";
 
@@ -473,7 +548,8 @@ namespace odb
   "SET "
   "`name`=?, "
   "`email`=?, "
-  "`passwd`=? "
+  "`passwd`=?, "
+  "`id_token`=? "
   "WHERE `id`=?";
 
   const char access::object_traits_impl< ::Entity::Person, id_mysql >::erase_statement[] =
@@ -481,13 +557,15 @@ namespace odb
   "WHERE `id`=?";
 
   const char access::object_traits_impl< ::Entity::Person, id_mysql >::query_statement[] =
-  "SELECT "
-  "`Person`.`id`, "
-  "`Person`.`typeid`, "
-  "`Person`.`name`, "
-  "`Person`.`email`, "
-  "`Person`.`passwd` "
-  "FROM `Person`";
+  "SELECT\n"
+  "`Person`.`id`,\n"
+  "`Person`.`typeid`,\n"
+  "`Person`.`name`,\n"
+  "`Person`.`email`,\n"
+  "`Person`.`passwd`,\n"
+  "`Person`.`id_token`\n"
+  "FROM `Person`\n"
+  "LEFT JOIN `Token` AS `id_token_Token` ON `id_token_Token`.`id`=`Person`.`id_token`";
 
   const char access::object_traits_impl< ::Entity::Person, id_mysql >::erase_query_statement[] =
   "DELETE FROM `Person`";
@@ -1068,7 +1146,7 @@ namespace odb
     std::string text (query_statement);
     if (!q.empty ())
     {
-      text += " ";
+      text += "\n";
       text += q.clause ();
     }
 
@@ -1077,7 +1155,7 @@ namespace odb
       new (shared) select_statement (
         conn,
         text,
-        false,
+        true,
         true,
         q.parameters_binding (),
         imb));
@@ -1404,7 +1482,8 @@ namespace odb
     "`Person`.`typeid`, "
     "`Person`.`name`, "
     "`Person`.`email`, "
-    "`Person`.`passwd` "
+    "`Person`.`passwd`, "
+    "`Person`.`id_token` "
     "FROM `Customer` "
     "LEFT JOIN `Person` ON `Person`.`id`=`Customer`.`id` "
     "WHERE `Customer`.`id`=?",
@@ -1414,7 +1493,7 @@ namespace odb
 
   const std::size_t access::object_traits_impl< ::Entity::Customer, id_mysql >::find_column_counts[] =
   {
-    5UL,
+    6UL,
     0UL
   };
 
@@ -1428,9 +1507,11 @@ namespace odb
   "`Person`.`typeid`,\n"
   "`Person`.`name`,\n"
   "`Person`.`email`,\n"
-  "`Person`.`passwd`\n"
+  "`Person`.`passwd`,\n"
+  "`Person`.`id_token`\n"
   "FROM `Customer`\n"
-  "LEFT JOIN `Person` ON `Person`.`id`=`Customer`.`id`";
+  "LEFT JOIN `Person` ON `Person`.`id`=`Customer`.`id`\n"
+  "LEFT JOIN `Token` AS `id_token_Token` ON `id_token_Token`.`id`=`Person`.`id_token`";
 
   const char access::object_traits_impl< ::Entity::Customer, id_mysql >::erase_query_statement[] =
   "DELETE FROM `Customer`";
@@ -2850,7 +2931,8 @@ namespace odb
     "`Person`.`typeid`, "
     "`Person`.`name`, "
     "`Person`.`email`, "
-    "`Person`.`passwd` "
+    "`Person`.`passwd`, "
+    "`Person`.`id_token` "
     "FROM `Employee` "
     "LEFT JOIN `Person` ON `Person`.`id`=`Employee`.`id` "
     "WHERE `Employee`.`id`=?",
@@ -2860,7 +2942,7 @@ namespace odb
 
   const std::size_t access::object_traits_impl< ::Entity::Employee, id_mysql >::find_column_counts[] =
   {
-    5UL,
+    6UL,
     0UL
   };
 
@@ -2874,9 +2956,11 @@ namespace odb
   "`Person`.`typeid`,\n"
   "`Person`.`name`,\n"
   "`Person`.`email`,\n"
-  "`Person`.`passwd`\n"
+  "`Person`.`passwd`,\n"
+  "`Person`.`id_token`\n"
   "FROM `Employee`\n"
-  "LEFT JOIN `Person` ON `Person`.`id`=`Employee`.`id`";
+  "LEFT JOIN `Person` ON `Person`.`id`=`Employee`.`id`\n"
+  "LEFT JOIN `Token` AS `id_token_Token` ON `id_token_Token`.`id`=`Person`.`id_token`";
 
   const char access::object_traits_impl< ::Entity::Employee, id_mysql >::erase_query_statement[] =
   "DELETE FROM `Employee`";

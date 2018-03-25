@@ -30,6 +30,7 @@ class Operation ;
 class Virement ;
 class SavingsAccount ;
 class CurrentAccount ;
+class Token ;
 
 
 /**
@@ -50,6 +51,8 @@ protected:
     std::string email ;
 #pragma db type("VARCHAR(2048)")
     std::string passwd ;
+#pragma db value_not_null type("INT") column("id_token")
+    std::shared_ptr<Token> p_token ;
 public:
     /**
      * \fn Person(long _id = 0, std::string _name= "")
@@ -88,6 +91,10 @@ public:
     std::string getPasswd() const ;
 
     void setPasswd(std::string _passwd) ;
+
+    void setToken(const Token &token) ;
+
+    Token* getToken() const ;
 
     void operator=(const Person &person)
     {
@@ -396,7 +403,7 @@ protected:
     int id ;
     #pragma db value_null type("INT") column("id_person")
     std::shared_ptr<Person> t_person ;
-    #pragma db value_not_null type("VARCHAR(2048)") unique
+    #pragma db value_not_null type("VARCHAR(1024)") unique
     std::string token ; /*!< Jetton unique */
 public:
     Token() ;
@@ -409,7 +416,7 @@ public:
 
     void setId(int id) ;
 
-    const std::shared_ptr<Person> &getPerson() const ;
+    Person *getPerson() const ;
 
     void setPerson(const std::shared_ptr<Person> &t_person) ;
 

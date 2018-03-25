@@ -11,6 +11,12 @@
 
 namespace Util
 {
+    /**
+     * Cette fonction lit le contenu d'un fichier texte vers une
+     * chaine de caractère.
+     * @param filePath Le chemin vers le fichier.
+     * @return
+     */
     std::string fromFileToString(const std::string &filePath) ;
 }
 

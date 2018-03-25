@@ -419,7 +419,7 @@ namespace odb
   // Person
   //
   template <typename A>
-  struct query_columns< ::Entity::Person, id_mysql, A >
+  struct pointer_query_columns< ::Entity::Person, id_mysql, A >
   {
     // id
     //
@@ -480,38 +480,49 @@ namespace odb
     passwd_type_;
 
     static const passwd_type_ passwd;
+
+    // p_token
+    //
+    typedef
+    mysql::query_column<
+      mysql::value_traits<
+        int,
+        mysql::id_long >::query_type,
+      mysql::id_long >
+    p_token_type_;
+
+    static const p_token_type_ p_token;
   };
 
   template <typename A>
-  const typename query_columns< ::Entity::Person, id_mysql, A >::id_type_
-  query_columns< ::Entity::Person, id_mysql, A >::
+  const typename pointer_query_columns< ::Entity::Person, id_mysql, A >::id_type_
+  pointer_query_columns< ::Entity::Person, id_mysql, A >::
   id (A::table_name, "`id`", 0);
 
   template <typename A>
-  const typename query_columns< ::Entity::Person, id_mysql, A >::typeid__type_
-  query_columns< ::Entity::Person, id_mysql, A >::
+  const typename pointer_query_columns< ::Entity::Person, id_mysql, A >::typeid__type_
+  pointer_query_columns< ::Entity::Person, id_mysql, A >::
   typeid_ (A::table_name, "`typeid`", 0);
 
   template <typename A>
-  const typename query_columns< ::Entity::Person, id_mysql, A >::name_type_
-  query_columns< ::Entity::Person, id_mysql, A >::
+  const typename pointer_query_columns< ::Entity::Person, id_mysql, A >::name_type_
+  pointer_query_columns< ::Entity::Person, id_mysql, A >::
   name (A::table_name, "`name`", 0);
 
   template <typename A>
-  const typename query_columns< ::Entity::Person, id_mysql, A >::email_type_
-  query_columns< ::Entity::Person, id_mysql, A >::
+  const typename pointer_query_columns< ::Entity::Person, id_mysql, A >::email_type_
+  pointer_query_columns< ::Entity::Person, id_mysql, A >::
   email (A::table_name, "`email`", 0);
 
   template <typename A>
-  const typename query_columns< ::Entity::Person, id_mysql, A >::passwd_type_
-  query_columns< ::Entity::Person, id_mysql, A >::
+  const typename pointer_query_columns< ::Entity::Person, id_mysql, A >::passwd_type_
+  pointer_query_columns< ::Entity::Person, id_mysql, A >::
   passwd (A::table_name, "`passwd`", 0);
 
   template <typename A>
-  struct pointer_query_columns< ::Entity::Person, id_mysql, A >:
-    query_columns< ::Entity::Person, id_mysql, A >
-  {
-  };
+  const typename pointer_query_columns< ::Entity::Person, id_mysql, A >::p_token_type_
+  pointer_query_columns< ::Entity::Person, id_mysql, A >::
+  p_token (A::table_name, "`id_token`", 0);
 
   template <>
   class access::object_traits_impl< ::Entity::Person, id_mysql >:
@@ -572,10 +583,17 @@ namespace odb
       unsigned long passwd_size;
       my_bool passwd_null;
 
+      // p_token
+      //
+      int p_token_value;
+      my_bool p_token_null;
+
       std::size_t version;
     };
 
     struct extra_statement_cache_type;
+
+    struct p_token_tag;
 
     using object_traits<object_type>::id;
 
@@ -621,7 +639,7 @@ namespace odb
 
     typedef mysql::query_base query_base_type;
 
-    static const std::size_t column_count = 5UL;
+    static const std::size_t column_count = 6UL;
     static const std::size_t id_column_count = 1UL;
     static const std::size_t inverse_column_count = 0UL;
     static const std::size_t readonly_column_count = 1UL;
@@ -695,12 +713,12 @@ namespace odb
   // Customer
   //
   template <typename A>
-  struct query_columns< ::Entity::Customer, id_mysql, A >:
-    query_columns< ::Entity::Person, id_mysql, typename A::base_traits >
+  struct pointer_query_columns< ::Entity::Customer, id_mysql, A >:
+    pointer_query_columns< ::Entity::Person, id_mysql, typename A::base_traits >
   {
     // Person
     //
-    typedef query_columns< ::Entity::Person, id_mysql, typename A::base_traits > Person;
+    typedef pointer_query_columns< ::Entity::Person, id_mysql, typename A::base_traits > Person;
 
     // id
     //
@@ -716,15 +734,9 @@ namespace odb
   };
 
   template <typename A>
-  const typename query_columns< ::Entity::Customer, id_mysql, A >::id_type_
-  query_columns< ::Entity::Customer, id_mysql, A >::
+  const typename pointer_query_columns< ::Entity::Customer, id_mysql, A >::id_type_
+  pointer_query_columns< ::Entity::Customer, id_mysql, A >::
   id (A::table_name, "`id`", 0);
-
-  template <typename A>
-  struct pointer_query_columns< ::Entity::Customer, id_mysql, A >:
-    query_columns< ::Entity::Customer, id_mysql, A >
-  {
-  };
 
   template <>
   class access::object_traits_impl< ::Entity::Customer, id_mysql >:
@@ -934,12 +946,12 @@ namespace odb
   // Employee
   //
   template <typename A>
-  struct query_columns< ::Entity::Employee, id_mysql, A >:
-    query_columns< ::Entity::Person, id_mysql, typename A::base_traits >
+  struct pointer_query_columns< ::Entity::Employee, id_mysql, A >:
+    pointer_query_columns< ::Entity::Person, id_mysql, typename A::base_traits >
   {
     // Person
     //
-    typedef query_columns< ::Entity::Person, id_mysql, typename A::base_traits > Person;
+    typedef pointer_query_columns< ::Entity::Person, id_mysql, typename A::base_traits > Person;
 
     // id
     //
@@ -955,15 +967,9 @@ namespace odb
   };
 
   template <typename A>
-  const typename query_columns< ::Entity::Employee, id_mysql, A >::id_type_
-  query_columns< ::Entity::Employee, id_mysql, A >::
+  const typename pointer_query_columns< ::Entity::Employee, id_mysql, A >::id_type_
+  pointer_query_columns< ::Entity::Employee, id_mysql, A >::
   id (A::table_name, "`id`", 0);
-
-  template <typename A>
-  struct pointer_query_columns< ::Entity::Employee, id_mysql, A >:
-    query_columns< ::Entity::Employee, id_mysql, A >
-  {
-  };
 
   template <>
   class access::object_traits_impl< ::Entity::Employee, id_mysql >:
@@ -2293,10 +2299,207 @@ namespace odb
 
   // Person
   //
+  template <>
+  struct alias_traits<
+    ::Entity::Token,
+    id_mysql,
+    access::object_traits_impl< ::Entity::Person, id_mysql >::p_token_tag>
+  {
+    static const char table_name[];
+  };
+
+  template <>
+  struct query_columns_base< ::Entity::Person, id_mysql >
+  {
+    // p_token
+    //
+    typedef
+    odb::alias_traits<
+      ::Entity::Token,
+      id_mysql,
+      access::object_traits_impl< ::Entity::Person, id_mysql >::p_token_tag>
+    p_token_alias_;
+  };
+
+  template <typename A>
+  struct query_columns< ::Entity::Person, id_mysql, A >:
+    query_columns_base< ::Entity::Person, id_mysql >
+  {
+    // id
+    //
+    typedef
+    mysql::query_column<
+      mysql::value_traits<
+        long int,
+        mysql::id_longlong >::query_type,
+      mysql::id_longlong >
+    id_type_;
+
+    static const id_type_ id;
+
+    // typeid_
+    //
+    typedef
+    mysql::query_column<
+      mysql::value_traits<
+        ::std::string,
+        mysql::id_string >::query_type,
+      mysql::id_string >
+    typeid__type_;
+
+    static const typeid__type_ typeid_;
+
+    // name
+    //
+    typedef
+    mysql::query_column<
+      mysql::value_traits<
+        ::std::string,
+        mysql::id_string >::query_type,
+      mysql::id_string >
+    name_type_;
+
+    static const name_type_ name;
+
+    // email
+    //
+    typedef
+    mysql::query_column<
+      mysql::value_traits<
+        ::std::string,
+        mysql::id_string >::query_type,
+      mysql::id_string >
+    email_type_;
+
+    static const email_type_ email;
+
+    // passwd
+    //
+    typedef
+    mysql::query_column<
+      mysql::value_traits<
+        ::std::string,
+        mysql::id_string >::query_type,
+      mysql::id_string >
+    passwd_type_;
+
+    static const passwd_type_ passwd;
+
+    // p_token
+    //
+    typedef
+    mysql::query_column<
+      mysql::value_traits<
+        int,
+        mysql::id_long >::query_type,
+      mysql::id_long >
+    p_token_column_type_;
+
+    typedef
+    odb::query_pointer<
+      odb::pointer_query_columns<
+        ::Entity::Token,
+        id_mysql,
+        p_token_alias_ > >
+    p_token_pointer_type_;
+
+    struct p_token_type_: p_token_pointer_type_, p_token_column_type_
+    {
+      p_token_type_ (const char* t, const char* c, const char* conv)
+        : p_token_column_type_ (t, c, conv)
+      {
+      }
+    };
+
+    static const p_token_type_ p_token;
+  };
+
+  template <typename A>
+  const typename query_columns< ::Entity::Person, id_mysql, A >::id_type_
+  query_columns< ::Entity::Person, id_mysql, A >::
+  id (A::table_name, "`id`", 0);
+
+  template <typename A>
+  const typename query_columns< ::Entity::Person, id_mysql, A >::typeid__type_
+  query_columns< ::Entity::Person, id_mysql, A >::
+  typeid_ (A::table_name, "`typeid`", 0);
+
+  template <typename A>
+  const typename query_columns< ::Entity::Person, id_mysql, A >::name_type_
+  query_columns< ::Entity::Person, id_mysql, A >::
+  name (A::table_name, "`name`", 0);
+
+  template <typename A>
+  const typename query_columns< ::Entity::Person, id_mysql, A >::email_type_
+  query_columns< ::Entity::Person, id_mysql, A >::
+  email (A::table_name, "`email`", 0);
+
+  template <typename A>
+  const typename query_columns< ::Entity::Person, id_mysql, A >::passwd_type_
+  query_columns< ::Entity::Person, id_mysql, A >::
+  passwd (A::table_name, "`passwd`", 0);
+
+  template <typename A>
+  const typename query_columns< ::Entity::Person, id_mysql, A >::p_token_type_
+  query_columns< ::Entity::Person, id_mysql, A >::
+  p_token (A::table_name, "`id_token`", 0);
+
   // Customer
   //
+  template <typename A>
+  struct query_columns< ::Entity::Customer, id_mysql, A >:
+    query_columns< ::Entity::Person, id_mysql, typename A::base_traits >
+  {
+    // Person
+    //
+    typedef query_columns< ::Entity::Person, id_mysql, typename A::base_traits > Person;
+
+    // id
+    //
+    typedef
+    mysql::query_column<
+      mysql::value_traits<
+        long int,
+        mysql::id_longlong >::query_type,
+      mysql::id_longlong >
+    id_type_;
+
+    static const id_type_ id;
+  };
+
+  template <typename A>
+  const typename query_columns< ::Entity::Customer, id_mysql, A >::id_type_
+  query_columns< ::Entity::Customer, id_mysql, A >::
+  id (A::table_name, "`id`", 0);
+
   // Employee
   //
+  template <typename A>
+  struct query_columns< ::Entity::Employee, id_mysql, A >:
+    query_columns< ::Entity::Person, id_mysql, typename A::base_traits >
+  {
+    // Person
+    //
+    typedef query_columns< ::Entity::Person, id_mysql, typename A::base_traits > Person;
+
+    // id
+    //
+    typedef
+    mysql::query_column<
+      mysql::value_traits<
+        long int,
+        mysql::id_longlong >::query_type,
+      mysql::id_longlong >
+    id_type_;
+
+    static const id_type_ id;
+  };
+
+  template <typename A>
+  const typename query_columns< ::Entity::Employee, id_mysql, A >::id_type_
+  query_columns< ::Entity::Employee, id_mysql, A >::
+  id (A::table_name, "`id`", 0);
+
   // Group
   //
   // Token

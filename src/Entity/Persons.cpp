@@ -57,6 +57,16 @@ void Person::setPasswd(std::string _passwd)
     this->passwd = _passwd;
 }
 
+Token* Person::getToken() const
+{
+    return this->p_token.get() ;
+}
+
+void Person::setToken(const Token &token)
+{
+    this->p_token = std::make_shared<Token>(token) ;
+}
+
 /* Classe Customer */
 Customer::Customer(long _id, std::string _name, std::string _email, std::string _passwd):
         Person(_id, _name, _email, _passwd)
@@ -311,9 +321,9 @@ std::string Group::getName() const
         this->id = id ;
     }
 
-    const std::shared_ptr<Person> &Token::getPerson() const
+    Person *Token::getPerson() const
     {
-        return this->t_person ;
+        return this->t_person.get() ;
     }
 
     void Token::setPerson(const std::shared_ptr<Person> &t_person)
