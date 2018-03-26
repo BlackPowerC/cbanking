@@ -45,9 +45,10 @@ public:
 	/**
 	 * \brief Cette fonction insert une entité de la base de données.
 	 * \param t_obj Une référence sur l'objet persistant.
+	 * \return L'id de l'objet sauvegardé.
 	 */
 	template <typename T>
- 	void insert(T &t_obj) ;
+ 	long insert(T &t_obj) ;
 
 	/**
 	 * \fn std::vector<std::shared_ptr<T> > findAll()

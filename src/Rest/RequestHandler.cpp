@@ -469,6 +469,8 @@ namespace RestAPI
             }
             // Vérification de session du requester
             std::shared_ptr<Session> p_userSession = SessionAPI::getInstance()->findByToken<Session>(token) ;
+            // Garde fou pour empêcher les utilisateurs de type client
+            PersonAPI::getInstance()->findById<Employee>(p_userSession->getPerson()->getId()) ;
             if(p_userSession->getEnd() < (ulong) std::time(nullptr))
             {
                 std::string err_msg = "{\"erreur\":[\"message\":\"session expirée\"]}" ;
@@ -483,7 +485,7 @@ namespace RestAPI
             rapidjson::Value &type = doc["type"] ;
             // Création de la session
             Session t_new_user_session ;
-            long id ;
+            long id_user, id_session ;
             if(!std::strcmp(type.GetString(), "customer"))
             {
                 Customer customer(0,std::string(name.GetString()),
@@ -492,10 +494,16 @@ namespace RestAPI
                 t_new_user_session = initSession(std::make_shared<Customer>(customer)) ;
                 customer.setToken(t_new_user_session) ;
                 // Enregistrement de l'employé et de sa session
-                id = PersonAPI::getInstance()->insert<Customer>(customer) ;
-                t_new_user_session.getPerson()->setId(id) ;
-                SessionAPI::getInstance()->insert<Session>(t_new_user_session) ;
-                LOG_INFO << "Customer inscription en cours..." ;
+                id_user = PersonAPI::getInstance()->insert<Customer>(customer) ;
+                id_session = SessionAPI::getInstance()->insert<Session>(t_new_user_session) ;
+
+                t_new_user_session.getPerson()->setId(id_user) ;
+                customer.getToken()->setId(id_session) ;
+
+                PersonAPI::getInstance()->update<Session>(t_new_user_session) ;
+                SessionAPI::getInstance()->update<Customer>(customer) ;
+
+                LOG_INFO << "Inscription du client en cours..." ;
             }
             else
             {
@@ -509,16 +517,21 @@ namespace RestAPI
                 to_update->addSubordinate(employee) ;
                 PersonAPI::getInstance()->update<Employee>(*to_update) ; to_update = nullptr ;
                 // Enregistrement de l'employé et de sa session
-                id = PersonAPI::getInstance()->insert<Employee>(employee) ;
-                t_new_user_session.getPerson()->setId(id) ;
-                SessionAPI::getInstance()->insert<Session>(t_new_user_session) ;
-                LOG_INFO << "Employee inscription en cours..." ;
+                id_user = PersonAPI::getInstance()->insert<Employee>(employee) ;
+                id_session = SessionAPI::getInstance()->insert<Session>(t_new_user_session) ;
+
+                t_new_user_session.getPerson()->setId(id_user) ;
+                employee.getToken()->setId(id_session) ;
+
+                PersonAPI::getInstance()->update<Session>(t_new_user_session) ;
+                SessionAPI::getInstance()->update<Employee>(employee) ;
+                LOG_INFO << "Inscription de l'employé en cours..." ;
             }
             // Envoie d'un email
         }
         catch(const NotFound &nf)
         {
-            LOG_WARNING << nf.what() ;
+            LOG_WARNING << "Tentative frauduleuse de connexion !" ;
             std::string err_msg = "{\"erreur\":[\"message\":\"non authorisé sur cet API\"]}" ;
             response.send(Http::Code::Unauthorized, err_msg, MIME(Application, Json)) ;
             return ;
@@ -535,7 +548,7 @@ namespace RestAPI
             response.send(Http::Code::Internal_Server_Error) ;
             return ;
         }
-        LOG_INFO << "Utilisateur inscrit" ;
+        LOG_INFO << "Utilisateur inscrit !" ;
         response.send(Http::Code::Ok) ;
     }
 }

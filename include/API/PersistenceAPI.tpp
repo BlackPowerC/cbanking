@@ -32,13 +32,15 @@ void PersistenceAPI::update(T &t_obj)
 }
 
 template <typename T>
-void PersistenceAPI::insert(T &t_obj)
+long PersistenceAPI::insert(T &t_obj)
 {
 	try
 	{
+        long id ;
 		DBConnection::getInstance()->reset() ;
-    DBConnection::getInstance()->getConnection()->persist(t_obj) ;
+    id = DBConnection::getInstance()->getConnection()->persist(t_obj) ;
     DBConnection::getInstance()->commit() ;
+        return id ;
 	}catch(const odb::exception &e)
 	{
     LOG_ERROR << e.what() ;
