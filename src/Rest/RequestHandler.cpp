@@ -260,6 +260,11 @@ namespace RestAPI
         }
     }
 
+    void RequestHandler::getSubordinates(const Rest::Request &request, Http::ResponseWriter response)
+    {
+
+    }
+
     // Les routes DELETE
     void RequestHandler::deletePerson(const Rest::Request &request, Http::ResponseWriter response)
     {

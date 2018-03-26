@@ -39,6 +39,7 @@ namespace RestAPI
         void getCustomerById(const Rest::Request &request, Http::ResponseWriter response) ;
         void getAllCustomers(const Rest::Request &request, Http::ResponseWriter response) ;
         void getCustomerByName(const Rest::Request &request, Http::ResponseWriter response) ;
+        void getSubordinates(const Rest::Request &request, Http::ResponseWriter response) ;
 
         // Les routes DELETE
         void deletePerson(const Rest::Request &request, Http::ResponseWriter response) ;

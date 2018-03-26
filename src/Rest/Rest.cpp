@@ -27,6 +27,9 @@ namespace RestAPI
         // Tout les clients
         Rest::Routes::Get(this->t_router, "/customer/get/all",
                           Rest::Routes::bind(&RequestHandler::getAllCustomers, &this->t_rhandler)) ;
+        // La liste des subordonnés d'un employé
+        Rest::Routes::Get(this->t_router, "/employe/subordinate/get/all",
+                          Rest::Routes::bind(&RequestHandler::getSubordinates, &this->t_rhandler)) ;
         // Un client avec un id
         Rest::Routes::Get(this->t_router, "/customer/get/id/:value",
                           Rest::Routes::bind(&RequestHandler::getCustomerById, &this->t_rhandler)) ;
