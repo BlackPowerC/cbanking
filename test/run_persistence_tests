@@ -1,12 +1,30 @@
+# fichier exécutable des tests
 TEST_DBCONNECION = ./dbconnection/test_dbconnection
 TEST_PERSON_API = ./personAPI/test_personapi
 TEST_ENTITY = ./entity/test_entities
 TEST_SESSION_API = ./sessionAPI/test_create_root_session
 TEST_PERSISTENCE_API = ./persistenceAPI/test_persistence_api
+# makefile pour les tests
+PERSISTENCE_TEST = ./run_persistence_tests
 
-all: $(TEST_DBCONNECION) $(TEST_PERSON_API) $(TEST_ENTITY) $(TEST_SESSION_API) $(TEST_PERSISTENCE_API)
-	$(TEST_DBCONNECION) && \
-	$(TEST_PERSON_API) && \
-	$(TEST_ENTITY) && \
-	$(TEST_SESSION_API) && \
-	$(TEST_PERSISTENCE_API)
+all:
+	make -f $(PERSISTENCE_TEST) test_dbconnection
+	make -f $(PERSISTENCE_TEST) test_entities
+	make -f $(PERSISTENCE_TEST) test_person_api
+	make -f $(PERSISTENCE_TEST) test_session_api
+	make -f $(PERSISTENCE_TEST) test_persistence_api
+
+test_entities: $(TEST_ENTITY)
+	$(TEST_ENTITY) > $(TEST_ENTITY).txt 
+
+test_person_api: $(TEST_PERSON_API)
+	$(TEST_PERSON_API) > $(TEST_PERSON_API).txt 
+
+test_dbconnection: $(TEST_DBCONNECION)
+	$(TEST_DBCONNECION) > $(TEST_DBCONNECION).txt 
+
+test_session_api: $(TEST_SESSION_API)
+	$(TEST_SESSION_API) > $(TEST_SESSION_API).txt 
+
+test_persistence_api:
+	$(TEST_PERSISTENCE_API) --gtest_repeat=25 --gtest_output="xml:./persistenceAPI/test_persistence_api.xml" 

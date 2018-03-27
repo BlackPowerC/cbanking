@@ -1,0 +1,37 @@
+# fichier exécutable des tests
+BASE = ./util
+BASE_CONVERTERS = $(BASE)/converter
+ACCOUNT_CONVERTER = $(BASE_CONVERTERS)/account/test_account_converter
+CURRENT_ACCOUNT_CONVERTER = $(BASE_CONVERTERS)/currentaccount/test_currentaccount_converter
+CUSTOMER_CONVERTER = $(BASE_CONVERTERS)/customer/test_customer_converter
+EMPLOYEE_CONVERTER = $(BASE_CONVERTERS)/employee/test_employee_converter
+PERSON_CONVERTER = $(BASE_CONVERTERS)/person/test_person_converter
+SAVINGS_ACCOUNT_CONVERTER = $(BASE_CONVERTERS)/savingsaccount/test_savingsaccount_converter
+# makefile pour les tests
+UTIL_TEST = ./run_utils_tests
+
+all:
+	make -f $(UTIL_TEST) account_converter
+	make -f $(UTIL_TEST) current_account_converter
+	make -f $(UTIL_TEST) savings_account_converter
+	make -f $(UTIL_TEST) customer_converter
+	make -f $(UTIL_TEST) employee_converter
+	make -f $(UTIL_TEST) person_converter
+
+account_converter: $(ACCOUNT_CONVERTER)
+	$(ACCOUNT_CONVERTER) --gtest_output="xml:./util/converter/account/test_account_converter.xml"
+
+current_account_converter: $(CUSTOMER_CONVERTER)
+	$(CUSTOMER_CONVERTER) --gtest_output="xml:./util/converter/currentaccount/test_currentaccount_converter.xml"
+
+savings_account_converter: $(SAVINGS_ACCOUNT_CONVERTER)
+	$(SAVINGS_ACCOUNT_CONVERTER) --gtest_output="xml:./util/converter/savingsaccount/test_savingsaccount_converter.xml"
+
+customer_converter: $(CUSTOMER_CONVERTER)
+	$(CUSTOMER_CONVERTER) --gtest_output="xml:./util/converter/customer/test_customer_converter.xml"
+
+employee_converter: $(EMPLOYEE_CONVERTER)
+	$(EMPLOYEE_CONVERTER) --gtest_output="xml:./util/converter/employee/test_employee_converter.xml"
+
+person_converter: $(PERSON_CONVERTER)
+	$(PERSON_CONVERTER) --gtest_output="xml:./util/converter/person/test_person_converter.xml"
