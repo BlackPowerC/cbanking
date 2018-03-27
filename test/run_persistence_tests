@@ -1,0 +1,12 @@
+TEST_DBCONNECION = ./dbconnection/test_dbconnection
+TEST_PERSON_API = ./personAPI/test_personapi
+TEST_ENTITY = ./entity/test_entities
+TEST_SESSION_API = ./sessionAPI/test_create_root_session
+TEST_PERSISTENCE_API = ./persistenceAPI/test_persistence_api
+
+all: $(TEST_DBCONNECION) $(TEST_PERSON_API) $(TEST_ENTITY) $(TEST_SESSION_API) $(TEST_PERSISTENCE_API)
+	$(TEST_DBCONNECION) && \
+	$(TEST_PERSON_API) && \
+	$(TEST_ENTITY) && \
+	$(TEST_SESSION_API) && \
+	$(TEST_PERSISTENCE_API)
