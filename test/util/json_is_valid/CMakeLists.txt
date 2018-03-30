@@ -11,6 +11,8 @@ add_executable(
 
         test_json_is_valid.cpp
         ../../../src/Util/JSONValidator.cpp
+        ../../../src/Util/RegularFile.cpp
+        ../../../src/Exception.cpp
 )
 
 target_link_libraries(
