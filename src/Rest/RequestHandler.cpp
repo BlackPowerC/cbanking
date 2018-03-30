@@ -436,19 +436,95 @@ namespace RestAPI
     }
 
     // Les routes POST
-    void RequestHandler::addCustomer(const Rest::Request &request, Http::ResponseWriter response)
-    {
-    	response.send(Http::Code::Ok, "Tout est OK", Http::Mime::MediaType::fromString("text/plain"));
-    }
-
-    void RequestHandler::addEmployee(const Rest::Request &request, Http::ResponseWriter response)
-    {
-    	response.send(Http::Code::Ok, "Tout est OK", Http::Mime::MediaType::fromString("text/plain"));
-    }
 
     void RequestHandler::addAccount(const Rest::Request &request, Http::ResponseWriter response)
     {
-    	response.send(Http::Code::Ok, "Tout est OK", Http::Mime::MediaType::fromString("text/plain"));
+    	try
+        {
+            std::string body(request.body()) ;
+            const char *body_cstr = body.c_str() ;
+            // Vérification json
+            if(!json_is_valid(fromFileToString("resources/json schema/account.schema.json"), body))
+            {
+                response.send(Http::Code::Bad_Request) ;
+                return ;
+            }
+            rapidjson::Document doc; doc.Parse(body_cstr) ;
+            rapidjson::Value &token = doc["token"] ;
+            rapidjson::Value &customer = doc["customer"] ;
+            rapidjson::Value &creationDate = doc["creationDate"] ;
+            rapidjson::Value &balance = doc["balance"] ;
+            rapidjson::Value &extra = doc["extra"] ;
+            rapidjson::Value &type = doc["type"] ;
+            // Vérification du token
+            std::shared_ptr<Session> p_user_session = SessionAPI::getInstance()->findByToken<Session>(
+                    std::string(token.GetString())
+            );
+            if(p_user_session->getEnd() < (ulong) std::time(nullptr))
+            {
+                std::string err_msg = "{\"erreur\":[\"message\":\"session expirée\"]}" ;
+                response.send(Http::Code::Unauthorized, err_msg, MIME(Application, Json)) ;
+                return ;
+            }
+            /* Récupération des Acteurs autour du compte*/
+            // L'employée créateur
+            std::shared_ptr<Employee> p_employee = PersonAPI::getInstance()
+                    ->findById<Employee>(p_user_session->getPerson()->getId()) ;
+
+            // Le client propriétaire
+            std::shared_ptr<Customer> p_customer = PersonAPI::getInstance()
+                    ->findById<Customer>(customer.GetInt()) ;
+
+            // construction de l'objet Account
+            long account_id ;
+            Account account(0, p_customer, p_employee, balance.GetDouble(), std::string(creationDate.GetString())) ;
+            if(std::strcmp("savings account", type.GetString()) == 0)
+            {
+                LOG_INFO << "Création d'un d'épargne courant en cours..." ;
+                // Insertion du compte d'épargne
+                SavingsAccount sa(account);
+                sa.setRate(extra.GetDouble());
+                account_id = AccountAPI::getInstance()->insert<SavingsAccount>(sa) ;
+                sa.setId(account_id) ;
+                p_customer->push_back(sa) ;
+                p_employee->addAccount(sa) ;
+            }
+            else
+            {
+                LOG_INFO << "Création d'un compte courant en cours..." ;
+                // Insertion du compte courant
+                CurrentAccount ca(account);
+                ca.setOverdraft(extra.GetDouble());
+                account_id = AccountAPI::getInstance()->insert<CurrentAccount>(ca) ;
+                ca.setId(account_id) ;
+                p_customer->push_back(ca) ;
+                p_employee->addAccount(ca) ;
+            }
+            // Mise à jour du client et de l'employé
+            PersonAPI::getInstance()->update<Customer>(*p_customer) ;
+            PersonAPI::getInstance()->update<Employee>(*p_employee) ;
+        }
+        catch(const NotFound &nf)
+        {
+            LOG_WARNING << "Tentative frauduleuse de connexion !" ;
+            std::string err_msg = "{\"erreur\":[\"message\":\"non authorisé sur cet API\"]}" ;
+            response.send(Http::Code::Unauthorized, err_msg, MIME(Application, Json)) ;
+            return ;
+        }
+        catch(const FileStreamError &fsr)
+        {
+            LOG_WARNING << fsr.what() ;
+            response.send(Http::Code::Internal_Server_Error) ;
+            return ;
+        }
+        catch(const std::exception &e)
+        {
+            LOG_WARNING << e.what() ;
+            response.send(Http::Code::Internal_Server_Error) ;
+            return ;
+        }
+        LOG_INFO << "Compte crée !" ;
+        response.send(Http::Code::Ok) ;
     }
 
     void RequestHandler::addOperation(const Rest::Request &request, Http::ResponseWriter response)
