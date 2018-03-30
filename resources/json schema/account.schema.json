@@ -34,7 +34,12 @@
 		{
 			"description":"Le jetton de l'employé créateur",
 			"type":"string"
-		}
+		},
+        "type":
+        {
+          "description":"Le type de compte à créer",
+          "enum":["savings account", "current account"]
+        }
 	},
-    "required": ["customer", "token", "balance", "extra", "creationDate"]
+    "required": ["customer", "token", "balance", "extra", "creationDate", "type"]
 }

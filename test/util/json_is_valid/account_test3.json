@@ -3,5 +3,6 @@
   "creationDate":"12-03-2028 14:33:32",
   "balance": 906.5,
   "extra":10.6,
-  "token":14
+  "token":14,
+  "type":"toto"
 }
