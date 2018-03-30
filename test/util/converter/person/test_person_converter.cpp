@@ -46,5 +46,6 @@ TEST_F(Test, person_api_test2)
 int main(int argc, char *argv[])
 {
     ::testing::InitGoogleTest(&argc, argv) ;
-    return RUN_ALL_TESTS() ;
+    RUN_ALL_TESTS() ;
+    return 0 ;
 }

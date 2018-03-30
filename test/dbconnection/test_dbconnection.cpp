@@ -1,6 +1,5 @@
-#include "../../include/Core/DBConnection.hpp"
-
 #include <plog/Log.h>
+#include "../../include/Core/DBConnection.hpp"
 #include <plog/Appenders/ColorConsoleAppender.h>
 
 int main()

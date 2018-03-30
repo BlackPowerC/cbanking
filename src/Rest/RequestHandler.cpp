@@ -262,7 +262,45 @@ namespace RestAPI
 
     void RequestHandler::getSubordinates(const Rest::Request &request, Http::ResponseWriter response)
     {
+        try
+        {
+            rapidjson::Document doc ; doc.Parse(request.body().c_str()) ;
+            if(doc.HasParseError() || !doc.HasMember("token"))
+            {
+                LOG_WARNING << request.body() ;
+                response.send(Http::Code::Bad_Request) ;
+                return ;
+            }
+            rapidjson::Value &token = doc["token"];
+            std::shared_ptr<Session> p_employee_session = SessionAPI::getInstance()
+                                                                  ->findByToken<Session>(std::string(token.GetString())) ;
+            PersonAPI::getInstance()->findById<Employee>(p_employee_session->getPerson()->getId()) ;
+            if(p_employee_session->getEnd() < (ulong) std::time(nullptr))
+            {
+                std::string err_msg = "{\"erreur\":[\"message\":\"session expirée\"]}" ;
+                response.send(Http::Code::Unauthorized, err_msg, MIME(Application, Json)) ;
+                return ;
+            }
 
+            Employee *p_employee = dynamic_cast<Employee*>(p_employee_session->getPerson()) ;
+            std::string json_response("[\n\t") ;
+            for(const auto &employee : p_employee->getSubordinate())
+            {
+                json_response += EmployeeConverter().entityToJson(employee)+",\n";
+            }
+            json_response.pop_back() ;
+            json_response.pop_back() ;
+            json_response += "\t]\n";
+
+            response.send(Http::Code::Ok, json_response, MIME(Application, Json)) ;
+        }
+        catch(const NotFound &nf)
+        {
+            LOG_WARNING << nf.what() ;
+            std::string err_msg = "{\"erreur\":[\"message\":\"non authorisé sur cet API\"]}" ;
+            response.send(Http::Code::Unauthorized, err_msg, MIME(Application, Json)) ;
+            return ;
+        }
     }
 
     // Les routes DELETE

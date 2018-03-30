@@ -40,20 +40,26 @@ int main()
         // Lecture de tout les customers
         try
         {
-            Customer dalida(0, "dalida", "dalida@gmail.com") ;
-            Customer thierrno(0, "thierrno", "thierrno@gmail.com") ;
-            Customer nabine(0, "nabine", "nabin@gmail.com") ;
-            p_papi->insert<Customer>(dalida) ;
-            p_papi->insert<Customer>(nabine) ;
-            p_papi->insert<Customer>(thierrno) ;
-
-            // Affiche de toutes les personnes
+            try
             {
+                Customer dalida(0, "dalida", "dalida@gmail.com") ;
+                Customer thierrno(0, "thierrno", "thierrno@gmail.com") ;
+                Customer nabine(0, "nabine", "nabin@gmail.com") ;
+                p_papi->insert<Customer>(dalida) ;
+                p_papi->insert<Customer>(nabine) ;
+                p_papi->insert<Customer>(thierrno) ;
+
+                // Affiche de toutes les personnes
                 for(auto &c: p_papi->findAll<Customer>())
                 {
                     std::cout << *c ;
                 }
             }
+            catch(const std::exception &e)
+            {
+                LOG_ERROR << e.what() <<"\n" ;
+            }
+
             // Toutes les personnes dont les nom commence par j
             {
                 try
@@ -65,7 +71,7 @@ int main()
                 }
                 catch(const BaseException &ba)
                 {
-                    LOG_ERROR << ba.what() ;
+                    LOG_WARNING << ba.what() <<"\n";
                 }
             }
             // La personnes avec l'id 5 et l'id 200
@@ -77,17 +83,17 @@ int main()
                 }
                 catch(const BaseException &ba)
                 {
-                    LOG_ERROR << ba.what() ;
+                    LOG_WARNING << ba.what()<<"\n" ;
                 }
             }
         }
         catch(const BaseException &ba)
         {
-            LOG_ERROR << ba.what() ;
+            LOG_WARNING << ba.what()<<"\n" ;
         }
         catch(const std::exception &e)
         {
-            LOG_ERROR << e.what() ;
+            LOG_ERROR << e.what()<<"\n" ;
         }
     }
 

@@ -4,6 +4,8 @@
 #include "../../include/API/AccountAPI.hpp"
 #include "../../include/API/OperationAPI.hpp"
 #include "../../include/API/PersonAPI.hpp"
+#include "../../include/API/SessionAPI.hpp"
+#include "../../include/Util/Crypto.hpp"
 
 #include <plog/Log.h>
 #include <plog/Appenders/ColorConsoleAppender.h>
@@ -85,6 +87,12 @@ TEST_F(Test, persistence_api_find_by_credentials_2)
   ASSERT_NO_THROW(PersonAPI::getInstance()->findByCredentials<Person>("root@root.com", "454")) ;
 }
 
+// Test de selection 6
+TEST_F(Test, persistence_api_find_by_token)
+{
+  ASSERT_NO_THROW(SessionAPI::getInstance()->findByToken<Session>(Util::hashSha512("root@root.com"))) ;
+}
+
 // Test de suppression 1
 TEST_F(Test, persistence_api_delete1)
 {
@@ -102,5 +110,7 @@ int main(int argc, char *argv[])
     ::testing::InitGoogleTest(&argc, argv) ;
 //    static plog::ColorConsoleAppender<plog::TxtFormatter> consoleAppender;
 //	plog::init(plog::verbose, &consoleAppender);
-    return RUN_ALL_TESTS() ;
+    RUN_ALL_TESTS() ;
+
+    return 0 ;
 }

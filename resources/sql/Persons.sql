@@ -25,7 +25,8 @@ CREATE TABLE `Person` (
   `typeid` VARCHAR(255) NOT NULL,
   `name` VARCHAR(512) NOT NULL,
   `email` VARCHAR(512) NOT NULL,
-  `passwd` VARCHAR(2048) NOT NULL)
+  `passwd` VARCHAR(2048) NOT NULL,
+  `id_token` INT NULL)
  ENGINE=InnoDB;
 
 CREATE UNIQUE INDEX `email_i`
@@ -123,4 +124,11 @@ CREATE TABLE `ReloadSession` (
     REFERENCES `Token` (`id`)
     ON DELETE CASCADE)
  ENGINE=InnoDB;
+
+/*
+ALTER TABLE `Person`
+  ADD CONSTRAINT `Person_id_token_fk`
+    FOREIGN KEY (`id_token`)
+    REFERENCES `Token` (`id`)
+*/
 

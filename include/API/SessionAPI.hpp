@@ -79,7 +79,7 @@ namespace Util
     {
         Entity::Session t_session;
         t_session.setBegin((ulong) std::time(nullptr)) ;
-        t_session.setEnd(t_session.getBegin()+31556952UL) ;
+        t_session.setEnd(t_session.getBegin()+(ulong)31556952) ;
         t_session.setPerson(p_person) ;
         t_session.setToken(hashSha512(p_person->getEmail())) ;
         return t_session ;
