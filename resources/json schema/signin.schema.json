@@ -7,5 +7,6 @@
 	{
 		"email": { "description":"L'email de l'utilisateur", "type":"string", "format":"email" },
 		"passwd": { "description":"Le mot de passe de l'utilisateur", "type":"string", "minLength":6}
-	}
+	},
+    "required":["email", "passwd"]
 }

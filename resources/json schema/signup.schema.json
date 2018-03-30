@@ -9,5 +9,6 @@
 		"email": { "description":"L'email de l'utilisateur", "type":"string", "format":"email" },
 		"passwd": { "description":"Le mot de passe de l'utilisateur", "type":"string", "minLength":6, "pattern":"^[\\w]+.*$"},
 		"type":{"description":"Le type d'utilisateur", "type":"string"}
-	}
+	},
+    "required":["name", "email", "passwd", "type"]
 }
