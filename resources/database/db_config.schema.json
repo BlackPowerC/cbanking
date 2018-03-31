@@ -1,0 +1,46 @@
+{
+	"$schema": "http://json-schema.org/schema#",
+	"title": "Database configuration",
+	"description": "fichier de configuration de la base de données",
+	"type":"object",
+	"properties":
+	{
+		"user": 
+		{
+			"description": "Nom d'utilisateur",
+			"type": "string"
+		},
+		"passwd":
+		{
+			"description": "Mot de passe",
+			"type": "string"
+		},
+		"database":
+		{
+			"description": "Nom de la base de données",
+			"type": "string"
+		},
+		"host":
+		{
+			"description": "Adresse IPv4 du SGBG",
+			"type": "string",
+			"format": "ipv4"
+		},
+		"port":
+		{
+			"description": "Port d'écoute du SGBD",
+			"type":"integer",
+			"minimum": 0
+		},
+		"type":
+		{
+			"description": "Le SGBD",
+			"enum":["mysql", "sqlite"]
+		}
+	},
+	"required": [
+		"user", "passwd",
+		"host", "database",
+		"port", "type"
+	]
+}
