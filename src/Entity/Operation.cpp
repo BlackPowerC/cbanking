@@ -86,8 +86,11 @@ void BaseOperation::setMontant(double montant)
 }
 
 /* classe Operation */
-Operation::Operation(const TypeOperation to) : BaseOperation(), typeOperation(to)
-{}
+Operation::Operation(const BaseOperation &ba, const TypeOperation &to) : 
+    BaseOperation(ba), typeOperation(to)
+{
+
+}
 
 Operation::Operation(const Operation &another): BaseOperation()
 {
@@ -105,7 +108,8 @@ void Operation::doOperation()
 }
 
 /* classe Virement */
-Virement::Virement(std::shared_ptr<Account> destination): BaseOperation(), t_destination(destination)
+Virement::Virement(const BaseOperation &ba, const std::shared_ptr<Account> &destination): 
+    BaseOperation(ba), t_destination(destination)
 {
 
 }

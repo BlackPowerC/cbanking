@@ -72,7 +72,7 @@ private:
   #pragma db type("INT") value_type("TINYINT")
   TypeOperation typeOperation ;
 public:
-  Operation(const TypeOperation to = TypeOperation::DEPOT) ;
+  Operation(const BaseOperation &ba, const TypeOperation &to = TypeOperation::DEPOT) ;
   Operation(const Operation &another) ;
   Operation(const Operation *another) ;
   virtual void doOperation() ;
@@ -106,7 +106,8 @@ private:
   #pragma db value_not_null column("id_account")
   std::shared_ptr<Account> t_destination ;
 public:
-  Virement(std::shared_ptr<Account> destination = std::make_shared<Account>()) ;
+  Virement(const BaseOperation &ba, 
+           const std::shared_ptr<Account> &destination = std::make_shared<Account>()) ;
   Virement(const Virement &another) ;
   Virement(const Virement *another) ;
   /* getters setters */
@@ -114,10 +115,10 @@ public:
   void setAccountDestination(Account &another) ;
   virtual void doOperation() ;
 
-        std::string getTypeOperation() const
-        {
-          return "virement" ;
-        }
+  std::string getTypeOperation() const
+  {
+    return "virement" ;
+  }
 
   void operator=(const Virement &t_another)
   {
