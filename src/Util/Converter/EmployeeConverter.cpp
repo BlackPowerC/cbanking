@@ -9,12 +9,14 @@
  */
 
 #include "../../../include/Util/Converter/EmployeeConverter.hpp"
+#include "../../../include/Util/Converter/OperationConverter.hpp"
 
 namespace Util
 {
     std::string EmployeeConverter::entityToJson(const Entity::Employee &entity)
     {
         bool flag = false;
+        OperationConverter oc ;
         std::string json("{\n") ;
         json += "\"id\":"+std::to_string(entity.getId())+",\n" ;
         json += "\"name\":\""+entity.getName()+"\",\n" ;
@@ -55,9 +57,7 @@ namespace Util
         for(auto operation: entity.getOperations())
         {
             flag = true ;
-            json += "\t{\"id\":"+std::to_string(operation->getId())+", " ;
-            json += "{\"type\":\""+operation->getTypeOperation()+"\", " ;
-            json += "\"date\":\""+operation->getDate()+"\"},\n" ;
+            json += oc.entityToJson(dynamic_cast<Entity::Operation*>(operation.get()))+",\n" ;
         }
         // fin de la convertion
         if(flag)

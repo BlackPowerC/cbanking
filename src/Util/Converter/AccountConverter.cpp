@@ -9,20 +9,35 @@
  */
 
 #include "../../../include/Util/Converter/AccountConverter.hpp"
+#include "../../../include/Util/Converter/OperationConverter.hpp"
 #include "../../../include/Util/Converter/PersonConverter.hpp"
 
 namespace Util
 {
     std::string AccountConverter::entityToJson(const Entity::Account &entity)
     {
+        bool flag = false ;
         std::string json("{") ;
         PersonConverter pc ;
+        OperationConverter oc ;
         json += "\"id\":"+std::to_string(entity.getId())+",\n" ;
         json += "\"customer\":"+pc.entityToJson(entity.getCustomer())+",\n" ;
         json += "\"employee\":"+pc.entityToJson(entity.getEmployee())+",\n" ;
         json += "\"dateCreation\":\""+entity.getCreationDate()+"\",\n" ;
-        json += "\"balance\":"+std::to_string(entity.getBalance())+"}" ;
-
+        json += "\"balance\":"+std::to_string(entity.getBalance())+",\n" ;
+        json += "\"operations\":\n\t[\n" ;
+        // Les opérations sur le compte
+        for(const auto operation: entity.getOperations())
+        {
+            flag = true ;
+            json += oc.entityToJson(dynamic_cast<Entity::Operation*>(operation.get()))+",\n" ;
+        }
+        if(flag)
+        {
+            json.pop_back();
+            json.pop_back();
+        }
+        json += "\t]\n}" ;
         return json ;
     }
 

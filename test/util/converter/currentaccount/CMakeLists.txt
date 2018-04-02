@@ -21,6 +21,7 @@ add_executable(
         ../../../../src/Util/Converter/AccountConverter.cpp
         ../../../../src/Util/Converter/CurrentAccountConverter.cpp
         ../../../../src/Util/Converter/PersonConverter.cpp
+        ../../../../src/Util/Converter/OperationConverter.cpp
 
         ../../../../src/Entity/Persons.cpp
 

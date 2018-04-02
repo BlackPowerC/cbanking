@@ -18,6 +18,7 @@ add_executable(
 
         ../../../../src/Util/Converter/EmployeeConverter.cpp
         ../../../../src/Util/Converter/PersonConverter.cpp
+        ../../../../src/Util/Converter/OperationConverter.cpp
 
         ../../../../src/Entity/Persons.cpp
 
