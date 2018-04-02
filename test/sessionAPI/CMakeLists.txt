@@ -18,6 +18,10 @@ add_executable(
 
     ../../src/Core/DBConnection.cpp
 
+    ../../src/Util/RegularFile.cpp
+
+    ../../src/Util/JSONValidator.cpp
+
     ../../src/Exception.cpp
 
     ../../src/Util/Crypto.cpp

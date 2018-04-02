@@ -14,8 +14,13 @@ add_executable(
 
 	test_dbconnection.cpp
 
-	../../include/Core/DBConnection.hpp
 	../../src/Core/DBConnection.cpp
+
+    ../../src/Exception.cpp
+
+    ../../src/Util/RegularFile.cpp
+
+    ../../src/Util/JSONValidator.cpp
 )
 
 target_link_libraries(

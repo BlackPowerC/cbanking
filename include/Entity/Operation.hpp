@@ -60,8 +60,8 @@ public:
   void setMontant(double montant) ;
 
   /* Méthode virtuelle pure*/
-  virtual std::string getTypeOperation() const = 0 ;
-  virtual void doOperation() = 0 ;
+  virtual std::string getTypeOperation() const {} ;
+  virtual void doOperation() {} ;
 };
 
 #pragma db object pointer(std::shared_ptr) session
@@ -72,6 +72,7 @@ private:
   #pragma db type("INT") value_type("TINYINT")
   TypeOperation typeOperation ;
 public:
+  Operation() {};
   Operation(const BaseOperation &ba, const TypeOperation &to = TypeOperation::DEPOT) ;
   Operation(const Operation &another) ;
   Operation(const Operation *another) ;
@@ -106,6 +107,7 @@ private:
   #pragma db value_not_null column("id_account")
   std::shared_ptr<Account> t_destination ;
 public:
+  Virement() {} ;
   Virement(const BaseOperation &ba, 
            const std::shared_ptr<Account> &destination = std::make_shared<Account>()) ;
   Virement(const Virement &another) ;

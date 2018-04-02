@@ -168,7 +168,7 @@ int main(void)
                 std::cout << "Insertion des opérations\n";
                 // L'opération de sam, sam fait une opération sur ca1
 
-                Operation sam_operation(TypeOperation::DEPOT) ;
+                Operation sam_operation ;
                 sam_operation.setId(0) ;
                 sam_operation.setAccountSource(ca1_jojo) ;
                 sam_operation.setEmployee(*sam) ;
@@ -182,7 +182,7 @@ int main(void)
                 p_database->update<Employee>(*sam) ;
 
                 // L'opération de edem, edem fait une opération sur ca2
-                Operation edem_operation(TypeOperation::RETRAIT) ;
+                Operation edem_operation ;
                 edem_operation.setId(0) ;
                 edem_operation.setAccountSource(ca1_ablavi) ;
                 edem_operation.setEmployee(*edem) ;

@@ -5,9 +5,9 @@
 	"type":"object",
 	"properties":
 	{
-        "customer":
+        "account":
 		{
-			"description":"Identitfiant du client",
+			"description":"Identifiant du compte",
 			"type":"integer",
             "minimum":1
 		},
@@ -31,8 +31,8 @@
         "type":
         {
           "description":"Le type de transaction",
-          "enum":["savings account", "current account"]
+          "enum":["retrait", "depot"]
         }
 	},
-    "required": ["customer", "token", "balance", "date", "type"]
+    "required": ["account", "token", "balance", "date", "type"]
 }

@@ -25,6 +25,10 @@ add_executable(
 
         ../../src/Util/Crypto.cpp
 
+        ../../src/Util/RegularFile.cpp
+
+        ../../src/Util/JSONValidator.cpp
+
         ../../src/Core/DBConnection.cpp
 
         ../../src/Entity/Persons.cpp

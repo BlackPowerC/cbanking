@@ -35,7 +35,7 @@
 		"type":
 		{
 			"description": "Le SGBD",
-			"enum":["mysql", "sqlite"]
+			"enum":["mysql", "mariadb"]
 		}
 	},
 	"required": [

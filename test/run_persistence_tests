@@ -8,7 +8,6 @@ TEST_PERSISTENCE_API = ./persistenceAPI/test_persistence_api
 PERSISTENCE_TEST = ./run_persistence_tests
 
 all:
-	make -f $(PERSISTENCE_TEST) test_dbconnection
 	make -f $(PERSISTENCE_TEST) test_entities
 	make -f $(PERSISTENCE_TEST) test_person_api
 	make -f $(PERSISTENCE_TEST) test_session_api

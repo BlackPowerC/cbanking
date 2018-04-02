@@ -62,7 +62,6 @@ namespace odb
     typedef ::std::string discriminator_type;
     typedef polymorphic_map<object_type> map_type;
     typedef polymorphic_concrete_info<object_type> info_type;
-    typedef polymorphic_abstract_info<object_type> abstract_info_type;
 
     static const std::size_t depth = 1UL;
 
@@ -70,7 +69,7 @@ namespace odb
 
     static const bool auto_id = true;
 
-    static const bool abstract = true;
+    static const bool abstract = false;
 
     static id_type
     id (const object_type&);
@@ -324,6 +323,7 @@ namespace odb
     public access::object_traits< ::Entity::BaseOperation >
   {
     public:
+    typedef polymorphic_entry<object_type, id_mysql> entry_type;
     typedef object_traits_impl<root_type, id_mysql> root_traits;
 
     struct discriminator_image_type
@@ -344,7 +344,7 @@ namespace odb
     };
 
     static map_type* map;
-    static const abstract_info_type info;
+    static const info_type info;
 
     struct image_type
     {
@@ -651,9 +651,6 @@ namespace odb
     static void
     persist (database&, object_type&, bool top = true, bool dyn = true);
 
-    static pointer_type
-    find (database&, const id_type&);
-
     static bool
     find (database&, const id_type&, object_type&, bool dyn = true);
 
@@ -846,9 +843,6 @@ namespace odb
 
     static void
     persist (database&, object_type&, bool top = true, bool dyn = true);
-
-    static pointer_type
-    find (database&, const id_type&);
 
     static bool
     find (database&, const id_type&, object_type&, bool dyn = true);

@@ -15,32 +15,25 @@ add_executable(
 
 	test_personapi.cpp
 
-	../../include/API/PersonAPI.hpp
-
 	../../src/Exception.cpp
-	../../include/Exception.hpp
 
-	../../include/Core/DBConnection.hpp
+    ../../src/Util/RegularFile.cpp
+
+    ../../src/Util/JSONValidator.cpp
+
 	../../src/Core/DBConnection.cpp
 
-	../../include/Entity/Persons.hpp
 	../../src/Entity/Persons.cpp
 
 	../../src/Entity/Persons-odb.cxx
-	../../include/Entity/Persons-odb.hxx
 
-	../../include/Entity/Operation.hpp
 	../../src/Entity/Operation.cpp
 
-	../../include/Entity/Operation-odb.hxx
 	../../src/Entity/Operation-odb.cxx
 
-	../../include/Entity/Account.hpp
 	../../src/Entity/Account.cpp
 
-	../../include/Entity/Account-odb.hxx
 	../../src/Entity/Account-odb.cxx
-
 )
 
 target_link_libraries(

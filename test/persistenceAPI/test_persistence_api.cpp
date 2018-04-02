@@ -52,9 +52,7 @@ TEST_F(Test, persistence_api_insert)
 // Test de selection 1
 TEST_F(Test, persistence_api_find_employee_by_name_a)
 {
-  std::vector<std::shared_ptr<Employee> > employees ;
-  employees = PersonAPI::getInstance()->findByName<Employee>("a") ;
-  ASSERT_NE(0, employees.size()) ;
+  ASSERT_NO_THROW(PersonAPI::getInstance()->findByName<Employee>("a")) ;
 }
 
 // Test de selection 2
