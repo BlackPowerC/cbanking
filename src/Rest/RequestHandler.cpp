@@ -14,6 +14,7 @@
 #include "../../include/API/PersistenceAPI.hpp"
 #include "../../include/API/AccountAPI.hpp"
 #include "../../include/API/PersonAPI.hpp"
+#include "../../include/API/OperationAPI.hpp"
 #include "../../include/API/SessionAPI.hpp"
 
 #include "../../include/Util/Converter/Converters.hpp"
@@ -436,7 +437,7 @@ namespace RestAPI
     }
 
     // Les routes POST
-
+    // /account/add
     void RequestHandler::addAccount(const Rest::Request &request, Http::ResponseWriter response)
     {
     	try
@@ -526,13 +527,92 @@ namespace RestAPI
         LOG_INFO << "Compte crée !" ;
         response.send(Http::Code::Ok) ;
     }
-
+    
+    // /operation/add
     void RequestHandler::addOperation(const Rest::Request &request, Http::ResponseWriter response)
     {
-    	response.send(Http::Code::Ok, "Tout est OK", Http::Mime::MediaType::fromString("text/plain"));
+        try
+        {
+            std::string body(request.body()) ;
+            const char *body_cstr = body.c_str() ;
+            // Vérification json
+            if(!json_is_valid(fromFileToString("resources/json schema/operation.schema.json"), body))
+            {
+                response.send(Http::Code::Bad_Request) ;
+                return ;
+            }
+            // Deserialization json
+            rapidjson::Document doc; doc.Parse(body_cstr) ;
+            // Vérification du token
+            std::shared_ptr<Session> p_user_session = SessionAPI::getInstance()->findByToken<Session>(
+                    std::string(doc["token"].GetString())
+            );
+            if(p_user_session->getEnd() < (ulong) std::time(nullptr))
+            {
+                std::string err_msg = "{\"erreur\":[\"message\":\"session expirée\"]}" ;
+                response.send(Http::Code::Unauthorized, err_msg, MIME(Application, Json)) ;
+                return ;
+            }
+            /* Récupération des Acteurs autour de la transaction*/
+            // L'employée créateur
+            std::shared_ptr<Employee> p_employee = PersonAPI::getInstance()
+                    ->findById<Employee>(p_user_session->getPerson()->getId()) ;
+
+            // Le compte à modifier
+            std::shared_ptr<Account> p_account = AccountAPI::getInstance()
+                    ->findById<Account>(doc["account"].GetInt()) ;
+            if(std::strcmp(doc["type"].GetString(), "retrait") == 0)
+            {
+                if(p_account->getBalance() < doc["balance"].GetDouble())
+                {
+                    response.send(Http::Code::Ok, "{\"message\":\"montant insufisant pour un retrait\"}", MIME(Application, Json)) ;
+                    return ;
+                }
+                LOG_INFO << "Retrait en cours..." ;
+                p_account->setBalance(p_account->getBalance()-doc["balance"].GetDouble()) ;
+            }
+            else
+            {
+                LOG_INFO << "Dépôt en cours..." ;
+                p_account->setBalance(p_account->getBalance()+doc["balance"].GetDouble()) ;
+            }
+
+            // construction de l'objet operation
+            long operation_id ;
+            Operation t_operation(BaseOperation(0L, p_account, p_employee, doc["date"].GetString(), doc["balance"].GetDouble()),
+                        (std::strcmp(doc["type"].GetString(), "retrait") == 0)? TypeOperation::RETRAIT:TypeOperation::DEPOT) ;
+            operation_id = OperationAPI::getInstance()->insert<Operation>(t_operation) ;
+            t_operation.setId(operation_id) ;
+            // Mise à jour de l'employé et du compte
+            p_account->addOperation(t_operation) ;
+            p_employee->addOperation(t_operation) ;
+            PersonAPI::getInstance()->update<Employee>(*p_employee) ;
+            AccountAPI::getInstance()->update<Account>(*p_account) ;
+        }
+        catch(const NotFound &nf)
+        {
+            LOG_WARNING << "Tentative frauduleuse de connexion !" ;
+            std::string err_msg = "{\"erreur\":[\"message\":\"non authorisé sur cet API\"]}" ;
+            response.send(Http::Code::Unauthorized, err_msg, MIME(Application, Json)) ;
+            return ;
+        }
+        catch(const FileStreamError &fsr)
+        {
+            LOG_WARNING << fsr.what() ;
+            response.send(Http::Code::Internal_Server_Error) ;
+            return ;
+        }
+        catch(const std::exception &e)
+        {
+            LOG_WARNING << e.what() ;
+            response.send(Http::Code::Internal_Server_Error) ;
+            return ;
+        }
+        LOG_INFO << "Transaction éffectuée !" ;
+        response.send(Http::Code::Ok) ;
     }
 
-    // Les routes pour la connexion
+    // /authentification
     void RequestHandler::authentification(const Rest::Request &request, Http::ResponseWriter response)
     {
         std::shared_ptr<Session> session ;
@@ -573,7 +653,7 @@ namespace RestAPI
         }
     }
 
-    // La route pour l'inscription
+    // /subscription/:token
     void RequestHandler::subscription(const Rest::Request &request, Http::ResponseWriter response)
     {
         try

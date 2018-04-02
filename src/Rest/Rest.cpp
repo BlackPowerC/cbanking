@@ -38,8 +38,12 @@ namespace RestAPI
                           Rest::Routes::bind(&RequestHandler::getCustomerByName, &this->t_rhandler)) ;
 
         /* Les requetes POST */
+        // Ajout d'un compte
         Rest::Routes::Post(this->t_router, "/account/add/",
                             Rest::Routes::bind(&RequestHandler::addAccount, &this->t_rhandler)) ;
+        // Ajout d'une opération
+        Rest::Routes::Post(this->t_router, "/operation/add/",
+                            Rest::Routes::bind(&RequestHandler::addOperation, &this->t_rhandler)) ;
         // La route pour l'authentification
         Rest::Routes::Post(this->t_router, "/authentification",
                             Rest::Routes::bind(&RequestHandler::authentification, &this->t_rhandler)) ;
