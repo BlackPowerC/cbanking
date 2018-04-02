@@ -6,7 +6,7 @@
 #define OPERATIONCONVERTER_HPP
 
 #include "AccountConverter.hpp"
-#include "EmployeeConverter.hpp"
+#include "PersonConverter.hpp"
 
 namespace Util
 {
@@ -23,11 +23,11 @@ namespace Util
          * @param entity
          * @return Une chaine de caractère formaté en JSON.
          */
-        virtual std::string entityToJson(const Entity::Operation &entity) = 0;
+        virtual std::string entityToJson(const Entity::Operation &entity) ;
 
-        virtual std::string entityToJson(const Entity::Operation *entity) = 0;
+        virtual std::string entityToJson(const Entity::Operation *entity) ;
 
-        virtual std::string entityToJson(const std::shared_ptr<Entity::Operation> &entity) = 0;
+        virtual std::string entityToJson(const std::shared_ptr<Entity::Operation> &entity) ;
     };
 }
 

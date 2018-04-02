@@ -53,6 +53,7 @@ add_subdirectory(test/util/converter/employee)
 add_subdirectory(test/util/converter/currentaccount)
 add_subdirectory(test/util/converter/account)
 add_subdirectory(test/util/converter/person)
+add_subdirectory(test/util/converter/operation)
 add_subdirectory(test/util/crypto)
 add_subdirectory(test/util/json_is_valid)
 
