@@ -679,11 +679,13 @@ namespace RestAPI
             // Création de la session
             Session t_new_user_session ;
             long id_user, id_session ;
+            Person p_person(0,std::string(doc["name"].GetString()),
+                            std::string(doc["surname"].GetString()),
+                            std::string(doc["email"].GetString()),
+                            hashArgon2(std::string(doc["passwd"].GetString()))) ;
             if(!std::strcmp(doc["type"].GetString(), "customer"))
             {
-                Customer customer(0,std::string(doc["name"].GetString()),
-                                  std::string(doc["email"].GetString()),
-                                  hashArgon2(std::string(doc["passwd"].GetString()))) ;
+                Customer customer(p_person) ;
                 t_new_user_session = initSession(std::make_shared<Customer>(customer)) ;
                 customer.setToken(t_new_user_session) ;
                 // Enregistrement de l'employé et de sa session
@@ -700,9 +702,7 @@ namespace RestAPI
             }
             else
             {
-                Employee employee(0,std::string(doc["name"].GetString()),
-                                  std::string(doc["email"].GetString()),
-                                  hashArgon2(std::string(doc["passwd"].GetString()))) ;
+                Employee employee(p_person) ;
                 t_new_user_session = initSession(std::make_shared<Employee>(employee)) ;
                 employee.setToken(t_new_user_session) ;
                 // Mise à jour du requester

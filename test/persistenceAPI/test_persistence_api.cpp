@@ -31,12 +31,12 @@ using namespace API ;
 // Test d'insertion
 TEST_F(Test, persistence_api_insert)
 {
-    Customer titi(0, "titianne", "titianne@gmail.com") ;
-    Customer baba(0, "baba", "baba@gmail.com") ;
-    Customer barry(0, "thierrno", "thierrno@gmail.com") ;
-    Employee souley(0, "souleymane", "soul@gmail.com") ;
-    Employee adoum(0, "adoum", "adoum@gmail.com") ;
-    Employee abide(0, "abidé", "abidé@gmail.com") ;
+    Customer titi(0, "bawara", "titianne", "titianne@gmail.com") ;
+    Customer baba(0, "baba","samuel" "baba@gmail.com") ;
+    Customer barry(0,"barry", "thierrno", "thierrno@gmail.com") ;
+    Employee souley(0, "souleymane","", "soul@gmail.com") ;
+    Employee adoum(0, "adoum","batrane", "adoum@gmail.com") ;
+    Employee abide(0, "abidé","akouty" "abidé@gmail.com") ;
 
     souley.addSubordinate(adoum) ;
     souley.addSubordinate(abide) ;

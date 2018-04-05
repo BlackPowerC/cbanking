@@ -138,9 +138,17 @@ namespace odb
       grew = true;
     }
 
-    // email
+    // surname
     //
     if (t[3UL])
+    {
+      i.surname_value.capacity (i.surname_size);
+      grew = true;
+    }
+
+    // email
+    //
+    if (t[4UL])
     {
       i.email_value.capacity (i.email_size);
       grew = true;
@@ -148,7 +156,7 @@ namespace odb
 
     // passwd
     //
-    if (t[4UL])
+    if (t[5UL])
     {
       i.passwd_value.capacity (i.passwd_size);
       grew = true;
@@ -156,7 +164,7 @@ namespace odb
 
     // p_token
     //
-    t[5UL] = 0;
+    t[6UL] = 0;
 
     return grew;
   }
@@ -204,6 +212,16 @@ namespace odb
       i.name_value.capacity ());
     b[n].length = &i.name_size;
     b[n].is_null = &i.name_null;
+    n++;
+
+    // surname
+    //
+    b[n].buffer_type = MYSQL_TYPE_STRING;
+    b[n].buffer = i.surname_value.data ();
+    b[n].buffer_length = static_cast<unsigned long> (
+      i.surname_value.capacity ());
+    b[n].length = &i.surname_size;
+    b[n].is_null = &i.surname_null;
     n++;
 
     // email
@@ -315,6 +333,27 @@ namespace odb
       grew = grew || (cap != i.name_value.capacity ());
     }
 
+    // surname
+    //
+    {
+      ::std::string const& v =
+        o.surname;
+
+      bool is_null (false);
+      std::size_t size (0);
+      std::size_t cap (i.surname_value.capacity ());
+      mysql::value_traits<
+          ::std::string,
+          mysql::id_string >::set_image (
+        i.surname_value,
+        size,
+        is_null,
+        v);
+      i.surname_null = is_null;
+      i.surname_size = static_cast<unsigned long> (size);
+      grew = grew || (cap != i.surname_value.capacity ());
+    }
+
     // email
     //
     {
@@ -423,6 +462,21 @@ namespace odb
         i.name_null);
     }
 
+    // surname
+    //
+    {
+      ::std::string& v =
+        o.surname;
+
+      mysql::value_traits<
+          ::std::string,
+          mysql::id_string >::set_value (
+        v,
+        i.surname_value,
+        i.surname_size,
+        i.surname_null);
+    }
+
     // email
     //
     {
@@ -519,17 +573,19 @@ namespace odb
   "(`id`, "
   "`typeid`, "
   "`name`, "
+  "`surname`, "
   "`email`, "
   "`passwd`, "
   "`id_token`) "
   "VALUES "
-  "(?, ?, ?, ?, ?, ?)";
+  "(?, ?, ?, ?, ?, ?, ?)";
 
   const char access::object_traits_impl< ::Entity::Person, id_mysql >::find_statement[] =
   "SELECT "
   "`Person`.`id`, "
   "`Person`.`typeid`, "
   "`Person`.`name`, "
+  "`Person`.`surname`, "
   "`Person`.`email`, "
   "`Person`.`passwd`, "
   "`Person`.`id_token` "
@@ -547,6 +603,7 @@ namespace odb
   "UPDATE `Person` "
   "SET "
   "`name`=?, "
+  "`surname`=?, "
   "`email`=?, "
   "`passwd`=?, "
   "`id_token`=? "
@@ -561,6 +618,7 @@ namespace odb
   "`Person`.`id`,\n"
   "`Person`.`typeid`,\n"
   "`Person`.`name`,\n"
+  "`Person`.`surname`,\n"
   "`Person`.`email`,\n"
   "`Person`.`passwd`,\n"
   "`Person`.`id_token`\n"
@@ -1481,6 +1539,7 @@ namespace odb
     "`Person`.`id`, "
     "`Person`.`typeid`, "
     "`Person`.`name`, "
+    "`Person`.`surname`, "
     "`Person`.`email`, "
     "`Person`.`passwd`, "
     "`Person`.`id_token` "
@@ -1493,7 +1552,7 @@ namespace odb
 
   const std::size_t access::object_traits_impl< ::Entity::Customer, id_mysql >::find_column_counts[] =
   {
-    6UL,
+    7UL,
     0UL
   };
 
@@ -1506,6 +1565,7 @@ namespace odb
   "`Person`.`id`,\n"
   "`Person`.`typeid`,\n"
   "`Person`.`name`,\n"
+  "`Person`.`surname`,\n"
   "`Person`.`email`,\n"
   "`Person`.`passwd`,\n"
   "`Person`.`id_token`\n"
@@ -2930,6 +2990,7 @@ namespace odb
     "`Person`.`id`, "
     "`Person`.`typeid`, "
     "`Person`.`name`, "
+    "`Person`.`surname`, "
     "`Person`.`email`, "
     "`Person`.`passwd`, "
     "`Person`.`id_token` "
@@ -2942,7 +3003,7 @@ namespace odb
 
   const std::size_t access::object_traits_impl< ::Entity::Employee, id_mysql >::find_column_counts[] =
   {
-    6UL,
+    7UL,
     0UL
   };
 
@@ -2955,6 +3016,7 @@ namespace odb
   "`Person`.`id`,\n"
   "`Person`.`typeid`,\n"
   "`Person`.`name`,\n"
+  "`Person`.`surname`,\n"
   "`Person`.`email`,\n"
   "`Person`.`passwd`,\n"
   "`Person`.`id_token`\n"

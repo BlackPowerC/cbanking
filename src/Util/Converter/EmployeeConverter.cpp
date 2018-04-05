@@ -20,6 +20,7 @@ namespace Util
         std::string json("{\n") ;
         json += "\"id\":"+std::to_string(entity.getId())+",\n" ;
         json += "\"name\":\""+entity.getName()+"\",\n" ;
+        json += "\"surname\":\""+entity.getSurname()+"\",\n" ;
         json += "\"email\":\""+entity.getEmail()+"\",\n" ;
         json += "\"passwd\":\""+entity.getPasswd()+"\",\n" ;
         json += "\"accounts\":\n\t[\n" ;

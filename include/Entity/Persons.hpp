@@ -47,6 +47,8 @@ protected:
     long id ;
 #pragma db type("VARCHAR(512)")
     std::string name ;
+#pragma db type("VARCHAR(512)")
+    std::string surname ;
 #pragma db type("VARCHAR(512)") unique
     std::string email ;
 #pragma db type("VARCHAR(2048)")
@@ -55,12 +57,10 @@ protected:
     std::shared_ptr<Token> p_token ;
 public:
     /**
-     * \fn Person(long _id = 0, std::string _name= "")
+     * \fn Person(long _id =0, std::string _name = "", std::string _surname = "", std::string _email ="", std::string _passwd="") ;
      * \brief Constructeur par défaut de la classe.
-     * \param _id ID de la personne, zéro par défaut.
-     * \param _name name de la personne, "" par défaut.
      */
-    Person(long _id =0, std::string _name = "", std::string _email ="", std::string _passwd="") ;
+    Person(long _id =0, std::string _name = "", std::string _surname = "", std::string _email ="", std::string _passwd="") ;
     /**
      * \fn Person(Person &t_person)
      * \brief Constructeur par recopie de la classe.
@@ -84,6 +84,10 @@ public:
 
     void setName(std::string _name) ;
 
+    std::string getSurname() const ;
+
+    void setSurname(std::string _surname) ;
+
     std::string getEmail() const ;
 
     void setEmail(std::string _email) ;
@@ -100,6 +104,7 @@ public:
     {
         this->id = person.id ;
         this->name = person.name ;
+        this->surname = person.surname ;
         this->email = person.email ;
         this->passwd = person.passwd ;
     }
@@ -119,13 +124,12 @@ private:
   std::vector<std::shared_ptr<Account> > accounts ;
 public:
     /**
-    * \fn Customer(long _id = 0, std::string _name= "")
+    * \fn Customer(long _id =0, std::string _name = "", std::string _surname = "", std::string _email ="", std::string _passwd="") ;
     * \brief Constructeur par défaut de la classe.
-    * \param _id ID du client, zéro par défaut.
-    * \param _name nom du client, "" par défaut.
     */
-    Customer(long _id=0, std::string _name="", std::string _email="", std::string _passwd="");
-    /**
+    Customer(long _id =0, std::string _name = "", std::string _surname = "", std::string _email ="", std::string _passwd="") ;
+
+        /**
      * \fn Customer(Customer &t_Customer)
      * \brief Constructeur par recopie de la classe.
      * \param t_customer Référence sur une instance Customer.
@@ -137,6 +141,12 @@ public:
      * \param p_Customer Pointeur sur une instance Customer.
      */
     Customer(const Customer *p_customer) ;
+
+    /**
+     * Construire à partir de la classe mère.
+     * @param t_person
+     */
+    Customer(const Person &t_person) ;
 
 		/* Opérations */
 	  /**
@@ -168,6 +178,8 @@ public:
     {
     	this->id = t_another.id ;
     	this->name = t_another.name ;
+    	this->surname = t_another.surname ;
+    	this->email = t_another.email ;
     	this->accounts = std::move(t_another.accounts) ;
     }
 
@@ -200,12 +212,10 @@ private:
     std::vector<std::shared_ptr<Group> > groups ; /*!< Listes des groupes de l'employé. */
 public:
     /**
-    * \fn Employee(long _id = 0, std::string _name= "", std::vector<Employee> _subordonne)
+    * \fn Employee(long _id =0, std::string _name = "", std::string _surname = "", std::string _email ="", std::string _passwd="")
     * \brief Constructeur par défaut de la classe.
-    * \param _id ID du l'employé, zéro par défaut.
-    * \param _name nom de l'employé, "" par défaut.
     */
-    Employee(long _id =0, std::string _name = "", std::string _email ="", std::string _passwd="") ;
+    Employee(long _id =0, std::string _name = "", std::string _surname = "", std::string _email ="", std::string _passwd="") ;
     /**
      * \fn Employee(Employee &t_employee)
      * \brief Constructeur par recopie de la classe.
@@ -218,6 +228,12 @@ public:
      * \param p_Employee Pointeur sur une instance Employee.
      */
     Employee(const Employee *p_employee) ;
+
+    /**
+     * Construire à partir de la classe mère.
+     * @param p
+     */
+    Employee(const Person &p) ;
 
     /**
      * \fn void removeSubordinate(long subordinateId)
@@ -309,6 +325,7 @@ public:
         this->name = employee.name ;
         this->email = employee.email;
         this->passwd = employee.passwd ;
+        this->surname = employee.surname ;
         this->subordinate = std::move(employee.subordinate) ;
         this->accounts = std::move(employee.accounts) ;
         this->operations = std::move(employee.operations) ;
@@ -445,6 +462,11 @@ private:
 public:
     // Les constructeurs
     Session() ;
+   /**
+    * Construire à partir d'une instance de Token.
+    * @param token Une instance de Token.
+    */
+    Session(const Token &token) ;
     Session(const Session *p_another) ;
     Session(const Session &t_another) ;
 
@@ -485,6 +507,11 @@ private:
     #pragma db value_not_null
     bool reloaded ; /*<! la session est-elle rechargée */
 public:
+    /**
+     * Construire à partir d'une instance de Token.
+     * @param token Une instance de Token.
+     */
+    ReloadSession(const Token &token) ;
     ReloadSession(bool reloaded=false) ;
 
     bool operator==(const ReloadSession &t_another)

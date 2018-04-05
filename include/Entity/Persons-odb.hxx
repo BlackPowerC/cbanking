@@ -457,6 +457,18 @@ namespace odb
 
     static const name_type_ name;
 
+    // surname
+    //
+    typedef
+    mysql::query_column<
+      mysql::value_traits<
+        ::std::string,
+        mysql::id_string >::query_type,
+      mysql::id_string >
+    surname_type_;
+
+    static const surname_type_ surname;
+
     // email
     //
     typedef
@@ -508,6 +520,11 @@ namespace odb
   const typename pointer_query_columns< ::Entity::Person, id_mysql, A >::name_type_
   pointer_query_columns< ::Entity::Person, id_mysql, A >::
   name (A::table_name, "`name`", 0);
+
+  template <typename A>
+  const typename pointer_query_columns< ::Entity::Person, id_mysql, A >::surname_type_
+  pointer_query_columns< ::Entity::Person, id_mysql, A >::
+  surname (A::table_name, "`surname`", 0);
 
   template <typename A>
   const typename pointer_query_columns< ::Entity::Person, id_mysql, A >::email_type_
@@ -570,6 +587,12 @@ namespace odb
       details::buffer name_value;
       unsigned long name_size;
       my_bool name_null;
+
+      // surname
+      //
+      details::buffer surname_value;
+      unsigned long surname_size;
+      my_bool surname_null;
 
       // email
       //
@@ -639,7 +662,7 @@ namespace odb
 
     typedef mysql::query_base query_base_type;
 
-    static const std::size_t column_count = 6UL;
+    static const std::size_t column_count = 7UL;
     static const std::size_t id_column_count = 1UL;
     static const std::size_t inverse_column_count = 0UL;
     static const std::size_t readonly_column_count = 1UL;
@@ -2361,6 +2384,18 @@ namespace odb
 
     static const name_type_ name;
 
+    // surname
+    //
+    typedef
+    mysql::query_column<
+      mysql::value_traits<
+        ::std::string,
+        mysql::id_string >::query_type,
+      mysql::id_string >
+    surname_type_;
+
+    static const surname_type_ surname;
+
     // email
     //
     typedef
@@ -2428,6 +2463,11 @@ namespace odb
   const typename query_columns< ::Entity::Person, id_mysql, A >::name_type_
   query_columns< ::Entity::Person, id_mysql, A >::
   name (A::table_name, "`name`", 0);
+
+  template <typename A>
+  const typename query_columns< ::Entity::Person, id_mysql, A >::surname_type_
+  query_columns< ::Entity::Person, id_mysql, A >::
+  surname (A::table_name, "`surname`", 0);
 
   template <typename A>
   const typename query_columns< ::Entity::Person, id_mysql, A >::email_type_

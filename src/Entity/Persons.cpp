@@ -3,8 +3,8 @@
 namespace Entity
 {
 /* Classe Person */
-Person::Person(long _id, std::string _name, std::string _email, std::string _passwd):
-        id(_id), name(_name), email(_email), passwd(_passwd)
+Person::Person(long _id, std::string _name, std::string _surname, std::string _email, std::string _passwd):
+        id(_id), name(_name), surname(_surname), email(_email), passwd(_passwd)
 {}
 
 Person::Person(const Person &t_person)
@@ -35,6 +35,16 @@ void Person::setName(std::string name)
 std::string Person::getName() const
 {
     return this->name ;
+}
+
+void Person::setSurname(std::string surname)
+{
+    this->surname = surname ;
+}
+
+std::string Person::getSurname() const
+{
+    return this->surname ;
 }
 
 std::string Person::getEmail() const
@@ -68,8 +78,11 @@ void Person::setToken(const Token &token)
 }
 
 /* Classe Customer */
-Customer::Customer(long _id, std::string _name, std::string _email, std::string _passwd):
-        Person(_id, _name, _email, _passwd)
+Customer::Customer(long _id, std::string _name, std::string _surname, std::string _email, std::string _passwd):
+        Person(_id, _name, _surname,_email, _passwd)
+{}
+
+Customer::Customer(const Person &p): Person(p)
 {}
 
 Customer::Customer(const Customer *p_customer): Person(p_customer)
@@ -110,8 +123,11 @@ void Customer::setAccounts(std::vector<std::shared_ptr<Account> > & another)
 }
 
 /* Classe Employe */
-Employee::Employee(long _id, std::string _name, std::string _email, std::string _passwd):
-        Person(_id, _name, _email, _passwd)
+Employee::Employee(long _id, std::string _name, std::string _surname, std::string _email, std::string _passwd):
+        Person(_id, _name, _surname,_email, _passwd)
+{}
+
+Employee::Employee(const Person &p): Person(p)
 {}
 
 Employee::Employee(const Employee *p_employee): Person(p_employee)
@@ -347,6 +363,11 @@ std::string Group::getName() const
 
     }
 
+    Session::Session(const Token &token): Token(token)
+    {
+
+    }
+
     Session::Session(const Session *p_another) : Token(p_another)
     {
         this->begin_ = p_another->begin_ ;
@@ -381,6 +402,11 @@ std::string Group::getName() const
 
     // ReloadSession
     ReloadSession::ReloadSession(bool reloaded) : reloaded(reloaded)
+    {
+
+    }
+
+    ReloadSession::ReloadSession(const Token &token) : Token(token)
     {
 
     }

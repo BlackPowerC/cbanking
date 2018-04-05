@@ -12,7 +12,7 @@ int main()
 {
     try
     {
-        Entity::Employee root(1, "root", "root@root.com", Util::hashArgon2("azerty123")) ;
+        Entity::Employee root(1, "root", "root", "root@root.com", Util::hashArgon2("azerty123")) ;
         Entity::Session session = Util::initSession(std::make_shared<Entity::Employee>(root)) ;
         root.setToken(session) ;
         long id_employee = API::PersonAPI::getInstance()->insert<Entity::Employee>(root) ;

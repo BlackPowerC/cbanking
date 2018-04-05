@@ -651,6 +651,9 @@ namespace odb
     static void
     persist (database&, object_type&, bool top = true, bool dyn = true);
 
+    static pointer_type
+    find (database&, const id_type&);
+
     static bool
     find (database&, const id_type&, object_type&, bool dyn = true);
 
@@ -843,6 +846,9 @@ namespace odb
 
     static void
     persist (database&, object_type&, bool top = true, bool dyn = true);
+
+    static pointer_type
+    find (database&, const id_type&);
 
     static bool
     find (database&, const id_type&, object_type&, bool dyn = true);

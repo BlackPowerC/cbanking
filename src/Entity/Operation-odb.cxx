@@ -647,17 +647,17 @@ namespace odb
 
     if (!top)
     {
-    id_image_type& i (sts.id_image ());
-    init (i, obj.id);
+      id_image_type& i (sts.id_image ());
+      init (i, obj.id);
 
-    binding& idb (sts.id_image_binding ());
-    if (i.version != sts.id_image_version () || idb.version == 0)
-    {
-      bind (idb.bind, i);
-      sts.id_image_version (i.version);
-      idb.version++;
+      binding& idb (sts.id_image_binding ());
+      if (i.version != sts.id_image_version () || idb.version == 0)
+      {
+        bind (idb.bind, i);
+        sts.id_image_version (i.version);
+        idb.version++;
+      }
     }
-  }
 
     if (top)
       callback (db,
@@ -740,7 +740,7 @@ namespace odb
     {
       callback (db, obj, callback_event::post_update);
       pointer_cache_traits::update (db, obj);
-  }
+    }
   }
 
   void access::object_traits_impl< ::Entity::BaseOperation, id_mysql >::
@@ -763,14 +763,14 @@ namespace odb
 
       if (d != info.discriminator)
       {
-      const info_type& pi (root_traits::map->find (d));
+        const info_type& pi (root_traits::map->find (d));
 
-      if (!pi.derived (info))
-        throw object_not_persistent ();
+        if (!pi.derived (info))
+          throw object_not_persistent ();
 
-      pi.dispatch (info_type::call_erase, db, 0, &id);
-      return;
-    }
+        pi.dispatch (info_type::call_erase, db, 0, &id);
+        return;
+      }
     }
 
     if (top)
@@ -897,13 +897,13 @@ namespace odb
 
     if (dyn)
     {
-    const std::type_info& t (typeid (obj));
+      const std::type_info& t (typeid (obj));
 
       if (t != info.type)
       {
-    const info_type& pi (root_traits::map->find (t));
-    return pi.dispatch (info_type::call_find, db, &obj, &id);
-  }
+        const info_type& pi (root_traits::map->find (t));
+        return pi.dispatch (info_type::call_find, db, &obj, &id);
+      }
     }
 
     mysql::connection& conn (
@@ -943,13 +943,13 @@ namespace odb
 
     if (dyn)
     {
-    const std::type_info& t (typeid (obj));
+      const std::type_info& t (typeid (obj));
 
       if (t != info.type)
       {
-    const info_type& pi (root_traits::map->find (t));
-    return pi.dispatch (info_type::call_reload, db, &obj, 0);
-  }
+        const info_type& pi (root_traits::map->find (t));
+        return pi.dispatch (info_type::call_reload, db, &obj, 0);
+      }
     }
 
     mysql::connection& conn (
@@ -1615,6 +1615,81 @@ namespace odb
     callback (db, obj, callback_event::pre_erase);
     erase (db, id (obj), true, false);
     callback (db, obj, callback_event::post_erase);
+  }
+
+  access::object_traits_impl< ::Entity::Operation, id_mysql >::pointer_type
+  access::object_traits_impl< ::Entity::Operation, id_mysql >::
+  find (database& db, const id_type& id)
+  {
+    using namespace mysql;
+
+    {
+      root_traits::pointer_type rp (pointer_cache_traits::find (db, id));
+
+      if (!root_traits::pointer_traits::null_ptr (rp))
+        return
+          root_traits::pointer_traits::dynamic_pointer_cast<object_type> (rp);
+    }
+
+    mysql::connection& conn (
+      mysql::transaction::current ().connection ());
+    statements_type& sts (
+      conn.statement_cache ().find_object<object_type> ());
+    root_statements_type& rsts (sts.root_statements ());
+
+    statements_type::auto_lock l (rsts);
+    root_traits::discriminator_type d;
+
+    if (l.locked ())
+    {
+      if (!find_ (sts, &id))
+        return pointer_type ();
+      d = root_traits::discriminator (rsts.image ());
+    }
+    else
+      root_traits::discriminator_ (rsts, id, &d);
+
+    const info_type& pi (
+      d == info.discriminator ? info : root_traits::map->find (d));
+
+    root_traits::pointer_type rp (pi.create ());
+    pointer_type p (
+      root_traits::pointer_traits::static_pointer_cast<object_type> (rp));
+    pointer_traits::guard pg (p);
+
+    pointer_cache_traits::insert_guard ig (
+      pointer_cache_traits::insert (db, id, rp));
+
+    object_type& obj (pointer_traits::get_ref (p));
+
+    if (l.locked ())
+    {
+      select_statement& st (sts.find_statement (depth));
+      ODB_POTENTIALLY_UNUSED (st);
+
+      callback_event ce (callback_event::pre_load);
+      pi.dispatch (info_type::call_callback, db, &obj, &ce);
+      init (obj, sts.image (), &db);
+      load_ (sts, obj, false);
+
+      if (&pi != &info)
+      {
+        std::size_t d (depth);
+        pi.dispatch (info_type::call_load, db, &obj, &d);
+      }
+
+      rsts.load_delayed (0);
+      l.unlock ();
+      ce = callback_event::post_load;
+      pi.dispatch (info_type::call_callback, db, &obj, &ce);
+      pointer_cache_traits::load (ig.position ());
+    }
+    else
+      rsts.delay_load (id, obj, ig.position (), pi.delayed_loader);
+
+    ig.release ();
+    pg.release ();
+    return p;
   }
 
   bool access::object_traits_impl< ::Entity::Operation, id_mysql >::
@@ -2323,6 +2398,81 @@ namespace odb
     callback (db, obj, callback_event::pre_erase);
     erase (db, id (obj), true, false);
     callback (db, obj, callback_event::post_erase);
+  }
+
+  access::object_traits_impl< ::Entity::Virement, id_mysql >::pointer_type
+  access::object_traits_impl< ::Entity::Virement, id_mysql >::
+  find (database& db, const id_type& id)
+  {
+    using namespace mysql;
+
+    {
+      root_traits::pointer_type rp (pointer_cache_traits::find (db, id));
+
+      if (!root_traits::pointer_traits::null_ptr (rp))
+        return
+          root_traits::pointer_traits::dynamic_pointer_cast<object_type> (rp);
+    }
+
+    mysql::connection& conn (
+      mysql::transaction::current ().connection ());
+    statements_type& sts (
+      conn.statement_cache ().find_object<object_type> ());
+    root_statements_type& rsts (sts.root_statements ());
+
+    statements_type::auto_lock l (rsts);
+    root_traits::discriminator_type d;
+
+    if (l.locked ())
+    {
+      if (!find_ (sts, &id))
+        return pointer_type ();
+      d = root_traits::discriminator (rsts.image ());
+    }
+    else
+      root_traits::discriminator_ (rsts, id, &d);
+
+    const info_type& pi (
+      d == info.discriminator ? info : root_traits::map->find (d));
+
+    root_traits::pointer_type rp (pi.create ());
+    pointer_type p (
+      root_traits::pointer_traits::static_pointer_cast<object_type> (rp));
+    pointer_traits::guard pg (p);
+
+    pointer_cache_traits::insert_guard ig (
+      pointer_cache_traits::insert (db, id, rp));
+
+    object_type& obj (pointer_traits::get_ref (p));
+
+    if (l.locked ())
+    {
+      select_statement& st (sts.find_statement (depth));
+      ODB_POTENTIALLY_UNUSED (st);
+
+      callback_event ce (callback_event::pre_load);
+      pi.dispatch (info_type::call_callback, db, &obj, &ce);
+      init (obj, sts.image (), &db);
+      load_ (sts, obj, false);
+
+      if (&pi != &info)
+      {
+        std::size_t d (depth);
+        pi.dispatch (info_type::call_load, db, &obj, &d);
+      }
+
+      rsts.load_delayed (0);
+      l.unlock ();
+      ce = callback_event::post_load;
+      pi.dispatch (info_type::call_callback, db, &obj, &ce);
+      pointer_cache_traits::load (ig.position ());
+    }
+    else
+      rsts.delay_load (id, obj, ig.position (), pi.delayed_loader);
+
+    ig.release ();
+    pg.release ();
+    return p;
   }
 
   bool access::object_traits_impl< ::Entity::Virement, id_mysql >::
