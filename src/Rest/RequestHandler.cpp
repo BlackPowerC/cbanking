@@ -40,6 +40,7 @@ namespace RestAPI
     void RequestHandler::getAccountById(const Rest::Request &request, Http::ResponseWriter response)
     {
         /* Vérifions le paramettre */
+        response.headers().add(std::make_shared<Pistache::Http::Header::AccessControlAllowOrigin>("http://127.0.0.1")) ;
         long id ;
         try
         {
@@ -234,7 +235,9 @@ namespace RestAPI
 
     void RequestHandler::getCustomerByName(const Rest::Request &request, Http::ResponseWriter response)
     {
-    	try
+        // Header pour authorisé l'ajax
+        response.headers().add(std::make_shared<Pistache::Http::Header::AccessControlAllowOrigin>("http://127.0.0.1")) ;
+        try
         {
             std::string name_pattern = request.param(":value").as<std::string>() ;
             std::vector<std::shared_ptr<Customer> > customers = PersonAPI::getInstance()->findByName<Customer>(name_pattern) ;
@@ -451,15 +454,9 @@ namespace RestAPI
                 return ;
             }
             rapidjson::Document doc; doc.Parse(body_cstr) ;
-            rapidjson::Value &token = doc["token"] ;
-            rapidjson::Value &customer = doc["customer"] ;
-            rapidjson::Value &creationDate = doc["creationDate"] ;
-            rapidjson::Value &balance = doc["balance"] ;
-            rapidjson::Value &extra = doc["extra"] ;
-            rapidjson::Value &type = doc["type"] ;
             // Vérification du token
             std::shared_ptr<Session> p_user_session = SessionAPI::getInstance()->findByToken<Session>(
-                    std::string(token.GetString())
+                    std::string(doc["token"].GetString())
             );
             if(p_user_session->getEnd() < (ulong) std::time(nullptr))
             {
@@ -474,17 +471,19 @@ namespace RestAPI
 
             // Le client propriétaire
             std::shared_ptr<Customer> p_customer = PersonAPI::getInstance()
-                    ->findById<Customer>(customer.GetInt()) ;
+                    ->findById<Customer>(doc["customer"] .GetInt()) ;
 
             // construction de l'objet Account
             long account_id ;
-            Account account(0, p_customer, p_employee, balance.GetDouble(), std::string(creationDate.GetString())) ;
-            if(std::strcmp("savings account", type.GetString()) == 0)
+            Account account(0, p_customer, p_employee,
+                            doc["balance"].GetDouble(),
+                            std::string(doc["creationDate"].GetString())) ;
+            if(std::strcmp("savings account", doc["type"].GetString()) == 0)
             {
                 LOG_INFO << "Création d'un d'épargne courant en cours..." ;
                 // Insertion du compte d'épargne
                 SavingsAccount sa(account);
-                sa.setRate(extra.GetDouble());
+                sa.setRate(doc["extra"].GetDouble());
                 account_id = AccountAPI::getInstance()->insert<SavingsAccount>(sa) ;
                 sa.setId(account_id) ;
                 p_customer->push_back(sa) ;
@@ -495,7 +494,7 @@ namespace RestAPI
                 LOG_INFO << "Création d'un compte courant en cours..." ;
                 // Insertion du compte courant
                 CurrentAccount ca(account);
-                ca.setOverdraft(extra.GetDouble());
+                ca.setOverdraft(doc["extra"].GetDouble());
                 account_id = AccountAPI::getInstance()->insert<CurrentAccount>(ca) ;
                 ca.setId(account_id) ;
                 p_customer->push_back(ca) ;
@@ -624,12 +623,11 @@ namespace RestAPI
                 return ;
             }
             rapidjson::Document doc ; doc.Parse(request.body().c_str()) ;
-            rapidjson::Value &passwd = doc["passwd"] ;
-            rapidjson::Value &email = doc["email"] ;
             // Récupérons la person avec les credentials
             std::shared_ptr<Person> person = PersonAPI::getInstance()
                                                 ->findByCredentials<Person>(
-                                                    std::string(email.GetString()), std::string(passwd.GetString())) ;
+                                                    std::string(doc["email"].GetString()),
+                                                    std::string(doc["passwd"].GetString())) ;
 
             Session *session = dynamic_cast<Session*>(person->getToken()) ;
             // On vérifie la validité de la session grâce au timestamp courant
@@ -678,18 +676,14 @@ namespace RestAPI
             }
             // Parse JSON
             rapidjson::Document doc ; doc.Parse(request.body().c_str()) ;
-            rapidjson::Value &name = doc["name"] ;
-            rapidjson::Value &passwd = doc["passwd"] ;
-            rapidjson::Value &email = doc["email"] ;
-            rapidjson::Value &type = doc["type"] ;
             // Création de la session
             Session t_new_user_session ;
             long id_user, id_session ;
-            if(!std::strcmp(type.GetString(), "customer"))
+            if(!std::strcmp(doc["type"].GetString(), "customer"))
             {
-                Customer customer(0,std::string(name.GetString()),
-                                  std::string(email.GetString()),
-                                  hashArgon2(std::string(passwd.GetString()))) ;
+                Customer customer(0,std::string(doc["name"].GetString()),
+                                  std::string(doc["email"].GetString()),
+                                  hashArgon2(std::string(doc["passwd"].GetString()))) ;
                 t_new_user_session = initSession(std::make_shared<Customer>(customer)) ;
                 customer.setToken(t_new_user_session) ;
                 // Enregistrement de l'employé et de sa session
@@ -706,9 +700,9 @@ namespace RestAPI
             }
             else
             {
-                Employee employee(0,std::string(name.GetString()),
-                                  std::string(email.GetString()),
-                                  hashArgon2(std::string(passwd.GetString()))) ;
+                Employee employee(0,std::string(doc["name"].GetString()),
+                                  std::string(doc["email"].GetString()),
+                                  hashArgon2(std::string(doc["passwd"].GetString()))) ;
                 t_new_user_session = initSession(std::make_shared<Employee>(employee)) ;
                 employee.setToken(t_new_user_session) ;
                 // Mise à jour du requester

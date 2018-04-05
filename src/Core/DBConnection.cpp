@@ -38,24 +38,19 @@ DBConnection *DBConnection::getInstance()
             }
             // Parsing
             rapidjson::Document doc; doc.Parse(Util::fromFileToString("resources/database/db_config.json").c_str()) ;
-            rapidjson::Value &user = doc["user"] ;
-            rapidjson::Value &passwd= doc["passwd"] ;
-            rapidjson::Value &database= doc["database"] ;
-            rapidjson::Value &host= doc["host"] ;
-            rapidjson::Value &port= doc["port"] ;
 
             p_singleton = new DBConnection(
-                    std::string(user.GetString()),
-                    std::string(passwd.GetString()),
-                    std::string(database.GetString()),
-                    std::string(host.GetString()),
-                    port.GetInt()) ;
+                    std::string(doc["user"].GetString()),
+                    std::string(doc["passwd"].GetString()),
+                    std::string(doc["database"].GetString()),
+                    std::string(doc["host"].GetString()),
+                    doc["port"].GetInt()) ;
             // Journalisation de la connexion
             LOG_INFO << "Connexion à la base de données éffectuée !" ;
-            LOG_INFO << "user: "<< user.GetString() ;
-            LOG_INFO << "host: "<< host.GetString() ;
-            LOG_INFO << "database: "<< database.GetString() ;
-            LOG_INFO << "port: "<< port.GetInt() ;
+            LOG_INFO << "user: "<< doc["user"].GetString() ;
+            LOG_INFO << "host: "<< doc["host"].GetString() ;
+            LOG_INFO << "database: "<< doc["database"].GetString() ;
+            LOG_INFO << "port: "<< doc["port"].GetInt() ;
             LOG_INFO << "type: "<< doc["type"].GetString() ;
         }
         return p_singleton ;
@@ -63,7 +58,6 @@ DBConnection *DBConnection::getInstance()
     catch(const FileStreamError &fse)
     {
         // Pour les tests en local
-#include "../../include/Core/DBConnection.hpp"
         p_singleton = new DBConnection("jordy", "dalila", "test_cbanking", "172.17.0.2", 3306) ;
         return p_singleton ;
     }

@@ -161,7 +161,7 @@ public:
     void push_back(CurrentAccount &t_account) ;
 
     /* getters setters */
-    std::vector<std::shared_ptr<Account> > &getAccounts() ;
+    const std::vector<std::shared_ptr<Account> > &getAccounts() const;
     void setAccounts(std::vector<std::shared_ptr<Account> > & another) ;
 
     void operator=(const Customer &t_another)
@@ -291,16 +291,16 @@ public:
 
     /* getters setters */
     // subordinate
-    std::vector<std::shared_ptr<Employee> > &getSubordinate() ;
+    const std::vector<std::shared_ptr<Employee> > &getSubordinate() const;
     void setSubordinate(std::vector<std::shared_ptr<Employee> > &t_another) ;
     // accounts
-    std::vector<std::shared_ptr<Account> > &getAccounts() ;
+    const std::vector<std::shared_ptr<Account> > &getAccounts() const;
     void setAccounts(std::vector<std::shared_ptr<Account> > &t_another) ;
 	// operations
-    std::vector<std::shared_ptr<BaseOperation> > &getOperations() ;
+    const std::vector<std::shared_ptr<BaseOperation> > &getOperations() const;
     void setOperations(std::vector<std::shared_ptr<BaseOperation> > &t_another) ;
     // group
-    std::vector<std::shared_ptr<Group> > &getGroups() ;
+    const std::vector<std::shared_ptr<Group> > &getGroups() const ;
     void setGroups(std::vector<std::shared_ptr<Group> > &t_another) ;
     /* operateur d'affectation */
     void operator=(const Employee &employee)

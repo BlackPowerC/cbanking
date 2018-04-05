@@ -5,3 +5,11 @@ de ses comptes crées. Mais les-dits comptes sont introuvables
 pour l'ORM.
 Resolution possible
 1- Rendre les champs nullable pour les clés étrangères et l'indiquer à l'ORM
+
+03-04-2018
+On Employee insert [bug #0002].
+L'inscription d'un employé entraine l'échec des fonctions:
+	-findByToken
+	-findByCredential
+	-findAll<T> sauf findAll<Customer>
+Resolution possible: Aucune pour l'instant

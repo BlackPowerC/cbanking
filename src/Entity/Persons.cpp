@@ -99,7 +99,7 @@ void Customer::push_back(SavingsAccount &t_account)
   this->accounts.push_back(std::make_shared<SavingsAccount>(t_account)) ;
 }
 
-std::vector<std::shared_ptr<Account> > &Customer::getAccounts()
+const std::vector<std::shared_ptr<Account> > &Customer::getAccounts() const
 {
   return this->accounts ;
 }
@@ -194,7 +194,7 @@ void Employee::addGroup(Group &t_group)
   this->groups.push_back(std::make_shared<Group>(t_group)) ;
 }
 
-std::vector<std::shared_ptr<Employee> > &Employee::getSubordinate()
+const std::vector<std::shared_ptr<Employee> > &Employee::getSubordinate() const
 {
   return this->subordinate;
 }
@@ -204,7 +204,7 @@ void Employee::setSubordinate(std::vector<std::shared_ptr<Employee> > &t_another
   this->subordinate = std::move(t_another) ;
 }
 // accounts
-std::vector<std::shared_ptr<Account> > &Employee::getAccounts()
+const std::vector<std::shared_ptr<Account> > &Employee::getAccounts() const
 {
   return this->accounts ;
 }
@@ -215,7 +215,7 @@ void Employee::setAccounts(std::vector<std::shared_ptr<Account> > &t_another)
 }
 
 // operations
-std::vector<std::shared_ptr<BaseOperation> > &Employee::getOperations()
+const std::vector<std::shared_ptr<BaseOperation> > &Employee::getOperations() const
 {
   return this->operations ;
 }
@@ -225,7 +225,7 @@ void Employee::setOperations(std::vector<std::shared_ptr<BaseOperation> > &t_ano
   this->operations = std::move(t_another) ;
 }
 // group
-std::vector<std::shared_ptr<Group> > &Employee::getGroups()
+const std::vector<std::shared_ptr<Group> > &Employee::getGroups() const
 {
     return this->groups ;
 }

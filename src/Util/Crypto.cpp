@@ -23,7 +23,7 @@ namespace Util
         {
             throw OutOfMemory("Impossible de hasher le mot de passe !") ;
         }
-        return std::string(&out[0], &out[crypto_pwhash_argon2i_STRBYTES-1]);
+        return std::string(out);
     }
 
     std::string hashSha512(const std::string &passwd)

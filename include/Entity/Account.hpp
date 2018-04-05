@@ -74,7 +74,7 @@ public:
 	double getBalance() const ;
   void setBalance(double balance) ;
 
-  std::vector<std::shared_ptr<BaseOperation> > &getOperations() ;
+  const std::vector<std::shared_ptr<BaseOperation> > &getOperations() const ;
   void setOperations(std::vector<std::shared_ptr<BaseOperation> > &t_another) ;
 
   void operator=(const Account &t_another)

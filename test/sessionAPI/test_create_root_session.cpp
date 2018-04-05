@@ -22,6 +22,9 @@ int main()
 
         API::PersonAPI::getInstance()->update<Entity::Session>(session) ;
         API::PersonAPI::getInstance()->update<Entity::Employee>(root) ;
+        DBConnection::getInstance()->reset() ;
+        DBConnection::getInstance()->getConnection()->execute("UPDATE Session SET end=2522496484 where id=1");
+        DBConnection::getInstance()->commit() ;
 
     }catch(const std::exception &e)
     {

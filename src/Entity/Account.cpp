@@ -88,7 +88,7 @@ void Account::setOperations(std::vector<std::shared_ptr<BaseOperation> > &t_anot
     this->operations = std::move(t_another) ;
 }
 
-std::vector<std::shared_ptr<BaseOperation> > &Account::getOperations()
+const std::vector<std::shared_ptr<BaseOperation> > &Account::getOperations() const
 {
     return this->operations ;
 }

@@ -16,6 +16,10 @@ std::vector<std::shared_ptr<T> > PersonAPI::findByName(const std::string &name)
     std::vector<std::shared_ptr<T> > persons ;
     odb::query<T> t_query(odb::query<T>::name.like(name+"%")) ;
     odb::result<T> t_result(DBConnection::getInstance()->getConnection()->query(t_query)) ;
+    if(!t_result.size())
+    {
+      throw NotFound("Recherche infructeuse !") ;
+    }
 		for(auto it = t_result.begin(); it!= t_result.end(); it++)
 		{
 			persons.push_back(it.load()) ;
