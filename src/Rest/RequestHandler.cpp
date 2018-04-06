@@ -639,7 +639,10 @@ namespace RestAPI
                 return ;
             }
             // Envoie du jeton
+            std::string person_json = Util::PersonConverter().entityToJson(person) ;
+            *(person_json.begin()) = '\n';
             std::string msg = "{\"token\":\""+session->getToken()+"\"}" ;
+            msg.pop_back() ; msg += ","+person_json ;
             response.send(Http::Code::Ok, msg, MIME(Application, Json)) ;
         }
         catch(const NotFound &nf)
