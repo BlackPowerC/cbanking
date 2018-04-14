@@ -27,12 +27,17 @@ add_executable(
         ../../../../src/Entity/Account.cpp
 
         ../../../../src/Entity/Operation.cpp
+
+        ../../../../src/Util/Crypto.cpp
+
+        ../../../../src/Exception.cpp
 )
 
 target_link_libraries(
         test_account_converter
         libgtest.a
         libgtest_main.a
+        sodium
         libpthread.so
 )
 

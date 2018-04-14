@@ -34,12 +34,17 @@ add_executable(
 	../../src/Entity/Account.cpp
 
 	../../src/Entity/Account-odb.cxx
+
+	../../src/Util/Crypto.cpp
+
+	../../src/Exception.cpp
 )
 
 target_link_libraries(
 	test_personapi
 	libodb-2.4.so
 	libodb-mysql-2.4.so
+	sodium
 )
 
 target_compile_features(test_personapi PUBLIC cxx_std_14)

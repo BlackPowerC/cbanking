@@ -24,12 +24,17 @@ add_executable(
 	../../src/Entity/Operation.cpp
 
 	../../src/Entity/Persons.cpp
+
+	../../src/Util/Crypto.cpp
+
+	../../src/Exception.cpp
 )
 
 target_link_libraries(
 	test_entities
 	libodb-2.4.so
 	libodb-mysql-2.4.so
+	sodium
 )
 
 target_compile_features(test_entities PUBLIC cxx_std_14)

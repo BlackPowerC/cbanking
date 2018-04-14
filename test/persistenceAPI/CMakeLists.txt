@@ -42,6 +42,10 @@ add_executable(
         ../../src/Entity/Account.cpp
 
         ../../src/Entity/Account-odb.cxx
+
+        ../../src/Util/Crypto.cpp
+
+        ../../src/Exception.cpp
 )
 
 target_link_libraries(

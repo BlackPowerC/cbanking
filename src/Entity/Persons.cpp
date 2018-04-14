@@ -1,10 +1,12 @@
+#include <ctime>
+#include "../../include/Util/Crypto.hpp"
 #include "../../include/Entity/Persons.hpp"
 
 namespace Entity
 {
 /* Classe Person */
 Person::Person(long _id, std::string _name, std::string _surname, std::string _email, std::string _passwd):
-        id(_id), name(_name), surname(_surname), email(_email), passwd(_passwd)
+        id(_id), name(_name), surname(_surname), email(_email), passwd(Util::hashArgon2(_passwd))
 {}
 
 Person::Person(const Person &t_person)
@@ -360,7 +362,8 @@ std::string Group::getName() const
     // Session
     Session::Session()
     {
-
+        this->begin_ = (ulong) std::time(nullptr) ;
+        this->end_ = (ulong) std::time(nullptr) * 2UL ;
     }
 
     Session::Session(const Token &token): Token(token)

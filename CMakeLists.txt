@@ -56,6 +56,7 @@ add_subdirectory(test/util/converter/person)
 add_subdirectory(test/util/converter/operation)
 add_subdirectory(test/util/crypto)
 add_subdirectory(test/util/json_is_valid)
+add_subdirectory(test/sessionEntity)
 
 target_link_libraries(
         cbanking_rest_api

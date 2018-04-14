@@ -28,6 +28,10 @@ add_executable(
         ../../../../src/Entity/Account.cpp
 
         ../../../../src/Entity/Operation.cpp
+
+        ../../../../src/Util/Crypto.cpp
+
+        ../../../../src/Exception.cpp
 )
 
 target_link_libraries(
@@ -35,6 +39,7 @@ target_link_libraries(
         libgtest.a
         libgtest_main.a
         libpthread.so
+        sodium
 )
 
 target_compile_features(test_savingsaccount_converter PUBLIC cxx_std_14)

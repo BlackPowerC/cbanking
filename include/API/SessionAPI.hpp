@@ -78,8 +78,6 @@ namespace Util
     Entity::Session initSession(const std::shared_ptr<Entity::Person> &p_person)
     {
         Entity::Session t_session;
-        t_session.setBegin((ulong) std::time(nullptr)) ;
-        t_session.setEnd(t_session.getBegin()+(ulong)31556952) ;
         t_session.setPerson(p_person) ;
         t_session.setToken(hashSha512(p_person->getEmail())) ;
         return t_session ;

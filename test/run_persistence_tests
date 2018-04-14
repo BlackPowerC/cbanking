@@ -25,4 +25,4 @@ test_session_api: $(TEST_SESSION_API)
 	$(TEST_SESSION_API) > $(TEST_SESSION_API).txt 
 
 test_persistence_api:
-	$(TEST_PERSISTENCE_API) --gtest_repeat=25 --gtest_output="xml:./persistenceAPI/test_persistence_api.xml" 
+	$(TEST_PERSISTENCE_API) --gtest_output="xml:./persistenceAPI/test_persistence_api.xml" 
