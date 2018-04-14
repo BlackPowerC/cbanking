@@ -563,7 +563,7 @@ namespace RestAPI
         LOG_INFO << "Compte crée !" ;
         response.send(Http::Code::Ok) ;
     }
-    
+
     // /operation/add
     void RequestHandler::addOperation(const Rest::Request &request, Http::ResponseWriter response)
     {
@@ -667,7 +667,12 @@ namespace RestAPI
                                                     std::string(doc["passwd"].GetString())) ;
 
             Session *session = dynamic_cast<Session*>(person->getToken()) ;
+            if(session == nullptr)
+            {
               LOG_WARNING << "session_ptr: " << (session==nullptr) ;
+              response.send(Http::Code::Internal_Server_Error) ;
+              return ;
+            }
             // On vérifie la validité de la session grâce au timestamp courant
             ulong current_time = std::time(nullptr) ;
             if(session->getEnd() < current_time)
