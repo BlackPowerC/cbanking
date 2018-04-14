@@ -9,6 +9,9 @@ namespace RestAPI
     void RestServer::routing()
     {
         /* Les routes GET */
+        // La liste de compte
+        Rest::Routes::Get(this->t_router, "/account/get/all/:token",
+                          Rest::Routes::bind(&RequestHandler::getAllAccounts, &this->t_rhandler)) ;
         // Un compte particulier
         Rest::Routes::Get(this->t_router,"/account/get/:id",
                           Rest::Routes::bind(&RequestHandler::getAccountById, &this->t_rhandler)) ;

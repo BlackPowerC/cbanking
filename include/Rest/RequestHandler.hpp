@@ -32,6 +32,7 @@ namespace RestAPI
     {
         // Les routes GET
         void getAccountById(const Rest::Request &request, Http::ResponseWriter response) ;
+        void getAllAccounts(const Rest::Request &request, Http::ResponseWriter response) ;
         void getAccountByCustomerId(const Rest::Request &request, Http::ResponseWriter response) ;
         void getAccountByEmployeeId(const Rest::Request &request, Http::ResponseWriter response) ;
         void getEmployeeById(const Rest::Request &request, Http::ResponseWriter response) ;

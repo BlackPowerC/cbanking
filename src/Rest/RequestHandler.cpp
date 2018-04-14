@@ -5,10 +5,10 @@
  * \author jordy
  */
 
-#include "../../include/Rest/RequestHandler.hpp"
 #include "../../include/Exception.hpp"
-#include "../../include/Util/JSONValidator.hpp"
 #include "../../include/Util/RegularFile.hpp"
+#include "../../include/Util/JSONValidator.hpp"
+#include "../../include/Rest/RequestHandler.hpp"
 
 // API de persistence
 #include "../../include/API/PersistenceAPI.hpp"
@@ -37,6 +37,43 @@ using namespace Util ;
 
 namespace RestAPI
 {
+    // /account/get/all sécurisé
+    void RequestHandler::getAllAccounts(const Rest::Request &request, Http::ResponseWriter response)
+    {
+        try
+        {
+            std::string token = request.param(":token").as<std::string>() ;
+            // Vérification de session
+            std::shared_ptr<Session> p_user_session = SessionAPI::getInstance()->findByToken<Session>(token) ;
+            PersonAPI::getInstance()->findById<Employee>(p_user_session->getPerson()->getId()) ;
+            if(p_user_session->getEnd() < (ulong) std::time(nullptr))
+            {
+                std::string err_msg = "{\"erreur\":[\"message\":\"session expirée\"]}" ;
+                response.send(Http::Code::Unauthorized, err_msg, MIME(Application, Json)) ;
+                return ;
+            }
+            // Traitement de la requête
+            std::vector<std::shared_ptr<Account> > accounts = AccountAPI::getInstance()->findAll<Account>() ;
+            std::string json("[\n\t") ;
+            for(auto &account : accounts)
+            {
+                json += AccountConverter().entityToJson(account)+",\n";
+            }
+            json.pop_back() ;
+            json.pop_back() ;
+            json += "\t]\n";
+            response.send(Http::Code::Ok, json, MIME(Application, Json)) ;
+
+        }
+        catch(const NotFound &nf)
+        {
+            LOG_WARNING << nf.what() ;
+            std::string err_msg = "{\"erreur\":[\"message\":\"non authorisé sur cet API\"]}" ;
+            response.send(Http::Code::Unauthorized, err_msg, MIME(Application, Json)) ;
+            return ;
+        }
+    }
+
     void RequestHandler::getAccountById(const Rest::Request &request, Http::ResponseWriter response)
     {
         /* Vérifions le paramettre */
