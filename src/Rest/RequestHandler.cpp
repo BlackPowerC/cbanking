@@ -667,6 +667,7 @@ namespace RestAPI
                                                     std::string(doc["passwd"].GetString())) ;
 
             Session *session = dynamic_cast<Session*>(person->getToken()) ;
+              LOG_WARNING << "session_ptr: " << (session==nullptr) ;
             // On vérifie la validité de la session grâce au timestamp courant
             ulong current_time = std::time(nullptr) ;
             if(session->getEnd() < current_time)
