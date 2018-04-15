@@ -5,6 +5,8 @@
  * \author jordy
  */
 
+#include "../../include/Util/Crypto.hpp"
+
 #include "../../include/Exception.hpp"
 #include "../../include/Util/RegularFile.hpp"
 #include "../../include/Util/JSONValidator.hpp"
@@ -652,6 +654,8 @@ namespace RestAPI
     void RequestHandler::authentification(const Rest::Request &request, Http::ResponseWriter response)
     {
         std::shared_ptr<Session> session ;
+        std::string err_msg = "{\"erreur\":[\"message\":\"non authorisé sur cet API\"]}" ;
+
         try
         {
             if(!Util::json_is_valid(fromFileToString("resources/json schema/signin.schema.json"), request.body()))
@@ -666,6 +670,12 @@ namespace RestAPI
                                                     std::string(doc["email"].GetString()),
                                                     std::string(doc["passwd"].GetString())) ;
 
+            if(person->getPasswd() !=  Util::hashSha512(std::string(doc["passwd"].GetString())))
+            {
+              response.send(Http::Code::Unauthorized, err_msg, MIME(Application, Json)) ;
+              return ;
+            }
+
             Session *session = dynamic_cast<Session*>(person->getToken()) ;
             if(session == nullptr)
             {
@@ -677,7 +687,7 @@ namespace RestAPI
             ulong current_time = std::time(nullptr) ;
             if(session->getEnd() < current_time)
             {
-                std::string err_msg = "{\"erreur\":[\"message\":\"session expirée\"]}" ;
+                err_msg = "{\"erreur\":[\"message\":\"session expirée\"]}" ;
                 response.send(Http::Code::Unauthorized, err_msg, MIME(Application, Json)) ;
                 return ;
             }
@@ -691,7 +701,6 @@ namespace RestAPI
         catch(const NotFound &nf)
         {
             LOG_WARNING << nf.what() ;
-            std::string err_msg = "{\"erreur\":[\"message\":\"non authorisé sur cet API\"]}" ;
             response.send(Http::Code::Unauthorized, err_msg, MIME(Application, Json)) ;
             return ;
         }

@@ -6,7 +6,7 @@ namespace Entity
 {
 /* Classe Person */
 Person::Person(long _id, std::string _name, std::string _surname, std::string _email, std::string _passwd):
-        id(_id), name(_name), surname(_surname), email(_email), passwd(Util::hashArgon2(_passwd))
+        id(_id), name(_name), surname(_surname), email(_email), passwd(Util::hashSha512(_passwd))
 {}
 
 Person::Person(const Person &t_person)

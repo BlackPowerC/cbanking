@@ -32,7 +32,6 @@ TEST_F(MyTest, verifyArgonHash1)
     std::string passwd = "qfdsbgkldsf45";
     std::string hash ;
     ASSERT_NO_THROW((hash = Util::hashArgon2(passwd))) ;
-    std::cout << hash+"\n";
     ASSERT_TRUE(Util::verifyArgon2Hash(hash, passwd)) ;
 }
 
@@ -41,7 +40,6 @@ TEST_F(MyTest, verifyArgonHash2)
     std::string passwd = "qfdsbgkldsf45";
     std::string hash ;
     ASSERT_NO_THROW((hash = Util::hashArgon2(passwd))) ;
-    std::cout << hash+"\n";
     ASSERT_FALSE(Util::verifyArgon2Hash(hash, "jordy")) ;
 }
 
@@ -51,7 +49,6 @@ TEST_F(MyTest, hashSha512_1)
     std::string hash ;
     hash = Util::hashSha512(passwd) ;
     ASSERT_FALSE(hash.empty()) ;
-    std::cout << hash+"\n";
 }
 
 int main(int argc, char *argv[])

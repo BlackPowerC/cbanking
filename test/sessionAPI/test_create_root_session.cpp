@@ -12,7 +12,7 @@ int main()
 {
     try
     {
-        Entity::Employee root(1, "root", "root", "root@root.com", Util::hashArgon2("azerty123")) ;
+        Entity::Employee root(1, "root", "root", "root@root.com", "azerty123") ;
         Entity::Session session = Util::initSession(std::make_shared<Entity::Employee>(root)) ;
         root.setToken(session) ;
         long id_employee = API::PersonAPI::getInstance()->insert<Entity::Employee>(root) ;
@@ -22,9 +22,6 @@ int main()
 
         API::PersonAPI::getInstance()->update<Entity::Session>(session) ;
         API::PersonAPI::getInstance()->update<Entity::Employee>(root) ;
-        DBConnection::getInstance()->reset() ;
-        DBConnection::getInstance()->getConnection()->execute("UPDATE Session SET end=2522496484 where id=1");
-        DBConnection::getInstance()->commit() ;
 
     }catch(const std::exception &e)
     {

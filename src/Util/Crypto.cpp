@@ -52,6 +52,6 @@ namespace Util
 
     bool verifyArgon2Hash(const std::string &hash, const std::string &passwd)
     {
-        return crypto_pwhash_str_verify(&hash[0], &passwd[0], (unsigned long long) passwd.size()) == 0 ;
+        return crypto_pwhash_str_verify(hash.c_str(), passwd.c_str(), (unsigned long long) passwd.size()) == 0 ;
     }
 }
