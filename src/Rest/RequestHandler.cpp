@@ -128,11 +128,31 @@ namespace RestAPI
         response.send(Http::Code::Ok, json, MIME(Application, Json)) ;
     }
 
+    // Route : "/customer/accounts/get/:token"
     void RequestHandler::getAccountByCustomerId(const Rest::Request &request, Http::ResponseWriter response)
     {
         try
         {
-            long id = request.param(":id").as<int>() ;
+            std::shared_ptr<Session> p_session ;
+            std::string token = request.param(":token").as<std::string>() ;
+            try
+            {
+              /* Vérification de la session */
+              p_session = SessionAPI::getInstance()->findByToken<Session>(token) ;
+              if(p_session->getEnd() < (ulong) std::time(nullptr))
+              {
+                std::string err_msg = "{\"erreur\":[\"message\":\"session expirée\"]}" ;
+                response.send(Http::Code::Unauthorized, err_msg, MIME(Application, Json)) ;
+              }
+              /* Employé ou client */
+              PersonAPI::getInstance()->findById<Customer>(p_session->getPerson()->getId()) ;
+            }catch(const NotFound &nf)
+            {
+              std::string err_msg = "{\"erreur\":[\"message\":\"non authorisé sur cet API\"]}" ;
+              response.send(Http::Code::Unauthorized, err_msg, MIME(Application, Json)) ;
+            }
+
+            int id = p_session->getPerson()->getId() ;
             std::vector<std::shared_ptr<Account> > accounts = AccountAPI::getInstance()->findByCustomerId<Account>(id) ;
             std::string json("[\n\t") ;
             for(auto &account : accounts)
@@ -672,6 +692,7 @@ namespace RestAPI
 
             if(person->getPasswd() !=  Util::hashSha512(std::string(doc["passwd"].GetString())))
             {
+              LOG_DEBUG << "Incorrect password";
               response.send(Http::Code::Unauthorized, err_msg, MIME(Application, Json)) ;
               return ;
             }
@@ -737,7 +758,7 @@ namespace RestAPI
             Person p_person(0,std::string(doc["name"].GetString()),
                             std::string(doc["surname"].GetString()),
                             std::string(doc["email"].GetString()),
-                            hashArgon2(std::string(doc["passwd"].GetString()))) ;
+                            std::string(doc["passwd"].GetString())) ;
             if(!std::strcmp(doc["type"].GetString(), "customer"))
             {
                 Customer customer(p_person) ;

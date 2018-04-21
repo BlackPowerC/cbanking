@@ -9,6 +9,8 @@ namespace RestAPI
     void RestServer::routing()
     {
         /* Les routes GET */
+        Rest::Routes::Get(this->t_router, "/customer/accounts/get/:token",
+                          Rest::Routes::bind(&RequestHandler::getAccountByCustomerId, &this->t_rhandler)) ;
         // La liste de compte
         Rest::Routes::Get(this->t_router, "/account/get/all/:token",
                           Rest::Routes::bind(&RequestHandler::getAllAccounts, &this->t_rhandler)) ;
@@ -61,7 +63,7 @@ namespace RestAPI
                              Rest::Routes::bind(&RequestHandler::deleteAccount, &this->t_rhandler)) ;
         // Une operation
         Rest::Routes::Delete(this->t_router, "/operation/delete/:id",
-                             Rest::Routes::bind(&RequestHandler::deleteOperation, &this->t_rhandler)) ;    
+                             Rest::Routes::bind(&RequestHandler::deleteOperation, &this->t_rhandler)) ;
     }
 
     Address RestServer::parseJson(const std::string &json)
