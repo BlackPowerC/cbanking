@@ -39,6 +39,70 @@ using namespace Util ;
 
 namespace RestAPI
 {
+    void RequestHandler::updateUserAccount(const Rest::Request &request, Http::ResponseWriter response)
+    {
+        try
+        {
+            std::string token = request.param(":token").as<std::string>() ;
+            /* Vérification de session */
+            std::shared_ptr<Session> p_session = SessionAPI::getInstance()->findByToken<Session>(token) ;
+            if(p_session->getEnd() < (ulong) std::time(nullptr))
+            {
+                std::string err_msg = "{\"erreur\":[\"message\":\"session expirée\"]}" ;
+                response.send(Http::Code::Unauthorized, err_msg, MIME(Application, Json)) ;
+                return ;
+            }
+            /*Vérification*/
+            if(!Util::json_is_valid(Util::fromFileToString("resources/json schema/update_user.schema.json"), request.body()))
+            {
+                response.send(Http::Code::Bad_Request) ;
+                return ;
+            }
+            rapidjson::Document doc; doc.Parse(request.body().c_str()) ;
+            if(doc.HasMember("old_passwd"))
+            {
+                if(Util::hashSha512(std::string(doc["old_passwd"].GetString())) != p_session->getPerson()->getPasswd())
+                {
+                    std::string err_msg = "{\"erreur\":[\"Mot de passe non correspondant\"]}";
+                    response.send(Http::Code::Bad_Request, err_msg, MIME(Application, Json)) ;
+                    return ;
+                }
+            }
+            Person *p ; p = p_session->getPerson() ;
+            p->setName(std::string(doc["name"].GetString())) ;
+            p->setSurname(std::string(doc["surname"].GetString())) ;
+            if(doc.HasMember("new_passwd"))
+            {
+                  p->setPasswd(Util::hashSha512(std::string(doc["new_passwd"].GetString()))) ;
+            }
+            p->setEmail(std::string(doc["email"].GetString())) ;
+
+            // Journalisation de la journalisation
+            LOG_INFO << "Compte d'utilisateur en cours de mise à jour..." ;
+            LOG_INFO << "Mise à jour éffectuée" ;
+
+            // Mise à jour de la session et de l'individu
+            SessionAPI::getInstance()->update<Session>(*p_session) ;
+            PersonAPI::getInstance()->update<Person>(*p_session->getPerson()) ;
+            std::string json = PersonConverter().entityToJson(p);
+            *(json.begin()) = '\n';
+            std::string msg = "{\"token\":\""+p_session->getToken()+"\"}" ;
+            msg.pop_back() ; msg += ","+json ;
+            response.send(Http::Code::Ok, msg, MIME(Application, Json)) ;
+
+        }
+        catch(const NotFound &nf)
+        {
+            LOG_WARNING << nf.what() ;
+            std::string err_msg = "{\"erreur\":[\"message\":\"non authorisé sur cet API\"]}" ;
+            response.send(Http::Code::Unauthorized, err_msg, MIME(Application, Json)) ;
+        }
+        catch(const std::exception e)
+        {
+            LOG_WARNING << e.what() ;
+            response.send(Http::Code::Unauthorized, e.what(), MIME(Text, Plain)) ;
+        }
+    }
     // /account/get/all sécurisé
     void RequestHandler::getAllAccounts(const Rest::Request &request, Http::ResponseWriter response)
     {

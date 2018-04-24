@@ -6,14 +6,14 @@
 	"properties":
 	{
 		"email":
-		{ 
-			"description":"L'email de l'utilisateur", 
-			"type":"string", 
-			"format":"email" 
+		{
+			"description":"L'email de l'utilisateur",
+			"type":"string",
+			"format":"email"
 		},
-		"name": 
-		{ 
-			"description":"Le nom l'utilisateur", 
+		"name":
+		{
+			"description":"Le nom l'utilisateur",
 			"type":"string",
 			"pattern":"^[a-zA-A]+$"
 		},
@@ -23,18 +23,18 @@
 			"type":"string",
 			"pattern":"^[a-zA-A]+$"
 		} ,
-		"old_passwd": 
+		"old_passwd":
 		{
 			"description":"L'ancien mot de passe",
 			"type":"string",
 			"minLength":6
 		},
-		"new_passwd": 
+		"new_passwd":
 		{
 			"description":"Le nouveau mot de passe",
 			"type":"string",
 			"minLength":6
 		}
 	},
-    "required":["email", "surname", "old_passwd", "new_passwd", "name"]
+    "required":["email", "surname", "name"]
 }

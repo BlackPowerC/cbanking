@@ -42,6 +42,10 @@ namespace RestAPI
         Rest::Routes::Get(this->t_router, "/customer/get/name/:value",
                           Rest::Routes::bind(&RequestHandler::getCustomerByName, &this->t_rhandler)) ;
 
+        /* les requetes PUT */
+        Rest::Routes::Put(this->t_router, "/user/account/update/:token",
+                        Rest::Routes::bind(&RequestHandler::updateUserAccount, &this->t_rhandler)) ;
+
         /* Les requetes POST */
         // Ajout d'un compte
         Rest::Routes::Post(this->t_router, "/account/add/",
