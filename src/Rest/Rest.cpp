@@ -33,7 +33,7 @@ namespace RestAPI
         Rest::Routes::Get(this->t_router, "/customer/get/all",
                           Rest::Routes::bind(&RequestHandler::getAllCustomers, &this->t_rhandler)) ;
         // La liste des subordonnés d'un employé
-        Rest::Routes::Post(this->t_router, "/employee/subordinate/get/all",
+        Rest::Routes::Get(this->t_router, "/employee/subordinate/get/all/:token",
                           Rest::Routes::bind(&RequestHandler::getSubordinates, &this->t_rhandler)) ;
         // Un client avec un id
         Rest::Routes::Get(this->t_router, "/customer/get/id/:value",
