@@ -72,4 +72,7 @@ RUN rm *.tar.gz
 
 VOLUME /home/cbanking/resources
 
-ENTRYPOINT ["./cbanking", "$HOST_NAME", "$IPV4"]
+RUN printf "#!/bin/bash\n./cbanking ${HOSTNAME} ${PORT}" > entrypoint.sh \
+        && chmod +x entrypoint.sh
+
+ENTRYPOINT ["./entrypoint.sh"]
