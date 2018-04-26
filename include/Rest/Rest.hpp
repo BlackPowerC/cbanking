@@ -60,6 +60,13 @@ namespace RestAPI
          */
         RestServer(const std::string &json = "{\"address\":\"localhost\", \"port\":8181}");
 
+        /**
+         * \fn RestServer(char *hostname, int port) ;
+         * \param hostame L'ip ou le nom d'hôte du serveur REST
+         * \param port Le port d'écoute du serveur REST
+         */
+        RestServer(char *hostname, int port) ;
+
         // Les fonctions de démarrage
         void start() ;
         void stop() ;

@@ -89,6 +89,14 @@ namespace RestAPI
         return Address(adr.GetString(), port.GetInt()) ;
     }
 
+    RestServer::RestServer(char *hostname, int port)
+    {
+      Address adr(hostname, port) ;
+      this->p_endpoint = std::make_shared<Http::Endpoint>(adr) ;
+      this->routing() ;
+      LOG_INFO << "Serveur REST sur " << hostname <<":"<< port << " !\n" ;
+    }
+
     RestServer::RestServer(const std::string &json)
     {
         Address adr ;
