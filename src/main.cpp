@@ -7,7 +7,7 @@
 #include "../include/Core/DBConnection.hpp"
 #include <cstdlib>
 
-int main(char *argv[], int argc)
+int main(int argc, char **argv)
 {
 	static plog::ColorConsoleAppender<plog::TxtFormatter> consoleAppender;
 	plog::init(plog::verbose, &consoleAppender);
@@ -15,6 +15,7 @@ int main(char *argv[], int argc)
   DBConnection::getInstance() ;
 	if(argc >= 3)
 	{
+        std::cout << argc ;
 		RestAPI::RestServer r(argv[1], std::atoi(argv[2])) ;
         r.start() ;
         r.stop() ;
