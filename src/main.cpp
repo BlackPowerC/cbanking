@@ -15,14 +15,16 @@ int main(char *argv[], int argc)
   DBConnection::getInstance() ;
 	if(argc >= 3)
 	{
-		RestAPI::RestServer r(argv[1], std::atoi(argc[2])) ;
+		RestAPI::RestServer r(argv[1], std::atoi(argv[2])) ;
+        r.start() ;
+        r.stop() ;
 	}
 	else
 	{
-		RestAPI::RestServer r ;
+        RestAPI::RestServer r ;
+        r.start() ;
+        r.stop() ;
 	}
-	r.start() ;
-	r.stop() ;
 	std::cout << "Hello world !\n" ;
 	return 0 ;
 }
