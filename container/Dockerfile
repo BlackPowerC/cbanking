@@ -62,9 +62,6 @@ RUN cp -R include/plog /usr/local/include/
 
 WORKDIR /home/cbanking
 
-ENV HOST_NAME   localhost
-ENV PORT        8181
-
 # installation de cbanking
 ADD http://172.17.0.1/~jordy/cbanking.tar.gz .
 RUN tar -xzf cbanking.tar.gz
@@ -72,9 +69,8 @@ RUN rm *.tar.gz
 
 VOLUME /home/cbanking/resources
 
-RUN printf "#!/bin/bash\n./cbanking ${HOST_NAME} ${PORT}" > entrypoint.sh \
-        && chmod +x entrypoint.sh
-
 EXPOSE 8181
 
 ENTRYPOINT ["./entrypoint.sh"]
+
+CMD ["bash"]

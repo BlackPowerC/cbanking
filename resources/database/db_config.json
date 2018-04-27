@@ -1,8 +1,8 @@
 {
-	"user":"jordy",
-	"passwd":"dalila",
-	"database":"test_cbanking",
-	"host":"172.17.0.2",
+	"user":"bf1bb6928c7615",
+	"passwd":"ef14017c",
+	"database":"ibmsl_66dc99a3baae5153f53b",
+	"host":"us-cdbr-sl-dfw-01.cleardb.net",
 	"port":3306,
 	"type":"mysql"
 }
