@@ -1,17 +1,14 @@
-FROM ubuntu:xenial
+FROM powerc/pistache:latest
 
 MAINTAINER jordy
 
-# Mise à jour de la distro
-RUN apt-get update
-
 # Installation des bibliothèques
-RUN apt-get install odb libodb-2.4 libodb-mysql-2.4 -y \
-    && apt-get install libmysql++3v5 libmysqlclient20 libmysqlcppconn7v5 -y \
+
+RUN  apt-get install odb libodb-2.4 libodb-mysql-2.4 --no-install-recommends -y \
+    && apt-get install libmysql++3v5 libmysqlclient20 libmysqlcppconn7v5 --no-install-recommends -y \
     && apt-get install --fix-missing \
     # Installation des outils de build
-    && apt-get install cmake make -y \
-    && apt-get install gcc g++ -y \
+    && apt-get install gcc --no-install-recommends -y \
     # Purge
     && apt-get clean autoclean \
     && rm /var/cache/apt/archives/* -dr
@@ -22,55 +19,58 @@ RUN mkdir /home/cbanking
 WORKDIR /home/cbanking
 
 # Récupération des codes sources
-ADD http://172.17.0.1/~jordy/github/github.tar.gz .
+ADD https://github.com/Tencent/rapidjson/archive/v1.1.0.tar.gz .
+ADD https://github.com/jedisct1/libsodium/releases/download/1.0.16/libsodium-1.0.16.tar.gz .
+ADD https://github.com/SergiusTheBest/plog/archive/1.1.3.tar.gz .
+ADD https://github.com/BlackPowerC/cbanking_rest_api/archive/v1.0.2-beta.tar.gz .
+ADD https://github.com/BlackPowerC/googletest/archive/release-1.8.0.tar.gz .
 
 # Décompression et néttoyage
-RUN tar -xzf *.tar.gz
-
-# Compilation de googletest
-WORKDIR /home/cbanking/googletest
-RUN cmake -G Unix\ Makefiles . \
-  && make \
-  && make install \
-  && make clean
-
+RUN tar -xzf v1.1.0.tar.gz \
+  && tar -xzf libsodium-1.0.16.tar.gz \ 
+  && tar -xzf 1.1.3.tar.gz \
+  && tar -xzf v1.0.2-beta.tar.gz \
+  && tar -xzf release-1.8.0.tar.gz
 
 # Compilation de libsodium
-WORKDIR /home/cbanking/libsodium
+WORKDIR /home/cbanking/libsodium-1.0.16
 RUN ./configure \
     && make \
     && make install \
     && make clean
 
-# Compilation de pistache
-WORKDIR /home/cbanking/pistache
+# Compilation de rapidjson
+WORKDIR /home/cbanking/rapidjson-1.1.0
 RUN cmake -G Unix\ Makefiles . \
   && make \
   && make install \
   && make clean
 
-# Compilation de rapidjson
-WORKDIR /home/cbanking/rapidjson
+# Compilation de googletest
+WORKDIR /home/cbanking/googletest-release-1.8.0
 RUN cmake -G Unix\ Makefiles . \
   && make \
   && make install \
   && make clean
 
 # installation de plog
-WORKDIR /home/cbanking/plog
+WORKDIR /home/cbanking/plog-1.1.3
 RUN cp -R include/plog /usr/local/include/
 
-WORKDIR /home/cbanking
-
 # installation de cbanking
-ADD http://172.17.0.1/~jordy/cbanking.tar.gz .
-RUN tar -xzf cbanking.tar.gz
-RUN rm *.tar.gz
+WORKDIR /home/cbanking/cbanking_rest_api-1.0.2-beta
+RUN cmake -G Unix\ Makefiles . && make
 
-VOLUME /home/cbanking/resources
+# Création d'un entrypoint
+RUN printf "#!/bin/bash\n ./cbanking_rest_api 8181\n" > entrypoint.sh
+
+# Cleanup
+WORKDIR /home/cbanking
+RUN apt-get autoremove --purge g++ make gcc cmake -y
+RUN rm *.tar.gz googletest-release-1.8.0 rapidjson-1.1.0 libsodium-1.0.16
 
 EXPOSE 8181
 
-ENTRYPOINT ["./entrypoint.sh"]
+ENTRYPOINT ["./home/cbanking/cbanking_rest_api-1.0.2-beta-latest/entrypoint.sh"]
 
 CMD ["bash"]
