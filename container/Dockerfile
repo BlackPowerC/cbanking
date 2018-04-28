@@ -44,22 +44,19 @@ RUN tar -xzf v1.1.0.tar.gz \
 WORKDIR /home/cbanking/libsodium-1.0.16
 RUN ./configure \
     && make \
-    && make install \
-    && make clean
+    && make install 
 
 # Compilation de rapidjson
 WORKDIR /home/cbanking/rapidjson-1.1.0
 RUN cmake -G Unix\ Makefiles . \
   && make \
-  && make install \
-  && make clean
+  && make install 
 
 # Compilation de googletest
 WORKDIR /home/cbanking/googletest-release-1.8.0
 RUN /usr/local/cmake/bin/cmake -G Unix\ Makefiles . \
   && make \
-  && make install \
-  && make clean
+  && make install 
 
 # installation de plog
 WORKDIR /home/cbanking/plog-1.1.3
@@ -68,21 +65,23 @@ RUN cp -R include/plog /usr/local/include/
 # installation de cbanking
 WORKDIR /home/cbanking/cbanking_rest_api-1.0.2-beta
 RUN /usr/local/cmake/bin/cmake -G Unix\ Makefiles . && make
+RUN cp -R cbanking_rest_api resources/ ..
 
 # Création d'un entrypoint
-RUN printf "#!/bin/bash\n ./cbanking_rest_api 8181\n" > entrypoint.sh
+RUN printf "#!/bin/bash\n ./cbanking_rest_api 8181\n" > /home/cbanking/entrypoint.sh
 
 # Cleanup
 WORKDIR /home/cbanking
 RUN rm -dr /usr/local/cmake
-RUN apt-get autoremove libodb-dev libodb-mysql-dev g++ make gcc cmake -y \
-    && apt-get autoremove libmysqlclient-dev -y \
-    && apt-get autoremove libmysqlcppconn-dev -y \
-    && apt-get autoremove libodb-dev libodb-mysql-dev -y
-RUN rm *.tar.gz googletest-release-1.8.0 rapidjson-1.1.0 libsodium-1.0.16
+RUN apt-get autoremove libodb-dev libodb-mysql-dev g++ make gcc cmake \
+    libmysqlclient-dev \
+    libmysqlcppconn-dev libmysqlcppconn-dev \
+    libmysql++-dev libmysqlclient-dev \
+    libodb-dev libodb-mysql-dev -y
+RUN rm *.tar.gz googletest-release-1.8.0 rapidjson-1.1.0 libsodium-1.0.16 cbanking_rest_api-1.0.2-beta -dr
 
 EXPOSE 8181
 
-ENTRYPOINT ["./home/cbanking/cbanking_rest_api-1.0.2-beta-latest/entrypoint.sh"]
+# ENTRYPOINT ["./entrypoint.sh"]
 
 CMD ["bash"]
