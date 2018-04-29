@@ -739,7 +739,7 @@ namespace RestAPI
             }
             // Deserialization json
             rapidjson::Document doc; doc.Parse(body_cstr) ;
-            
+
             // Vérification du token
             std::shared_ptr<Session> p_session ;
             try
@@ -904,7 +904,8 @@ namespace RestAPI
             Person p_person(0,std::string(doc["name"].GetString()),
                             std::string(doc["surname"].GetString()),
                             std::string(doc["email"].GetString()),
-                            std::string(doc["passwd"].GetString())) ;
+                            std::string(doc["passwd"].GetString()),
+                          std::string(doc["sexe"].GetString())) ;
             if(!std::strcmp(doc["type"].GetString(), "customer"))
             {
                 Customer customer(p_person) ;

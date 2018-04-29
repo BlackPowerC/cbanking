@@ -23,6 +23,7 @@ namespace Util
         json += "\"surname\":\""+entity.getSurname()+"\",\n" ;
         json += "\"email\":\""+entity.getEmail()+"\",\n" ;
         json += "\"passwd\":\""+entity.getPasswd()+"\",\n" ;
+        json += "\"sexe\":\""+entity.getSexe()+"\",\n" ;
         json += "\"accounts\":\n\t[\n" ;
         // Les comptes créer par l'employée
         for(auto accounts: entity.getAccounts())

@@ -19,7 +19,8 @@ namespace Util
         json += std::string("\"name\":")+std::string("\""+entity.getName())+std::string("\", ") ;
         json += std::string("\"surname\":")+std::string("\""+entity.getSurname())+std::string("\", ") ;
         json += std::string("\"email\":")+std::string("\""+entity.getEmail())+std::string("\", ") ;
-        json += std::string("\"passwd\":")+std::string("\""+entity.getPasswd())+std::string("\"") ;
+        json += std::string("\"passwd\":")+std::string("\""+entity.getPasswd())+std::string("\", ") ;
+        json += std::string("\"sexe\":")+std::string("\""+entity.getSexe())+std::string("\"") ;
         json += "}" ;
         return json ;
     }
