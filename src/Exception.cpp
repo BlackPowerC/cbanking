@@ -52,3 +52,9 @@ FileStreamError::FileStreamError(std::string msg_): BaseException(msg_)
 {
 
 }
+
+// FileStreamError
+SessionExprired::SessionExprired(std::string msg_): BaseException(msg_)
+{
+
+}

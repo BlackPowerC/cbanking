@@ -68,4 +68,14 @@ public:
     FileStreamError(std::string msg_) ;
 };
 
+/**
+ * @class SessionExprired
+ * @brief Exception relative à l'expiration d'une session.
+ */
+class SessionExprired: public BaseException
+{
+public:
+    SessionExprired(std::string _msg) ;
+};
+
 #endif // EXCEPTION_HPP_INCLUDED
