@@ -42,9 +42,9 @@ int main()
         {
             try
             {
-                Customer dalida(0, "dalida","kodjo", "dalida@gmail.com") ;
-                Customer thierrno(0, "thierrno","barry", "thierrno@gmail.com") ;
-                Customer nabine(0, "nabine","sabine", "nabin@gmail.com") ;
+                Customer dalida(0, "dalida","kodjo", "dalida@gmail.com", "", "feminin") ;
+                Customer thierrno(0, "thierrno","barry", "thierrno@gmail.com", "", "masculin") ;
+                Customer nabine(0, "nabine","sabine", "nabin@gmail.com", "", "feminin") ;
                 p_papi->insert<Customer>(dalida) ;
                 p_papi->insert<Customer>(nabine) ;
                 p_papi->insert<Customer>(thierrno) ;

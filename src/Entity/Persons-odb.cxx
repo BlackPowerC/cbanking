@@ -162,9 +162,17 @@ namespace odb
       grew = true;
     }
 
+    // sexe
+    //
+    if (t[6UL])
+    {
+      i.sexe_value.capacity (i.sexe_size);
+      grew = true;
+    }
+
     // p_token
     //
-    t[6UL] = 0;
+    t[7UL] = 0;
 
     return grew;
   }
@@ -242,6 +250,16 @@ namespace odb
       i.passwd_value.capacity ());
     b[n].length = &i.passwd_size;
     b[n].is_null = &i.passwd_null;
+    n++;
+
+    // sexe
+    //
+    b[n].buffer_type = MYSQL_TYPE_STRING;
+    b[n].buffer = i.sexe_value.data ();
+    b[n].buffer_length = static_cast<unsigned long> (
+      i.sexe_value.capacity ());
+    b[n].length = &i.sexe_size;
+    b[n].is_null = &i.sexe_null;
     n++;
 
     // p_token
@@ -396,6 +414,27 @@ namespace odb
       grew = grew || (cap != i.passwd_value.capacity ());
     }
 
+    // sexe
+    //
+    {
+      ::std::string const& v =
+        o.sexe;
+
+      bool is_null (false);
+      std::size_t size (0);
+      std::size_t cap (i.sexe_value.capacity ());
+      mysql::value_traits<
+          ::std::string,
+          mysql::id_string >::set_image (
+        i.sexe_value,
+        size,
+        is_null,
+        v);
+      i.sexe_null = is_null;
+      i.sexe_size = static_cast<unsigned long> (size);
+      grew = grew || (cap != i.sexe_value.capacity ());
+    }
+
     // p_token
     //
     {
@@ -507,6 +546,21 @@ namespace odb
         i.passwd_null);
     }
 
+    // sexe
+    //
+    {
+      ::std::string& v =
+        o.sexe;
+
+      mysql::value_traits<
+          ::std::string,
+          mysql::id_string >::set_value (
+        v,
+        i.sexe_value,
+        i.sexe_size,
+        i.sexe_null);
+    }
+
     // p_token
     //
     {
@@ -576,9 +630,10 @@ namespace odb
   "`surname`, "
   "`email`, "
   "`passwd`, "
+  "`sexe`, "
   "`id_token`) "
   "VALUES "
-  "(?, ?, ?, ?, ?, ?, ?)";
+  "(?, ?, ?, ?, ?, ?, ?, ?)";
 
   const char access::object_traits_impl< ::Entity::Person, id_mysql >::find_statement[] =
   "SELECT "
@@ -588,6 +643,7 @@ namespace odb
   "`Person`.`surname`, "
   "`Person`.`email`, "
   "`Person`.`passwd`, "
+  "`Person`.`sexe`, "
   "`Person`.`id_token` "
   "FROM `Person` "
   "WHERE `Person`.`id`=?";
@@ -606,6 +662,7 @@ namespace odb
   "`surname`=?, "
   "`email`=?, "
   "`passwd`=?, "
+  "`sexe`=?, "
   "`id_token`=? "
   "WHERE `id`=?";
 
@@ -621,6 +678,7 @@ namespace odb
   "`Person`.`surname`,\n"
   "`Person`.`email`,\n"
   "`Person`.`passwd`,\n"
+  "`Person`.`sexe`,\n"
   "`Person`.`id_token`\n"
   "FROM `Person`\n"
   "LEFT JOIN `Token` AS `id_token_Token` ON `id_token_Token`.`id`=`Person`.`id_token`";
@@ -1542,6 +1600,7 @@ namespace odb
     "`Person`.`surname`, "
     "`Person`.`email`, "
     "`Person`.`passwd`, "
+    "`Person`.`sexe`, "
     "`Person`.`id_token` "
     "FROM `Customer` "
     "LEFT JOIN `Person` ON `Person`.`id`=`Customer`.`id` "
@@ -1552,7 +1611,7 @@ namespace odb
 
   const std::size_t access::object_traits_impl< ::Entity::Customer, id_mysql >::find_column_counts[] =
   {
-    7UL,
+    8UL,
     0UL
   };
 
@@ -1568,6 +1627,7 @@ namespace odb
   "`Person`.`surname`,\n"
   "`Person`.`email`,\n"
   "`Person`.`passwd`,\n"
+  "`Person`.`sexe`,\n"
   "`Person`.`id_token`\n"
   "FROM `Customer`\n"
   "LEFT JOIN `Person` ON `Person`.`id`=`Customer`.`id`\n"
@@ -2993,6 +3053,7 @@ namespace odb
     "`Person`.`surname`, "
     "`Person`.`email`, "
     "`Person`.`passwd`, "
+    "`Person`.`sexe`, "
     "`Person`.`id_token` "
     "FROM `Employee` "
     "LEFT JOIN `Person` ON `Person`.`id`=`Employee`.`id` "
@@ -3003,7 +3064,7 @@ namespace odb
 
   const std::size_t access::object_traits_impl< ::Entity::Employee, id_mysql >::find_column_counts[] =
   {
-    7UL,
+    8UL,
     0UL
   };
 
@@ -3019,6 +3080,7 @@ namespace odb
   "`Person`.`surname`,\n"
   "`Person`.`email`,\n"
   "`Person`.`passwd`,\n"
+  "`Person`.`sexe`,\n"
   "`Person`.`id_token`\n"
   "FROM `Employee`\n"
   "LEFT JOIN `Person` ON `Person`.`id`=`Employee`.`id`\n"

@@ -9,7 +9,8 @@
 		"surname":{"description":"Le prénom réel de l'utilisateur", "type":"string", "pattern":"^[a-zA-Z]+$"},
 		"email": { "description":"L'email de l'utilisateur", "type":"string", "format":"email" },
 		"passwd": { "description":"Le mot de passe de l'utilisateur", "type":"string", "minLength":6, "pattern":"^[\\w]+.*$"},
-		"type":{"description":"Le type d'utilisateur", "type":"string"}
+		"type":{"description":"Le type d'utilisateur", "type":"string"},
+        "sexe":{"description":"Le sexe de l'individu", "enum":["masculin", "feminin"]}
 	},
-    "required":["name", "email", "passwd", "type", "surname"]
+    "required":["name", "email", "passwd", "type", "surname", "sexe"]
 }

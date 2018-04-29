@@ -493,6 +493,18 @@ namespace odb
 
     static const passwd_type_ passwd;
 
+    // sexe
+    //
+    typedef
+    mysql::query_column<
+      mysql::value_traits<
+        ::std::string,
+        mysql::id_string >::query_type,
+      mysql::id_string >
+    sexe_type_;
+
+    static const sexe_type_ sexe;
+
     // p_token
     //
     typedef
@@ -535,6 +547,11 @@ namespace odb
   const typename pointer_query_columns< ::Entity::Person, id_mysql, A >::passwd_type_
   pointer_query_columns< ::Entity::Person, id_mysql, A >::
   passwd (A::table_name, "`passwd`", 0);
+
+  template <typename A>
+  const typename pointer_query_columns< ::Entity::Person, id_mysql, A >::sexe_type_
+  pointer_query_columns< ::Entity::Person, id_mysql, A >::
+  sexe (A::table_name, "`sexe`", 0);
 
   template <typename A>
   const typename pointer_query_columns< ::Entity::Person, id_mysql, A >::p_token_type_
@@ -606,6 +623,12 @@ namespace odb
       unsigned long passwd_size;
       my_bool passwd_null;
 
+      // sexe
+      //
+      details::buffer sexe_value;
+      unsigned long sexe_size;
+      my_bool sexe_null;
+
       // p_token
       //
       int p_token_value;
@@ -662,7 +685,7 @@ namespace odb
 
     typedef mysql::query_base query_base_type;
 
-    static const std::size_t column_count = 7UL;
+    static const std::size_t column_count = 8UL;
     static const std::size_t id_column_count = 1UL;
     static const std::size_t inverse_column_count = 0UL;
     static const std::size_t readonly_column_count = 1UL;
@@ -2420,6 +2443,18 @@ namespace odb
 
     static const passwd_type_ passwd;
 
+    // sexe
+    //
+    typedef
+    mysql::query_column<
+      mysql::value_traits<
+        ::std::string,
+        mysql::id_string >::query_type,
+      mysql::id_string >
+    sexe_type_;
+
+    static const sexe_type_ sexe;
+
     // p_token
     //
     typedef
@@ -2478,6 +2513,11 @@ namespace odb
   const typename query_columns< ::Entity::Person, id_mysql, A >::passwd_type_
   query_columns< ::Entity::Person, id_mysql, A >::
   passwd (A::table_name, "`passwd`", 0);
+
+  template <typename A>
+  const typename query_columns< ::Entity::Person, id_mysql, A >::sexe_type_
+  query_columns< ::Entity::Person, id_mysql, A >::
+  sexe (A::table_name, "`sexe`", 0);
 
   template <typename A>
   const typename query_columns< ::Entity::Person, id_mysql, A >::p_token_type_

@@ -5,8 +5,8 @@
 namespace Entity
 {
 /* Classe Person */
-Person::Person(long _id, std::string _name, std::string _surname, std::string _email, std::string _passwd):
-        id(_id), name(_name), surname(_surname), email(_email), passwd(Util::hashSha512(_passwd))
+Person::Person(long _id, std::string _name, std::string _surname, std::string _email, std::string _passwd, std::string _sexe):
+        id(_id), name(_name), surname(_surname), email(_email), passwd(Util::hashSha512(_passwd)), sexe(_sexe)
 {}
 
 Person::Person(const Person &t_person)
@@ -69,6 +69,16 @@ void Person::setPasswd(std::string _passwd)
     this->passwd = _passwd;
 }
 
+std::string Person::getSexe() const
+{
+    return this->sexe;
+}
+
+void Person::setSexe(std::string _sexe)
+{
+    this->sexe = _sexe;
+}
+
 Token* Person::getToken() const
 {
     return this->p_token.get() ;
@@ -80,8 +90,8 @@ void Person::setToken(const Token &token)
 }
 
 /* Classe Customer */
-Customer::Customer(long _id, std::string _name, std::string _surname, std::string _email, std::string _passwd):
-        Person(_id, _name, _surname,_email, _passwd)
+Customer::Customer(long _id, std::string _name, std::string _surname, std::string _email, std::string _passwd, std::string _sexe):
+        Person(_id, _name, _surname,_email, _passwd, _sexe)
 {}
 
 Customer::Customer(const Person &p): Person(p)
@@ -125,8 +135,8 @@ void Customer::setAccounts(std::vector<std::shared_ptr<Account> > & another)
 }
 
 /* Classe Employe */
-Employee::Employee(long _id, std::string _name, std::string _surname, std::string _email, std::string _passwd):
-        Person(_id, _name, _surname,_email, _passwd)
+Employee::Employee(long _id, std::string _name, std::string _surname, std::string _email, std::string _passwd, std::string _sexe):
+        Person(_id, _name, _surname,_email, _passwd, _sexe)
 {}
 
 Employee::Employee(const Person &p): Person(p)

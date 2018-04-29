@@ -45,14 +45,16 @@ protected:
 
 		#pragma db id auto not_null
     long id ;
-#pragma db type("VARCHAR(512)")
+#pragma db type("VARCHAR(255)")
     std::string name ;
-#pragma db type("VARCHAR(512)")
+#pragma db type("VARCHAR(255)")
     std::string surname ;
-#pragma db type("VARCHAR(512)") unique
+#pragma db type("VARCHAR(255)") unique
     std::string email ;
-#pragma db type("VARCHAR(2048)")
+#pragma db type("VARCHAR(255)")
     std::string passwd ;
+#pragma db type("VARCHAR(255)")
+     std::string sexe;
 #pragma db value_not_null type("INT") column("id_token")
     std::shared_ptr<Token> p_token ;
 public:
@@ -60,7 +62,7 @@ public:
      * \fn Person(long _id =0, std::string _name = "", std::string _surname = "", std::string _email ="", std::string _passwd="") ;
      * \brief Constructeur par défaut de la classe.
      */
-    Person(long _id =0, std::string _name = "", std::string _surname = "", std::string _email ="", std::string _passwd="") ;
+    Person(long _id =0, std::string _name = "", std::string _surname = "", std::string _email ="", std::string _passwd="", std::string _sexe="") ;
     /**
      * \fn Person(Person &t_person)
      * \brief Constructeur par recopie de la classe.
@@ -96,6 +98,10 @@ public:
 
     void setPasswd(std::string _passwd) ;
 
+    std::string getSexe() const ;
+
+    void setSexe(std::string _sexe) ;
+
     void setToken(const Token &token) ;
 
     Token* getToken() const ;
@@ -107,6 +113,7 @@ public:
         this->surname = person.surname ;
         this->email = person.email ;
         this->passwd = person.passwd ;
+        this->sexe = person.sexe ;
     }
 };
 
@@ -124,10 +131,10 @@ private:
   std::vector<std::shared_ptr<Account> > accounts ;
 public:
     /**
-    * \fn Customer(long _id =0, std::string _name = "", std::string _surname = "", std::string _email ="", std::string _passwd="") ;
+    * \fn Customer(long _id =0, std::string _name = "", std::string _surname = "", std::string _email ="", std::string _passwd="", std::string _sexe="") ;
     * \brief Constructeur par défaut de la classe.
     */
-    Customer(long _id =0, std::string _name = "", std::string _surname = "", std::string _email ="", std::string _passwd="") ;
+    Customer(long _id =0, std::string _name = "", std::string _surname = "", std::string _email ="", std::string _passwd="", std::string _sexe="") ;
 
         /**
      * \fn Customer(Customer &t_Customer)
@@ -180,6 +187,7 @@ public:
     	this->name = t_another.name ;
     	this->surname = t_another.surname ;
     	this->email = t_another.email ;
+        this->sexe = t_another.sexe ;
     	this->accounts = std::move(t_another.accounts) ;
     }
 
@@ -212,10 +220,10 @@ private:
     std::vector<std::shared_ptr<Group> > groups ; /*!< Listes des groupes de l'employé. */
 public:
     /**
-    * \fn Employee(long _id =0, std::string _name = "", std::string _surname = "", std::string _email ="", std::string _passwd="")
+    * \fn Employee(long _id =0, std::string _name = "", std::string _surname = "", std::string _email ="", std::string _passwd="", std::string _sexe="")
     * \brief Constructeur par défaut de la classe.
     */
-    Employee(long _id =0, std::string _name = "", std::string _surname = "", std::string _email ="", std::string _passwd="") ;
+    Employee(long _id =0, std::string _name = "", std::string _surname = "", std::string _email ="", std::string _passwd="", std::string _sexe="") ;
     /**
      * \fn Employee(Employee &t_employee)
      * \brief Constructeur par recopie de la classe.
@@ -326,6 +334,7 @@ public:
         this->email = employee.email;
         this->passwd = employee.passwd ;
         this->surname = employee.surname ;
+        this->sexe = employee.sexe ;
         this->subordinate = std::move(employee.subordinate) ;
         this->accounts = std::move(employee.accounts) ;
         this->operations = std::move(employee.operations) ;
@@ -349,7 +358,7 @@ private:
 	friend class odb::access ;
 	#pragma db id auto not_null
     long id ;
-    #pragma db type("VARCHAR(512)")
+    #pragma db type("VARCHAR(255)")
     std::string name ;
     #pragma db value_null column("id_group") unordered
     std::vector<std::shared_ptr<Employee> > members ;
