@@ -12,6 +12,7 @@ namespace RestAPI
         Rest::Routes::Get(this->t_router, "/customer/accounts/get/:token",
                           Rest::Routes::bind(&RequestHandler::getAccountByCustomerId, &this->t_rhandler)) ;
         // La liste de compte
+        // SÉCURISÉ
         Rest::Routes::Get(this->t_router, "/account/get/all/:token",
                           Rest::Routes::bind(&RequestHandler::getAllAccounts, &this->t_rhandler)) ;
         // Un compte particulier
@@ -24,15 +25,18 @@ namespace RestAPI
         Rest::Routes::Get(this->t_router, "/employee/account/get/:id",
                           Rest::Routes::bind(&RequestHandler::getAccountByEmployeeId, &this->t_rhandler)) ;
         // Tout les employées
-        Rest::Routes::Get(this->t_router, "/employee/get/all",
+        // SÉCURISÉ
+        Rest::Routes::Get(this->t_router, "/employee/get/all/:token",
                           Rest::Routes::bind(&RequestHandler::getAllEmployees, &this->t_rhandler)) ;
         // Un employee avec un id
         Rest::Routes::Get(this->t_router, "/employee/get/:id",
                           Rest::Routes::bind(&RequestHandler::getEmployeeById, &this->t_rhandler)) ;
         // Tout les clients
-        Rest::Routes::Get(this->t_router, "/customer/get/all",
+        // SÉCURISÉ
+        Rest::Routes::Get(this->t_router, "/customer/get/all/:token",
                           Rest::Routes::bind(&RequestHandler::getAllCustomers, &this->t_rhandler)) ;
         // La liste des subordonnés d'un employé
+        // SÉCURISÉ
         Rest::Routes::Get(this->t_router, "/employee/subordinate/get/all/:token",
                           Rest::Routes::bind(&RequestHandler::getSubordinates, &this->t_rhandler)) ;
         // Un client avec un id
@@ -58,6 +62,7 @@ namespace RestAPI
                             Rest::Routes::bind(&RequestHandler::authentification, &this->t_rhandler)) ;
         Rest::Routes::Post(this->t_router, "/subscription/:token",
                             Rest::Routes::bind(&RequestHandler::subscription, &this->t_rhandler));
+        
         /* Les requetes DELETE */
         // Un client
         Rest::Routes::Delete(this->t_router, "/person/delete/:id",

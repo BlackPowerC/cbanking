@@ -39,19 +39,47 @@ using namespace Util ;
 
 namespace RestAPI
 {
+    std::shared_ptr<Session> RequestHandler::checkToken(const std::string &token)
+    {
+        std::shared_ptr<Session> p_session ;
+        try
+        {
+        /* Vérification de la session */
+        p_session = SessionAPI::getInstance()->findByToken<Session>(token) ;
+        if(p_session->getEnd() < (ulong) std::time(nullptr))
+        {
+          throw SessionExprired("{\"erreur\":[\"message\":\"session expirée\"]}") ;
+        }
+        /* Employée ? */
+        PersonAPI::getInstance()->findById<Employee>(p_session->getPerson()->getId()) ;
+      }
+      catch(const NotFound &nf)
+      {
+          throw NotFound("{\"erreur\":[\"message\":\"non authorisé sur cet API\"]}") ;
+      }
+      return p_session ;
+    }
+
+    // SÉCURISÉ
+    // Route: /user/account/update/:token
     void RequestHandler::updateUserAccount(const Rest::Request &request, Http::ResponseWriter response)
     {
         try
         {
             std::string token = request.param(":token").as<std::string>() ;
             /* Vérification de session */
-            std::shared_ptr<Session> p_session = SessionAPI::getInstance()->findByToken<Session>(token) ;
-            if(p_session->getEnd() < (ulong) std::time(nullptr))
+            std::shared_ptr<Session> p_session ;
+            try
             {
-                std::string err_msg = "{\"erreur\":[\"message\":\"session expirée\"]}" ;
-                response.send(Http::Code::Unauthorized, err_msg, MIME(Application, Json)) ;
+                p_session = this->checkToken(token) ;
+            }
+            catch(const std::exception &e)
+            {
+                LOG_ERROR << e.what() ;
+                response.send(Http::Code::Unauthorized, e.what(), MIME(Application, Json)) ;
                 return ;
             }
+
             /*Vérification*/
             if(!Util::json_is_valid(Util::fromFileToString("resources/json schema/update_user.schema.json"), request.body()))
             {
@@ -103,19 +131,24 @@ namespace RestAPI
             response.send(Http::Code::Unauthorized, e.what(), MIME(Text, Plain)) ;
         }
     }
-    // /account/get/all sécurisé
+
+    // SÉCURISÉ
+    // Route: /account/get/all/:token
     void RequestHandler::getAllAccounts(const Rest::Request &request, Http::ResponseWriter response)
     {
         try
         {
             std::string token = request.param(":token").as<std::string>() ;
-            // Vérification de session
-            std::shared_ptr<Session> p_user_session = SessionAPI::getInstance()->findByToken<Session>(token) ;
-            PersonAPI::getInstance()->findById<Employee>(p_user_session->getPerson()->getId()) ;
-            if(p_user_session->getEnd() < (ulong) std::time(nullptr))
+            /* Vérification de session */
+            std::shared_ptr<Session> p_session ;
+            try
             {
-                std::string err_msg = "{\"erreur\":[\"message\":\"session expirée\"]}" ;
-                response.send(Http::Code::Unauthorized, err_msg, MIME(Application, Json)) ;
+                p_session = this->checkToken(token) ;
+            }
+            catch(const std::exception &e)
+            {
+                LOG_ERROR << e.what() ;
+                response.send(Http::Code::Unauthorized, e.what(), MIME(Application, Json)) ;
                 return ;
             }
             // Traitement de la requête
@@ -192,7 +225,9 @@ namespace RestAPI
         response.send(Http::Code::Ok, json, MIME(Application, Json)) ;
     }
 
-    // Route : "/customer/accounts/get/:token"
+    // SÉCURISÉ
+    // Utilisé par le client Android
+    // Route : /customer/accounts/get/:token
     void RequestHandler::getAccountByCustomerId(const Rest::Request &request, Http::ResponseWriter response)
     {
         try
@@ -290,10 +325,26 @@ namespace RestAPI
         }
     }
 
+    // SÉCURISÉ
+    // Route /employee/get/all/:token
     void RequestHandler::getAllEmployees(const Rest::Request &request, Http::ResponseWriter response)
     {
         try
         {
+            /* Vérification de session */
+            std::string token = request.param(":token").as<std::string>() ;
+            std::shared_ptr<Session> p_session ;
+            try
+            {
+                p_session = this->checkToken(token) ;
+            }
+            catch(const std::exception &e)
+            {
+                LOG_ERROR << e.what() ;
+                response.send(Http::Code::Unauthorized, e.what(), MIME(Application, Json)) ;
+                return ;
+            }
+
             std::vector<std::shared_ptr<Employee> > employees = PersonAPI::getInstance()->findAll<Employee>() ;
             std::string json("[\n\t") ;
             for(auto &employee : employees)
@@ -312,6 +363,7 @@ namespace RestAPI
         }
     }
 
+    // Route: /custumer/get/id/:value
     void RequestHandler::getCustomerById(const Rest::Request &request, Http::ResponseWriter response)
     {
         /* Vérifions le paramettre */
@@ -334,10 +386,26 @@ namespace RestAPI
         }
     }
 
+    // SÉCURISÉ
+    // Route: /customer/get/all/:token
     void RequestHandler::getAllCustomers(const Rest::Request &request, Http::ResponseWriter response)
     {
         try
         {
+            /* Vérification de session */
+            std::string token = request.param(":token").as<std::string>() ;
+            std::shared_ptr<Session> p_session ;
+            try
+            {
+                p_session = this->checkToken(token) ;
+            }
+            catch(const std::exception &e)
+            {
+                LOG_ERROR << e.what() ;
+                response.send(Http::Code::Unauthorized, e.what(), MIME(Application, Json)) ;
+                return ;
+            }
+
             std::vector<std::shared_ptr<Customer> > customers = PersonAPI::getInstance()->findAll<Customer>() ;
             std::string json("[\n\t") ;
             for(auto &customer : customers)
@@ -356,6 +424,7 @@ namespace RestAPI
         }
     }
 
+    // Route: /customer/get/name/:value
     void RequestHandler::getCustomerByName(const Rest::Request &request, Http::ResponseWriter response)
     {
         // Header pour authorisé l'ajax
@@ -387,23 +456,27 @@ namespace RestAPI
         }
     }
 
-    // /employee/subordinate/get/all/:token
+    // SÉCURISÉ
+    // Route: /employee/subordinate/get/all/:token
     void RequestHandler::getSubordinates(const Rest::Request &request, Http::ResponseWriter response)
     {
         try
         {
             std::string token = request.param(":token").as<std::string>() ;
-            std::shared_ptr<Session> p_employee_session = SessionAPI::getInstance()
-                                                                  ->findByToken<Session>(token) ;
-            PersonAPI::getInstance()->findById<Employee>(p_employee_session->getPerson()->getId()) ;
-            if(p_employee_session->getEnd() < (ulong) std::time(nullptr))
+            /* Vérification de session */
+            std::shared_ptr<Session> p_session ;
+            try
             {
-                std::string err_msg = "{\"erreur\":[\"message\":\"session expirée\"]}" ;
-                response.send(Http::Code::Unauthorized, err_msg, MIME(Application, Json)) ;
+                p_session = this->checkToken(token) ;
+            }
+            catch(const std::exception &e)
+            {
+                LOG_ERROR << e.what() ;
+                response.send(Http::Code::Unauthorized, e.what(), MIME(Application, Json)) ;
                 return ;
             }
 
-            Employee *p_employee = dynamic_cast<Employee*>(p_employee_session->getPerson()) ;
+            Employee *p_employee = dynamic_cast<Employee*>(p_session->getPerson()) ;
             std::string json_response("[\n\t") ;
             for(const auto &employee : p_employee->getSubordinate())
             {
@@ -557,8 +630,9 @@ namespace RestAPI
         response.send(Http::Code::Ok) ;
     }
 
+    // SÉCURISÉ
     // Les routes POST
-    // /account/add
+    // Route: /account/add
     void RequestHandler::addAccount(const Rest::Request &request, Http::ResponseWriter response)
     {
     	try
@@ -572,20 +646,24 @@ namespace RestAPI
                 return ;
             }
             rapidjson::Document doc; doc.Parse(body_cstr) ;
+
             // Vérification du token
-            std::shared_ptr<Session> p_user_session = SessionAPI::getInstance()->findByToken<Session>(
-                    std::string(doc["token"].GetString())
-            );
-            if(p_user_session->getEnd() < (ulong) std::time(nullptr))
+            std::shared_ptr<Session> p_session ;
+            try
             {
-                std::string err_msg = "{\"erreur\":[\"message\":\"session expirée\"]}" ;
-                response.send(Http::Code::Unauthorized, err_msg, MIME(Application, Json)) ;
+                p_session = this->checkToken(std::string(doc["token"].GetString())) ;
+            }
+            catch(const std::exception &e)
+            {
+                LOG_ERROR << e.what() ;
+                response.send(Http::Code::Unauthorized, e.what(), MIME(Application, Json)) ;
                 return ;
             }
+
             /* Récupération des Acteurs autour du compte*/
             // L'employée créateur
             std::shared_ptr<Employee> p_employee = PersonAPI::getInstance()
-                    ->findById<Employee>(p_user_session->getPerson()->getId()) ;
+                    ->findById<Employee>(p_session->getPerson()->getId()) ;
 
             // Le client propriétaire
             std::shared_ptr<Customer> p_customer = PersonAPI::getInstance()
@@ -645,7 +723,8 @@ namespace RestAPI
         response.send(Http::Code::Ok) ;
     }
 
-    // /operation/add
+    // SÉCURISÉ
+    // Route: /operation/add
     void RequestHandler::addOperation(const Rest::Request &request, Http::ResponseWriter response)
     {
         try
@@ -660,20 +739,23 @@ namespace RestAPI
             }
             // Deserialization json
             rapidjson::Document doc; doc.Parse(body_cstr) ;
+            
             // Vérification du token
-            std::shared_ptr<Session> p_user_session = SessionAPI::getInstance()->findByToken<Session>(
-                    std::string(doc["token"].GetString())
-            );
-            if(p_user_session->getEnd() < (ulong) std::time(nullptr))
+            std::shared_ptr<Session> p_session ;
+            try
             {
-                std::string err_msg = "{\"erreur\":[\"message\":\"session expirée\"]}" ;
-                response.send(Http::Code::Unauthorized, err_msg, MIME(Application, Json)) ;
+                p_session = this->checkToken(std::string(doc["token"].GetString())) ;
+            }
+            catch(const std::exception &e)
+            {
+                LOG_ERROR << e.what() ;
+                response.send(Http::Code::Unauthorized, e.what(), MIME(Application, Json)) ;
                 return ;
             }
             /* Récupération des Acteurs autour de la transaction*/
             // L'employée créateur
             std::shared_ptr<Employee> p_employee = PersonAPI::getInstance()
-                    ->findById<Employee>(p_user_session->getPerson()->getId()) ;
+                    ->findById<Employee>(p_session->getPerson()->getId()) ;
 
             // Le compte à modifier
             std::shared_ptr<Account> p_account = AccountAPI::getInstance()
@@ -729,7 +811,8 @@ namespace RestAPI
         response.send(Http::Code::Ok) ;
     }
 
-    // /authentification
+    // SÉCURISÉ
+    // Route: /authentification
     void RequestHandler::authentification(const Rest::Request &request, Http::ResponseWriter response)
     {
         std::shared_ptr<Session> session ;
@@ -786,7 +869,8 @@ namespace RestAPI
         }
     }
 
-    // /subscription/:token
+    // SÉCURISÉ
+    // Route: /subscription/:token
     void RequestHandler::subscription(const Rest::Request &request, Http::ResponseWriter response)
     {
         try
@@ -800,15 +884,18 @@ namespace RestAPI
                 return ;
             }
             // Vérification de session du requester
-            std::shared_ptr<Session> p_userSession = SessionAPI::getInstance()->findByToken<Session>(token) ;
-            // Garde fou pour empêcher les utilisateurs de type client
-            PersonAPI::getInstance()->findById<Employee>(p_userSession->getPerson()->getId()) ;
-            if(p_userSession->getEnd() < (ulong) std::time(nullptr))
+            std::shared_ptr<Session> p_session ;
+            try
             {
-                std::string err_msg = "{\"erreur\":[\"message\":\"session expirée\"]}" ;
-                response.send(Http::Code::Unauthorized, err_msg, MIME(Application, Json)) ;
+                p_session = this->checkToken(token) ;
+            }
+            catch(const std::exception &e)
+            {
+                LOG_ERROR << e.what() ;
+                response.send(Http::Code::Unauthorized, e.what(), MIME(Application, Json)) ;
                 return ;
             }
+
             // Parse JSON
             rapidjson::Document doc ; doc.Parse(request.body().c_str()) ;
             // Création de la session
@@ -841,7 +928,7 @@ namespace RestAPI
                 t_new_user_session = initSession(std::make_shared<Employee>(employee)) ;
                 employee.setToken(t_new_user_session) ;
                 // Mise à jour du requester
-                Employee* to_update = dynamic_cast<Employee*>(p_userSession->getPerson()) ;
+                Employee* to_update = dynamic_cast<Employee*>(p_session->getPerson()) ;
                 to_update->addSubordinate(employee) ;
                 PersonAPI::getInstance()->update<Employee>(*to_update) ; to_update = nullptr ;
                 // Enregistrement de l'employé et de sa session
@@ -856,13 +943,6 @@ namespace RestAPI
                 LOG_INFO << "Inscription de l'employé en cours..." ;
             }
             // Envoie d'un email
-        }
-        catch(const NotFound &nf)
-        {
-            LOG_WARNING << "Tentative frauduleuse de connexion !" ;
-            std::string err_msg = "{\"erreur\":[\"message\":\"non authorisé sur cet API\"]}" ;
-            response.send(Http::Code::Unauthorized, err_msg, MIME(Application, Json)) ;
-            return ;
         }
         catch(const FileStreamError &fsr)
         {

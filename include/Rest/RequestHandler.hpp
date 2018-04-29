@@ -30,6 +30,16 @@ namespace RestAPI
      */
     struct RequestHandler
     {
+        /**
+         * \fn checkToken(const std::string &token, Http::ResponseWriter response);
+         * \brief Cette fonction est utilisé pour sécurisé les méthodes de l'API.
+         * \param token Un jetton d'identification.
+         * \throw SessionExpired
+         * \throw NotFound
+         * \return std::shared_ptr<Session> Une session.
+         */
+        std::shared_ptr<Entity::Session> checkToken(const std::string &token) ;
+
         // Les routes GET
         void getAccountById(const Rest::Request &request, Http::ResponseWriter response) ;
         void getAllAccounts(const Rest::Request &request, Http::ResponseWriter response) ;
