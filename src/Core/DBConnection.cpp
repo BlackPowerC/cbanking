@@ -64,7 +64,15 @@ DBConnection *DBConnection::getInstance()
     catch(const odb::exception &odb_e)
     {
         LOG_FATAL << odb_e.what() ;
-        exit(-1) ;
+        // Pour les tests en local
+        try
+        {
+            p_singleton = new DBConnection("jordy", "dalila", "test_cbanking", "172.17.0.2", 3306) ;
+            return p_singleton ;
+        }catch (const odb::exception &e)
+        {
+            exit(-1) ;
+        }
     }
     catch(const std::bad_alloc &ba)
     {
