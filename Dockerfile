@@ -1,10 +1,10 @@
-FROM powerc/myubuntu:latest
+FROM ubuntu:xenial
 
 MAINTAINER jordy
 
 # Installation des bibliothèques
 
-RUN  apt-get install odb libodb-2.4 libodb-mysql-2.4 \
+RUN apt-get update && apt-get install odb libodb-2.4 libodb-mysql-2.4 \
     libodb-dev libodb-mysql-dev  \
     libmysql++-dev libmysqlclient-dev \
     libmysql++3v5 libmysqlclient20 libmysqlcppconn7v5 libmysqlcppconn-dev --no-install-recommends -y \
