@@ -48,6 +48,7 @@ namespace RestAPI
         p_session = SessionAPI::getInstance()->findByToken<Session>(token) ;
         if(p_session->getEnd() < (ulong) std::time(nullptr))
         {
+          LOG_DEBUG << p_session->getPerson()->getEmail() << " session expired !" ;
           throw SessionExprired("{\"erreur\":[\"message\":\"session expirée\"]}") ;
         }
         /* Employée ? */
@@ -55,6 +56,7 @@ namespace RestAPI
       }
       catch(const NotFound &nf)
       {
+          LOG_WARNING << "Unauthorized access detected !" ;
           throw NotFound("{\"erreur\":[\"message\":\"non authorisé sur cet API\"]}") ;
       }
       return p_session ;
@@ -240,6 +242,7 @@ namespace RestAPI
               p_session = SessionAPI::getInstance()->findByToken<Session>(token) ;
               if(p_session->getEnd() < (ulong) std::time(nullptr))
               {
+              	LOG_DEBUG << p_session->getPerson()->getEmail() << " session expired !" ;
                 std::string err_msg = "{\"erreur\":[\"message\":\"session expirée\"]}" ;
                 response.send(Http::Code::Unauthorized, err_msg, MIME(Application, Json)) ;
               }
@@ -247,6 +250,7 @@ namespace RestAPI
               PersonAPI::getInstance()->findById<Customer>(p_session->getPerson()->getId()) ;
             }catch(const NotFound &nf)
             {
+ 			  LOG_WARNING << "Unauthorized access detected !" ;
               std::string err_msg = "{\"erreur\":[\"message\":\"non authorisé sur cet API\"]}" ;
               response.send(Http::Code::Unauthorized, err_msg, MIME(Application, Json)) ;
             }
@@ -635,6 +639,9 @@ namespace RestAPI
     // Route: /account/add
     void RequestHandler::addAccount(const Rest::Request &request, Http::ResponseWriter response)
     {
+        LOG_DEBUG << "Request body" ;
+        LOG_DEBUG << request.body() ;
+
     	try
         {
             std::string body(request.body()) ;
@@ -727,6 +734,8 @@ namespace RestAPI
     // Route: /operation/add
     void RequestHandler::addOperation(const Rest::Request &request, Http::ResponseWriter response)
     {
+        LOG_DEBUG << "Request body" ;
+        LOG_DEBUG << request.body() ;
         try
         {
             std::string body(request.body()) ;
@@ -817,7 +826,6 @@ namespace RestAPI
     {
         std::shared_ptr<Session> session ;
         std::string err_msg = "{\"erreur\":[\"message\":\"non authorisé sur cet API\"]}" ;
-
         try
         {
             if(!Util::json_is_valid(fromFileToString("resources/json schema/signin.schema.json"), request.body()))
@@ -834,7 +842,7 @@ namespace RestAPI
 
             if(person->getPasswd() !=  Util::hashSha512(std::string(doc["passwd"].GetString())))
             {
-              LOG_DEBUG << "Incorrect password";
+              LOG_WARNING << "Unauthorized access detected !";
               response.send(Http::Code::Unauthorized, err_msg, MIME(Application, Json)) ;
               return ;
             }
@@ -879,7 +887,6 @@ namespace RestAPI
             // Vérification JSON
             if(!json_is_valid(fromFileToString("resources/json schema/signup.schema.json"), request.body()))
             {
-                LOG_WARNING << request.body() ;
                 response.send(Http::Code::Bad_Request) ;
                 return ;
             }
