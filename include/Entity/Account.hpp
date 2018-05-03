@@ -19,13 +19,19 @@ protected:
 
   #pragma db id auto not_null
   long id ;
+
   #pragma db not_null column("id_customer")
   std::shared_ptr<Customer> t_customer ;
+
   #pragma db not_null column("id_employee")
   std::shared_ptr<Employee> t_employee ;
+
   double balance ;
-#pragma db type("VARCHAR(512)")
+  double initialBalance ;
+
+  #pragma db type("VARCHAR(512)")
   std::string creationDate ;
+
   #pragma db value_null inverse(t_source) column("id_operation")
   std::vector<std::shared_ptr<BaseOperation> > operations ;
 public:
@@ -68,11 +74,15 @@ public:
   Employee getEmployee() const ;
   void setEmployee(const Employee &employee) ;
 
-	std::string getCreationDate() const ;
+  std::string getCreationDate() const ;
   void setCreationDate(std::string creationDate) ;
 
-	double getBalance() const ;
+  double getBalance() const ;
   void setBalance(double balance) ;
+
+  double getInitialBalance() const;
+
+  void setInitialBalance(double initialBalance);
 
   const std::vector<std::shared_ptr<BaseOperation> > &getOperations() const ;
   void setOperations(std::vector<std::shared_ptr<BaseOperation> > &t_another) ;
@@ -83,6 +93,7 @@ public:
     this->t_customer = std::move(t_another.t_customer) ;
     this->t_employee = std::move(t_another.t_employee) ;
     this->balance = t_another.balance ;
+    this->initialBalance = t_another.initialBalance ;
     this->creationDate = t_another.creationDate;
     this->operations = std::move(t_another.operations);
   }
@@ -109,13 +120,13 @@ public:
 
   void operator=(const CurrentAccount &t_another)
   {
-    this->id = t_another.id ;
-    this->t_customer = std::move(t_another.t_customer) ;
-    this->t_employee = std::move(t_another.t_employee) ;
-    this->balance = t_another.balance ;
-    this->creationDate = t_another.creationDate;
-    this->operations = std::move(t_another.operations);
-    this->overdraft = t_another.overdraft ;
+      this->id = t_another.id ;
+      this->t_customer = std::move(t_another.t_customer) ;
+      this->t_employee = std::move(t_another.t_employee) ;
+      this->balance = t_another.balance ;
+      this->initialBalance = t_another.initialBalance ;
+      this->creationDate = t_another.creationDate;
+      this->operations = std::move(t_another.operations);
   }
 };
 
@@ -135,13 +146,13 @@ public:
 
   void operator=(const SavingsAccount &t_another)
   {
-    this->id = t_another.id ;
-    this->t_customer = t_another.t_customer ;
-    this->t_employee = t_another.t_employee ;
-    this->balance = t_another.balance ;
-    this->creationDate = t_another.creationDate;
-    this->operations = std::move(t_another.operations);
-    this->rate = t_another.rate ;
+      this->id = t_another.id ;
+      this->t_customer = std::move(t_another.t_customer) ;
+      this->t_employee = std::move(t_another.t_employee) ;
+      this->balance = t_another.balance ;
+      this->initialBalance = t_another.initialBalance ;
+      this->creationDate = t_another.creationDate;
+      this->operations = std::move(t_another.operations);
   }
 };
 

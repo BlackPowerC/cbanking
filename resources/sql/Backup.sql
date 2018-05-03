@@ -28,6 +28,7 @@ CREATE TABLE `Account` (
   `id_customer` bigint(20) NOT NULL,
   `id_employee` bigint(20) NOT NULL,
   `balance` double NOT NULL,
+  `initialBalance` DOUBLE NOT NULL,
   `creationDate` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
@@ -39,7 +40,7 @@ CREATE TABLE `Account` (
 
 LOCK TABLES `Account` WRITE;
 /*!40000 ALTER TABLE `Account` DISABLE KEYS */;
-INSERT INTO `Account` VALUES (1,'Entity::SavingsAccount',8,4,35905,'16-04-2018 14:57:15');
+INSERT INTO `Account` VALUES (1,'Entity::SavingsAccount',8,4,35905,35905,'16-04-2018 14:57:15');
 /*!40000 ALTER TABLE `Account` ENABLE KEYS */;
 UNLOCK TABLES;
 

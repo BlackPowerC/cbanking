@@ -275,6 +275,18 @@ namespace odb
 
     static const balance_type_ balance;
 
+    // initialBalance
+    //
+    typedef
+    mysql::query_column<
+      mysql::value_traits<
+        double,
+        mysql::id_double >::query_type,
+      mysql::id_double >
+    initialBalance_type_;
+
+    static const initialBalance_type_ initialBalance;
+
     // creationDate
     //
     typedef
@@ -312,6 +324,11 @@ namespace odb
   const typename pointer_query_columns< ::Entity::Account, id_mysql, A >::balance_type_
   pointer_query_columns< ::Entity::Account, id_mysql, A >::
   balance (A::table_name, "`balance`", 0);
+
+  template <typename A>
+  const typename pointer_query_columns< ::Entity::Account, id_mysql, A >::initialBalance_type_
+  pointer_query_columns< ::Entity::Account, id_mysql, A >::
+  initialBalance (A::table_name, "`initialBalance`", 0);
 
   template <typename A>
   const typename pointer_query_columns< ::Entity::Account, id_mysql, A >::creationDate_type_
@@ -373,6 +390,11 @@ namespace odb
       //
       double balance_value;
       my_bool balance_null;
+
+      // initialBalance
+      //
+      double initialBalance_value;
+      my_bool initialBalance_null;
 
       // creationDate
       //
@@ -494,7 +516,7 @@ namespace odb
 
     typedef mysql::query_base query_base_type;
 
-    static const std::size_t column_count = 6UL;
+    static const std::size_t column_count = 7UL;
     static const std::size_t id_column_count = 1UL;
     static const std::size_t inverse_column_count = 0UL;
     static const std::size_t readonly_column_count = 1UL;
@@ -1121,6 +1143,18 @@ namespace odb
 
     static const balance_type_ balance;
 
+    // initialBalance
+    //
+    typedef
+    mysql::query_column<
+      mysql::value_traits<
+        double,
+        mysql::id_double >::query_type,
+      mysql::id_double >
+    initialBalance_type_;
+
+    static const initialBalance_type_ initialBalance;
+
     // creationDate
     //
     typedef
@@ -1158,6 +1192,11 @@ namespace odb
   const typename query_columns< ::Entity::Account, id_mysql, A >::balance_type_
   query_columns< ::Entity::Account, id_mysql, A >::
   balance (A::table_name, "`balance`", 0);
+
+  template <typename A>
+  const typename query_columns< ::Entity::Account, id_mysql, A >::initialBalance_type_
+  query_columns< ::Entity::Account, id_mysql, A >::
+  initialBalance (A::table_name, "`initialBalance`", 0);
 
   template <typename A>
   const typename query_columns< ::Entity::Account, id_mysql, A >::creationDate_type_

@@ -12,7 +12,9 @@ Account::Account(long _id,
     t_employee(std::move(employee)),
     balance(_balance),
     creationDate(date)
-{}
+{
+    this->initialBalance = _balance ;
+}
 
 Account::Account(const Account &another)
 {
@@ -103,6 +105,16 @@ void Account::remove(long id)
             break ;
         }
     }
+}
+
+double Account::getInitialBalance() const
+{
+    return initialBalance;
+}
+
+void Account::setInitialBalance(double initialBalance)
+{
+    this->initialBalance = initialBalance;
 }
 
 /* Classe  CurrentAcount*/

@@ -313,9 +313,13 @@ namespace odb
     //
     t[4UL] = 0;
 
+    // initialBalance
+    //
+    t[5UL] = 0;
+
     // creationDate
     //
-    if (t[5UL])
+    if (t[6UL])
     {
       i.creationDate_value.capacity (i.creationDate_size);
       grew = true;
@@ -380,6 +384,13 @@ namespace odb
     b[n].buffer_type = MYSQL_TYPE_DOUBLE;
     b[n].buffer = &i.balance_value;
     b[n].is_null = &i.balance_null;
+    n++;
+
+    // initialBalance
+    //
+    b[n].buffer_type = MYSQL_TYPE_DOUBLE;
+    b[n].buffer = &i.initialBalance_value;
+    b[n].is_null = &i.initialBalance_null;
     n++;
 
     // creationDate
@@ -516,6 +527,20 @@ namespace odb
       i.balance_null = is_null;
     }
 
+    // initialBalance
+    //
+    {
+      double const& v =
+        o.initialBalance;
+
+      bool is_null (false);
+      mysql::value_traits<
+          double,
+          mysql::id_double >::set_image (
+        i.initialBalance_value, is_null, v);
+      i.initialBalance_null = is_null;
+    }
+
     // creationDate
     //
     {
@@ -639,6 +664,20 @@ namespace odb
         i.balance_null);
     }
 
+    // initialBalance
+    //
+    {
+      double& v =
+        o.initialBalance;
+
+      mysql::value_traits<
+          double,
+          mysql::id_double >::set_value (
+        v,
+        i.initialBalance_value,
+        i.initialBalance_null);
+    }
+
     // creationDate
     //
     {
@@ -691,9 +730,10 @@ namespace odb
   "`id_customer`, "
   "`id_employee`, "
   "`balance`, "
+  "`initialBalance`, "
   "`creationDate`) "
   "VALUES "
-  "(?, ?, ?, ?, ?, ?)";
+  "(?, ?, ?, ?, ?, ?, ?)";
 
   const char access::object_traits_impl< ::Entity::Account, id_mysql >::find_statement[] =
   "SELECT "
@@ -702,6 +742,7 @@ namespace odb
   "`Account`.`id_customer`, "
   "`Account`.`id_employee`, "
   "`Account`.`balance`, "
+  "`Account`.`initialBalance`, "
   "`Account`.`creationDate` "
   "FROM `Account` "
   "WHERE `Account`.`id`=?";
@@ -719,6 +760,7 @@ namespace odb
   "`id_customer`=?, "
   "`id_employee`=?, "
   "`balance`=?, "
+  "`initialBalance`=?, "
   "`creationDate`=? "
   "WHERE `id`=?";
 
@@ -733,6 +775,7 @@ namespace odb
   "`Account`.`id_customer`,\n"
   "`Account`.`id_employee`,\n"
   "`Account`.`balance`,\n"
+  "`Account`.`initialBalance`,\n"
   "`Account`.`creationDate`\n"
   "FROM `Account`\n"
   "LEFT JOIN `Customer` AS `id_customer_Customer` ON `id_customer_Customer`.`id`=`Account`.`id_customer`\n"
@@ -1560,6 +1603,7 @@ namespace odb
     "`Account`.`id_customer`, "
     "`Account`.`id_employee`, "
     "`Account`.`balance`, "
+    "`Account`.`initialBalance`, "
     "`Account`.`creationDate` "
     "FROM `CurrentAccount` "
     "LEFT JOIN `Account` ON `Account`.`id`=`CurrentAccount`.`id` "
@@ -1573,7 +1617,7 @@ namespace odb
 
   const std::size_t access::object_traits_impl< ::Entity::CurrentAccount, id_mysql >::find_column_counts[] =
   {
-    7UL,
+    8UL,
     1UL
   };
 
@@ -1595,6 +1639,7 @@ namespace odb
   "`Account`.`id_customer`,\n"
   "`Account`.`id_employee`,\n"
   "`Account`.`balance`,\n"
+  "`Account`.`initialBalance`,\n"
   "`Account`.`creationDate`\n"
   "FROM `CurrentAccount`\n"
   "LEFT JOIN `Account` ON `Account`.`id`=`CurrentAccount`.`id`\n"
@@ -2309,6 +2354,7 @@ namespace odb
     "`Account`.`id_customer`, "
     "`Account`.`id_employee`, "
     "`Account`.`balance`, "
+    "`Account`.`initialBalance`, "
     "`Account`.`creationDate` "
     "FROM `SavingsAccount` "
     "LEFT JOIN `Account` ON `Account`.`id`=`SavingsAccount`.`id` "
@@ -2322,7 +2368,7 @@ namespace odb
 
   const std::size_t access::object_traits_impl< ::Entity::SavingsAccount, id_mysql >::find_column_counts[] =
   {
-    7UL,
+    8UL,
     1UL
   };
 
@@ -2344,6 +2390,7 @@ namespace odb
   "`Account`.`id_customer`,\n"
   "`Account`.`id_employee`,\n"
   "`Account`.`balance`,\n"
+  "`Account`.`initialBalance`,\n"
   "`Account`.`creationDate`\n"
   "FROM `SavingsAccount`\n"
   "LEFT JOIN `Account` ON `Account`.`id`=`SavingsAccount`.`id`\n"
