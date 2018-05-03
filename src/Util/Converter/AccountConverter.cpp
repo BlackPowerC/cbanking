@@ -25,6 +25,7 @@ namespace Util
         json += "\"employee\":"+pc.entityToJson(entity.getEmployee())+",\n" ;
         json += "\"dateCreation\":\""+entity.getCreationDate()+"\",\n" ;
         json += "\"balance\":"+std::to_string(entity.getBalance())+",\n" ;
+        json += "\"initialBalance\":"+std::to_string(entity.getInitialBalance())+",\n" ;
         json += "\"operations\":\n\t[\n" ;
         // Les opérations sur le compte
         for(const auto operation: entity.getOperations())
