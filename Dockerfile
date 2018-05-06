@@ -24,7 +24,7 @@ WORKDIR /home/cbanking
 ADD https://github.com/Tencent/rapidjson/archive/v1.1.0.tar.gz .
 ADD https://github.com/jedisct1/libsodium/releases/download/1.0.16/libsodium-1.0.16.tar.gz .
 ADD https://github.com/SergiusTheBest/plog/archive/1.1.3.tar.gz .
-ADD https://github.com/BlackPowerC/cbanking_rest_api/archive/v1.0.5.tar.gz .
+ADD https://github.com/BlackPowerC/cbanking_rest_api/archive/v1.0.6.tar.gz .
 ADD https://github.com/BlackPowerC/googletest/archive/release-1.8.0.tar.gz .
 ADD https://github.com/BlackPowerC/pistache-1/archive/28-04-18.tar.gz .
 
@@ -38,7 +38,7 @@ RUN mv cmake-3.11.1-Linux-x86_64/ cmake/ \
 RUN tar -xzf v1.1.0.tar.gz \
   && tar -xzf libsodium-1.0.16.tar.gz \
   && tar -xzf 1.1.3.tar.gz \
-  && tar -xzf v1.0.5.tar.gz \
+  && tar -xzf v1.0.6.tar.gz \
   && tar -xzf release-1.8.0.tar.gz \
   && tar -xzf 28-04-18.tar.gz
 
@@ -71,7 +71,7 @@ WORKDIR /home/cbanking/plog-1.1.3
 RUN cp -R include/plog /usr/local/include/
 
 # installation de cbanking
-WORKDIR /home/cbanking/cbanking_rest_api-1.0.5
+WORKDIR /home/cbanking/cbanking_rest_api-1.0.6
 RUN /usr/local/cmake/bin/cmake -G Unix\ Makefiles . && make
 RUN cp -R cbanking_rest_api resources/ ..
 
@@ -86,7 +86,7 @@ RUN apt-get autoremove --purge libodb-dev libodb-mysql-dev g++ make gcc \
     libmysqlcppconn-dev libmysqlcppconn-dev \
     libmysql++-dev libmysqlclient-dev \
     libodb-dev libodb-mysql-dev -y
-RUN rm *.tar.gz googletest-release-1.8.0 rapidjson-1.1.0 libsodium-1.0.16 cbanking_rest_api-1.0.5 pistache-1-28-04-18 -dr
+RUN rm *.tar.gz googletest-release-1.8.0 rapidjson-1.1.0 libsodium-1.0.16 cbanking_rest_api-1.0.6 pistache-1-28-04-18 -dr
 RUN rm /var/lib/dpkg/* -dr
 
 EXPOSE 8181
