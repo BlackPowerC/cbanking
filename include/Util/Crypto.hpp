@@ -43,6 +43,15 @@ namespace Util
     * @throw BadMalloc en cas d'erreur d'allocation de mémoire.
     */
     std::string hashGeneric(const std::string &passwsd) ;
+
+    /**
+     * Cette fontion convertir un tableau d'octet en une chaine
+     * de nombre hexadécimaux.
+     * @param bytes Un pointeur sur un tableau d'octets.
+     * @param n Le nombre d'octets dans le tableau.
+     * @return Une chaine de caractères en hexadécimal
+     */
+    std::string bytesToHex(const u_char *bytes, int n) ;
 }
 
 #endif // CRYPTO_HPP

@@ -39,11 +39,7 @@ namespace Util
         {
             return std::string() ;
         }
-        for(int i=0; i<crypto_hash_sha512_BYTES; i++)
-        {
-            hash += std::to_string((int) out[i]) ;
-        }
-        return hash ;
+        return bytesToHex(out, crypto_hash_sha512_BYTES) ;
     }
 
     std::string hashGeneric(const std::string &passwd)
@@ -53,5 +49,16 @@ namespace Util
     bool verifyArgon2Hash(const std::string &hash, const std::string &passwd)
     {
         return crypto_pwhash_str_verify(hash.c_str(), passwd.c_str(), (unsigned long long) passwd.size()) == 0 ;
+    }
+
+    std::string bytesToHex(const u_char *bytes, int n)
+    {
+        std::string hexDigits = "0123456789ABCDEF";
+        std::string buffer ;
+        for (int j=0; j<n; j++)
+        {
+            buffer += hexDigits[(bytes[j] >> 4) & 0x0f];
+        }
+        return buffer ;
     }
 }
