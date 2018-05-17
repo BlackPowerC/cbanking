@@ -1,0 +1,22 @@
+{
+  "$schema": "http://json-schema.org/schema#",
+  "title": "InstanceAppId schema",
+  "description": "Information associant une instanceAppId et le jetton d'un client",
+  "type":"object",
+  "properties":
+  {
+    "instanceAppId":
+    {
+      "description":"L'ancien jetton d'identification",
+      "type":"string",
+      "minLength":"1"
+    },
+    "token":
+    {
+      "description":"Jetton d'identification de l'utilisateur",
+      "type":"string",
+      "minLength":"1"
+    }
+  },
+  "required": ["instanceAppId", "token"]
+}
