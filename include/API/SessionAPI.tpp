@@ -1,6 +1,30 @@
 namespace API
 {
 
+template<class T>
+std::shared_ptr<T> SessionAPI::findByInstanceAppId(const std::string &instanceAppId)
+{
+    try
+    {
+        odb::session t_session ;
+        DBConnection *conn = DBConnection::getInstance() ;
+        conn->reset() ;
+        odb::query<T> t_query(odb::query<T>::appInstanceId == instanceAppId) ;
+        odb::result<T> t_result(conn->getConnection()->query(t_query)) ;
+        if(t_result.empty() || t_result.size() > 1)
+        {
+            throw NotFound("Impossible de trouver la ressource à l'ID "+instanceAppId) ;
+        }
+        std::shared_ptr<T> token(t_result.begin().load()) ;
+        conn->commit() ;
+        return token ;
+
+    }catch(const odb::exception &e)
+    {
+        throw NotFound("Recherche infructueuse") ;
+    }
+}
+
 template <typename T>
 std::shared_ptr<T> SessionAPI::findById(long id)
 {

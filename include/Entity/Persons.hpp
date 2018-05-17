@@ -429,8 +429,10 @@ protected:
     int id ;
     #pragma db value_null type("INT") column("id_person")
     std::shared_ptr<Person> t_person ;
-    #pragma db value_not_null type("VARCHAR(1024)") unique
-    std::string token ; /*!< Jetton unique */
+    #pragma db value_not_null type("VARCHAR(255)") unique
+    std::string token ; /*!< Jetton unique identifiant le client sur l'api */
+    #pragma db value_null type("VARCHAR(255)")
+    std::string appInstanceId ; /*! Jetton identifiant l'application du client */
 public:
     Token() ;
     Token(const Token *p_another) ;
@@ -449,6 +451,10 @@ public:
     std::string getToken() const ;
 
     void setToken(const std::string &token) ;
+
+    std::string getAppInstanceId() const;
+
+    void setAppInstanceId(const std::string &appInstanceId);
 
 //  virtual void doNothing() = 0 ;
 };

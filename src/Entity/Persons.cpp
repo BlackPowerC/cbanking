@@ -369,6 +369,16 @@ std::string Group::getName() const
         this->token = token ;
     }
 
+    std::string Token::getAppInstanceId() const
+    {
+        return appInstanceId;
+    }
+
+    void Token::setAppInstanceId(const std::string &appInstanceId)
+    {
+        this->appInstanceId = appInstanceId;
+    }
+
     // Session
     Session::Session()
     {

@@ -40,6 +40,15 @@ namespace RestAPI
          */
         std::shared_ptr<Entity::Session> checkToken(const std::string &token) ;
 
+        /**
+         * Cette fonction permet la mise à jour du AppInstanceId
+         * d'un client.
+         * @param request Une requête HTTP avec un corps json.
+         * eg: {"instanceAppId":"something"}
+         * @param response
+         */
+        void updateInstaceAppId(const Rest::Request &request, Http::ResponseWriter response) ;
+
         // Les routes GET
         void getAccountById(const Rest::Request &request, Http::ResponseWriter response) ;
         void getAllAccounts(const Rest::Request &request, Http::ResponseWriter response) ;

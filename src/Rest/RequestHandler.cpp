@@ -63,6 +63,54 @@ namespace RestAPI
     }
 
     // SÉCURISÉ
+    // Utilisé par le client Android
+    // Route /misc/instanceidapp/:token
+    void RequestHandler::updateInstaceAppId(const Rest::Request &request, Http::ResponseWriter response)
+    {
+        try
+        {
+            std::string token(request.param(":token").as<std::string>());
+            std::string request_body(request.body()) ;
+            if(!Util::json_is_valid(
+                    Util::fromFileToString("resources/instanceappid.schema.json"),
+                    request_body))
+            {
+                LOG_DEBUG << "Request body" << request_body ;
+                response.send(Http::Code::Bad_Request) ;
+            }
+            rapidjson::Document doc; doc.Parse(request_body.c_str()) ;
+            // Job
+            std::shared_ptr<Session> p_session = SessionAPI::getInstance()->findByToken<Session>(token) ;
+            if(p_session->getEnd() < (ulong) std::time(nullptr))
+            {
+                LOG_DEBUG << p_session->getPerson()->getEmail() << " session expired !" ;
+                std::string err_msg = "{\"erreur\":[\"message\":\"session expirée\"]}" ;
+                response.send(Http::Code::Unauthorized, err_msg, MIME(Application, Json)) ;
+            }
+
+            std::shared_ptr<Customer> p_customer = PersonAPI::getInstance()->findById<Customer>(p_session->getPerson()->getId()) ;
+            // Mise à jour du jetton
+            p_customer->getToken()->setAppInstanceId(std::string(doc["instanceAppId"].GetString())) ;
+            SessionAPI::getInstance()->update<Token>(*p_customer->getToken()) ;
+            PersonAPI::getInstance()->update<Customer>(*p_customer) ;
+
+            response.send(Http::Code::Ok) ;
+
+        }
+        catch(const NotFound &nf)
+        {
+            LOG_WARNING << nf.what() ;
+            std::string err_msg = "{\"erreur\":[\"message\":\"non authorisé sur cet API\"]}" ;
+            response.send(Http::Code::Unauthorized, err_msg, MIME(Application, Json)) ;
+        }
+        catch(const std::exception e)
+        {
+            LOG_WARNING << e.what() ;
+            response.send(Http::Code::Internal_Server_Error) ;
+        }
+    }
+
+    // SÉCURISÉ
     // Route: /user/account/update/:token
     void RequestHandler::updateUserAccount(const Rest::Request &request, Http::ResponseWriter response)
     {

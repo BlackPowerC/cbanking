@@ -55,6 +55,17 @@ public:
     template <typename T>
     std::shared_ptr<T> findByToken(const std::string &token) ;
 
+    /**
+     * Cette fonction fouille la base de données pour retrouver un Token
+     * selon la valeur de la colonne instanceAppId.
+     * @tparam T
+     * @param instanceAppId
+     * @throw NotFound
+     * @return
+     */
+    template<class T>
+    std::shared_ptr<T> findByInstanceAppId(const std::string &instanceAppId) ;
+
     // Fonction polymorphic
     virtual void doNothing() {}
 };
