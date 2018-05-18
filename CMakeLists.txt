@@ -1,10 +1,14 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(cbanking_rest_api)
+project(futurabank_rest_api)
 
 # Les bibliothèques de l'ouest
 # pistache
 include_directories(/usr/local/include/pistache)
+link_directories(/usr/local/lib)
+
+# curl
+include_directories(/usr/local/include/curl)
 link_directories(/usr/local/lib)
 
 # pthread
@@ -36,7 +40,7 @@ file(
 set(CMAKE_CXX_FLAGS -fpermissive)
 
 add_executable(
-        cbanking_rest_api
+        futurabank_rest_api
 
         ${source}
 )
@@ -59,13 +63,14 @@ add_subdirectory(test/util/json_is_valid)
 add_subdirectory(test/sessionEntity)
 
 target_link_libraries(
-        cbanking_rest_api
+        futurabank_rest_api
 
         libpistache.a
         libpthread.so
         libodb-2.4.so
         libodb-mysql-2.4.so
         libsodium.so
+        libcurl.so
 )
 
-target_compile_features(cbanking_rest_api PUBLIC cxx_std_14)
+target_compile_features(futurabank_rest_api PUBLIC cxx_std_14)
