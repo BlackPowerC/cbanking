@@ -61,6 +61,7 @@ add_subdirectory(test/util/converter/operation)
 add_subdirectory(test/util/crypto)
 add_subdirectory(test/util/json_is_valid)
 add_subdirectory(test/sessionEntity)
+add_subdirectory(test/fcm)
 
 target_link_libraries(
         futurabank_rest_api
