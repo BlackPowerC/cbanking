@@ -73,6 +73,9 @@ namespace RestAPI
         // Une operation
         Rest::Routes::Delete(this->t_router, "/operation/delete/:id",
                              Rest::Routes::bind(&RequestHandler::deleteOperation, &this->t_rhandler)) ;
+        // Mise à jour de l'instanceAppId
+        Rest::Routes::Post(this->t_router, "/misc/instanceidapp",
+                             Rest::Routes::bind(&RequestHandler::updateInstaceAppId, &this->t_rhandler)) ;
     }
 
     Address RestServer::parseJson(const std::string &json)

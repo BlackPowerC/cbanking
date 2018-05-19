@@ -4764,6 +4764,14 @@ namespace odb
       grew = true;
     }
 
+    // appInstanceId
+    //
+    if (t[4UL])
+    {
+      i.appInstanceId_value.capacity (i.appInstanceId_size);
+      grew = true;
+    }
+
     return grew;
   }
 
@@ -4818,6 +4826,16 @@ namespace odb
       i.token_value.capacity ());
     b[n].length = &i.token_size;
     b[n].is_null = &i.token_null;
+    n++;
+
+    // appInstanceId
+    //
+    b[n].buffer_type = MYSQL_TYPE_STRING;
+    b[n].buffer = i.appInstanceId_value.data ();
+    b[n].buffer_length = static_cast<unsigned long> (
+      i.appInstanceId_value.capacity ());
+    b[n].length = &i.appInstanceId_size;
+    b[n].is_null = &i.appInstanceId_null;
     n++;
   }
 
@@ -4926,6 +4944,27 @@ namespace odb
       grew = grew || (cap != i.token_value.capacity ());
     }
 
+    // appInstanceId
+    //
+    {
+      ::std::string const& v =
+        o.appInstanceId;
+
+      bool is_null (false);
+      std::size_t size (0);
+      std::size_t cap (i.appInstanceId_value.capacity ());
+      mysql::value_traits<
+          ::std::string,
+          mysql::id_string >::set_image (
+        i.appInstanceId_value,
+        size,
+        is_null,
+        v);
+      i.appInstanceId_null = is_null;
+      i.appInstanceId_size = static_cast<unsigned long> (size);
+      grew = grew || (cap != i.appInstanceId_value.capacity ());
+    }
+
     return grew;
   }
 
@@ -4997,6 +5036,21 @@ namespace odb
         i.token_size,
         i.token_null);
     }
+
+    // appInstanceId
+    //
+    {
+      ::std::string& v =
+        o.appInstanceId;
+
+      mysql::value_traits<
+          ::std::string,
+          mysql::id_string >::set_value (
+        v,
+        i.appInstanceId_value,
+        i.appInstanceId_size,
+        i.appInstanceId_null);
+    }
   }
 
   void access::object_traits_impl< ::Entity::Token, id_mysql >::
@@ -5033,16 +5087,18 @@ namespace odb
   "(`id`, "
   "`typeid`, "
   "`id_person`, "
-  "`token`) "
+  "`token`, "
+  "`appInstanceId`) "
   "VALUES "
-  "(?, ?, ?, ?)";
+  "(?, ?, ?, ?, ?)";
 
   const char access::object_traits_impl< ::Entity::Token, id_mysql >::find_statement[] =
   "SELECT "
   "`Token`.`id`, "
   "`Token`.`typeid`, "
   "`Token`.`id_person`, "
-  "`Token`.`token` "
+  "`Token`.`token`, "
+  "`Token`.`appInstanceId` "
   "FROM `Token` "
   "WHERE `Token`.`id`=?";
 
@@ -5057,7 +5113,8 @@ namespace odb
   "UPDATE `Token` "
   "SET "
   "`id_person`=?, "
-  "`token`=? "
+  "`token`=?, "
+  "`appInstanceId`=? "
   "WHERE `id`=?";
 
   const char access::object_traits_impl< ::Entity::Token, id_mysql >::erase_statement[] =
@@ -5069,7 +5126,8 @@ namespace odb
   "`Token`.`id`,\n"
   "`Token`.`typeid`,\n"
   "`Token`.`id_person`,\n"
-  "`Token`.`token`\n"
+  "`Token`.`token`,\n"
+  "`Token`.`appInstanceId`\n"
   "FROM `Token`\n"
   "LEFT JOIN `Person` AS `id_person_Person` ON `id_person_Person`.`id`=`Token`.`id_person`";
 
@@ -5913,7 +5971,8 @@ namespace odb
     "`Token`.`id`, "
     "`Token`.`typeid`, "
     "`Token`.`id_person`, "
-    "`Token`.`token` "
+    "`Token`.`token`, "
+    "`Token`.`appInstanceId` "
     "FROM `Session` "
     "LEFT JOIN `Token` ON `Token`.`id`=`Session`.`id` "
     "WHERE `Session`.`id`=?",
@@ -5927,7 +5986,7 @@ namespace odb
 
   const std::size_t access::object_traits_impl< ::Entity::Session, id_mysql >::find_column_counts[] =
   {
-    6UL,
+    7UL,
     2UL
   };
 
@@ -5949,7 +6008,8 @@ namespace odb
   "`Token`.`id`,\n"
   "`Token`.`typeid`,\n"
   "`Token`.`id_person`,\n"
-  "`Token`.`token`\n"
+  "`Token`.`token`,\n"
+  "`Token`.`appInstanceId`\n"
   "FROM `Session`\n"
   "LEFT JOIN `Token` ON `Token`.`id`=`Session`.`id`\n"
   "LEFT JOIN `Person` AS `id_person_Person` ON `id_person_Person`.`id`=`Token`.`id_person`";
@@ -6659,7 +6719,8 @@ namespace odb
     "`Token`.`id`, "
     "`Token`.`typeid`, "
     "`Token`.`id_person`, "
-    "`Token`.`token` "
+    "`Token`.`token`, "
+    "`Token`.`appInstanceId` "
     "FROM `ReloadSession` "
     "LEFT JOIN `Token` ON `Token`.`id`=`ReloadSession`.`id` "
     "WHERE `ReloadSession`.`id`=?",
@@ -6672,7 +6733,7 @@ namespace odb
 
   const std::size_t access::object_traits_impl< ::Entity::ReloadSession, id_mysql >::find_column_counts[] =
   {
-    5UL,
+    6UL,
     1UL
   };
 
@@ -6692,7 +6753,8 @@ namespace odb
   "`Token`.`id`,\n"
   "`Token`.`typeid`,\n"
   "`Token`.`id_person`,\n"
-  "`Token`.`token`\n"
+  "`Token`.`token`,\n"
+  "`Token`.`appInstanceId`\n"
   "FROM `ReloadSession`\n"
   "LEFT JOIN `Token` ON `Token`.`id`=`ReloadSession`.`id`\n"
   "LEFT JOIN `Person` AS `id_person_Person` ON `id_person_Person`.`id`=`Token`.`id_person`";

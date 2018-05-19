@@ -20,6 +20,7 @@
 #include "../../include/API/SessionAPI.hpp"
 
 #include "../../include/Util/Converter/Converters.hpp"
+#include "../../include/Rest/FCMNotification.hpp"
 
 #include <exception>
 #include <plog/Log.h>
@@ -64,28 +65,32 @@ namespace RestAPI
 
     // SÉCURISÉ
     // Utilisé par le client Android
-    // Route /misc/instanceidapp/:token
+    // Route /misc/instanceidapp/
     void RequestHandler::updateInstaceAppId(const Rest::Request &request, Http::ResponseWriter response)
     {
         try
         {
-            std::string token(request.param(":token").as<std::string>());
+            std::string origin = request.headers().getRaw("Origin").value() ;
+            response.headers().add(std::make_shared<Pistache::Http::Header::AccessControlAllowOrigin>(origin)) ;
+
             std::string request_body(request.body()) ;
             if(!Util::json_is_valid(
-                    Util::fromFileToString("resources/instanceappid.schema.json"),
+                    Util::fromFileToString("resources/json schema/instanceappid.schema.json"),
                     request_body))
             {
                 LOG_DEBUG << "Request body" << request_body ;
                 response.send(Http::Code::Bad_Request) ;
+                return ;
             }
             rapidjson::Document doc; doc.Parse(request_body.c_str()) ;
             // Job
-            std::shared_ptr<Session> p_session = SessionAPI::getInstance()->findByToken<Session>(token) ;
+            std::shared_ptr<Session> p_session = SessionAPI::getInstance()->findByToken<Session>(std::string(doc["token"].GetString())) ;
             if(p_session->getEnd() < (ulong) std::time(nullptr))
             {
                 LOG_DEBUG << p_session->getPerson()->getEmail() << " session expired !" ;
                 std::string err_msg = "{\"erreur\":[\"message\":\"session expirée\"]}" ;
                 response.send(Http::Code::Unauthorized, err_msg, MIME(Application, Json)) ;
+                return ;
             }
 
             std::shared_ptr<Customer> p_customer = PersonAPI::getInstance()->findById<Customer>(p_session->getPerson()->getId()) ;
@@ -687,6 +692,8 @@ namespace RestAPI
     // Route: /account/add
     void RequestHandler::addAccount(const Rest::Request &request, Http::ResponseWriter response)
     {
+        response.headers().add(std::make_shared<Pistache::Http::Header::AccessControlAllowOrigin>("http://127.0.0.1")) ;
+
         LOG_DEBUG << "Request body" ;
         LOG_DEBUG << request.body() ;
 
@@ -754,6 +761,16 @@ namespace RestAPI
             // Mise à jour du client et de l'employé
             PersonAPI::getInstance()->update<Customer>(*p_customer) ;
             PersonAPI::getInstance()->update<Employee>(*p_employee) ;
+
+            // Envoie de la notification
+            try
+            {
+                Fcm::FCMNotification::getInstance()->sendMessageToSpecificDevice(p_customer->getToken()->getAppInstanceId(), "RequestHandler::addAccount") ;
+            }catch(const std::exception &e)
+            {
+                LOG_ERROR << e.what();
+                LOG_ERROR << "Cannot send Notification !";
+            }
         }
         catch(const NotFound &nf)
         {

@@ -431,7 +431,7 @@ protected:
     std::shared_ptr<Person> t_person ;
     #pragma db value_not_null type("VARCHAR(255)") unique
     std::string token ; /*!< Jetton unique identifiant le client sur l'api */
-    #pragma db value_null type("VARCHAR(255)")
+    #pragma db value_null type("VARCHAR(511)")
     std::string appInstanceId ; /*! Jetton identifiant l'application du client */
 public:
     Token() ;

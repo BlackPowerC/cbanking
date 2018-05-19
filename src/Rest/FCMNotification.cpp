@@ -9,6 +9,8 @@
 namespace Fcm
 {
 
+    FCMNotification *FCMNotification::p_singleton = nullptr ;
+
     FCMNotification* FCMNotification::getInstance()
     {
         if(!p_singleton)

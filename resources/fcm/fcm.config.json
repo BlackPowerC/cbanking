@@ -1,13 +1,4 @@
 {
-  "serverKey":"AAAAWPchqAo:APA91bEgSyAAF1PgqflHgHHf2F8bErae2trl_SSlOKQIbQgIFDQ8aDolEniys-MNRzXGdmUCZCsZ4FtAzjyo7LqKSvW_cmKMX2Wk3zAF5QRASBztgSwNm5VQYefIm9Fwj3vdkzJrDXmk"
+  "serverKey":"AAAAWPchqAo:APA91bEgSyAAF1PgqflHgHHf2F8bErae2trl_SSlOKQIbQgIFDQ8aDolEniys-MNRzXGdmUCZCsZ4FtAzjyo7LqKSvW_cmKMX2Wk3zAF5QRASBztgSwNm5VQYefIm9Fwj3vdkzJrDXmk",
   "fcmUrl":"fcm.googleapis.com/fcm/send"
 }
-
-// Clé serveur
-// AAAAWPchqAo:APA91bEgSyAAF1PgqflHgHHf2F8bErae2trl_SSlOKQIbQgIFDQ8aDolEniys-MNRzXGdmUCZCsZ4FtAzjyo7LqKSvW_cmKMX2Wk3zAF5QRASBztgSwNm5VQYefIm9Fwj3vdkzJrDXmk
-// Message id
-// 382103300106
-// clé public web
-// BPGXV2xElkRGB5_Qu6hWhvwbevN_7uYJE31u3CpWYjJF0utKvMN4BypBzVN_736xMPG74IFxNCqEUsVAc9zxb0I
-// clé api web
-// AIzaSyAy2WukKRRCaCRUKB559JyYe0yUNotQa4o

@@ -1737,6 +1737,18 @@ namespace odb
     token_type_;
 
     static const token_type_ token;
+
+    // appInstanceId
+    //
+    typedef
+    mysql::query_column<
+      mysql::value_traits<
+        ::std::string,
+        mysql::id_string >::query_type,
+      mysql::id_string >
+    appInstanceId_type_;
+
+    static const appInstanceId_type_ appInstanceId;
   };
 
   template <typename A>
@@ -1758,6 +1770,11 @@ namespace odb
   const typename pointer_query_columns< ::Entity::Token, id_mysql, A >::token_type_
   pointer_query_columns< ::Entity::Token, id_mysql, A >::
   token (A::table_name, "`token`", 0);
+
+  template <typename A>
+  const typename pointer_query_columns< ::Entity::Token, id_mysql, A >::appInstanceId_type_
+  pointer_query_columns< ::Entity::Token, id_mysql, A >::
+  appInstanceId (A::table_name, "`appInstanceId`", 0);
 
   template <>
   class access::object_traits_impl< ::Entity::Token, id_mysql >:
@@ -1811,6 +1828,12 @@ namespace odb
       unsigned long token_size;
       my_bool token_null;
 
+      // appInstanceId
+      //
+      details::buffer appInstanceId_value;
+      unsigned long appInstanceId_size;
+      my_bool appInstanceId_null;
+
       std::size_t version;
     };
 
@@ -1862,7 +1885,7 @@ namespace odb
 
     typedef mysql::query_base query_base_type;
 
-    static const std::size_t column_count = 4UL;
+    static const std::size_t column_count = 5UL;
     static const std::size_t id_column_count = 1UL;
     static const std::size_t inverse_column_count = 0UL;
     static const std::size_t readonly_column_count = 1UL;
@@ -2673,6 +2696,18 @@ namespace odb
     token_type_;
 
     static const token_type_ token;
+
+    // appInstanceId
+    //
+    typedef
+    mysql::query_column<
+      mysql::value_traits<
+        ::std::string,
+        mysql::id_string >::query_type,
+      mysql::id_string >
+    appInstanceId_type_;
+
+    static const appInstanceId_type_ appInstanceId;
   };
 
   template <typename A>
@@ -2694,6 +2729,11 @@ namespace odb
   const typename query_columns< ::Entity::Token, id_mysql, A >::token_type_
   query_columns< ::Entity::Token, id_mysql, A >::
   token (A::table_name, "`token`", 0);
+
+  template <typename A>
+  const typename query_columns< ::Entity::Token, id_mysql, A >::appInstanceId_type_
+  query_columns< ::Entity::Token, id_mysql, A >::
+  appInstanceId (A::table_name, "`appInstanceId`", 0);
 
   // Session
   //

@@ -34,8 +34,6 @@ namespace Fcm
         ~FCMNotification() ;
         static FCMNotification *getInstance() ;
     };
-
-    FCMNotification *FCMNotification::p_singleton = nullptr ;
 }
 
 
