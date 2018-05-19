@@ -40,6 +40,16 @@ using namespace Util ;
 
 namespace RestAPI
 {
+
+    std::string getQueryParam(const Http::Uri::Query &queries, const std::string &param_name)
+    {
+        if(!queries.has(param_name))
+        {
+            throw NotFound("No query param named "+param_name) ;
+        }
+        return queries.get(param_name).get() ;
+    }
+
     std::shared_ptr<Session> RequestHandler::checkToken(const std::string &token)
     {
         std::shared_ptr<Session> p_session ;
@@ -203,7 +213,7 @@ namespace RestAPI
             catch(const std::exception &e)
             {
                 LOG_ERROR << e.what() ;
-                response.send(Http::Code::Unauthorized, e.what(), MIME(Application, Json)) ;
+                response.send(Http::Code::Unauthorized, e.what(), MIME(Text, Plain)) ;
                 return ;
             }
             // Traitement de la requête
@@ -228,18 +238,23 @@ namespace RestAPI
         }
     }
 
+    // SÉCURISÉ
+    // Route: /account/get/:id?token=xxx
     void RequestHandler::getAccountById(const Rest::Request &request, Http::ResponseWriter response)
     {
-        /* Vérifions le paramettre */
-        response.headers().add(std::make_shared<Pistache::Http::Header::AccessControlAllowOrigin>("http://127.0.0.1")) ;
         long id ;
         try
         {
             id = request.param(":id").as<int>() ;
+            std::string token = getQueryParam(request.query(), "token") ;
+            PersonAPI::getInstance()->findById<Person>(
+                    SessionAPI::getInstance()->findByToken<Session>(token)
+                            ->getPerson()->getId()
+            ) ;
         }catch(const std::exception &e)
         {
             LOG_ERROR << e.what() ;
-            response.send(Http::Code::Not_Acceptable, e.what(), Http::Mime::MediaType::fromString("text/plain")) ;
+            response.send(Http::Code::Unauthorized, e.what(), Http::Mime::MediaType::fromString("text/plain")) ;
             return ;
         }
         // Pas d'erreur on continue
@@ -332,11 +347,20 @@ namespace RestAPI
         }
     }
 
+    // SÉCURISÉ
+    // Route : /employee/account/get/:id?token=xxx
     void RequestHandler::getAccountByEmployeeId(const Rest::Request &request, Http::ResponseWriter response)
     {
         try
         {
             long id = request.param(":id").as<int>() ;
+            std::string token = getQueryParam(request.query(), "token") ;
+            // Sécurisation de l'API
+            std::shared_ptr<Employee> p_empoyee =
+                    PersonAPI::getInstance()->findById<Employee>(
+                            SessionAPI::getInstance()->findByToken<Session>(token)->getPerson()->getId()
+                    ) ;
+
             std::vector<std::shared_ptr<Account> > accounts = AccountAPI::getInstance()->findByEmployeeId<Account>(id) ;
             std::string json("[\n\t") ;
             for(auto &account : accounts)
@@ -360,12 +384,21 @@ namespace RestAPI
         }
     }
 
+    // SÉCURISÉ
+    // Route /employee/get/:id?token=xxx
     void RequestHandler::getEmployeeById(const Rest::Request &request, Http::ResponseWriter response)
     {
         /* Vérifions le paramettre */
         try
         {
             long id = request.param(":id").as<int>() ;
+
+            // Sécurisation
+            std::string token = getQueryParam(request.query(), "token") ;
+            PersonAPI::getInstance()->findById<Employee>(
+                            SessionAPI::getInstance()->findByToken<Session>(token)->getPerson()->getId()
+                    ) ;
+
             std::shared_ptr<Employee> person = PersonAPI::getInstance()->findById<Employee>(id) ;
             std::string json = EmployeeConverter().entityToJson(person.get());
             response.send(Http::Code::Ok, json, MIME(Application, Json)) ;
@@ -420,13 +453,28 @@ namespace RestAPI
         }
     }
 
-    // Route: /custumer/get/id/:value
+    // SÉCURISÉ
+    // Route: /custumer/get/id/:value?token=xxx
     void RequestHandler::getCustomerById(const Rest::Request &request, Http::ResponseWriter response)
     {
         /* Vérifions le paramettre */
         try
         {
             long id = request.param(":value").as<int>() ;
+            // Sécurisation
+            try
+            {
+                std::string token = getQueryParam(request.query(), "token") ;
+                PersonAPI::getInstance()->findById<Person>(
+                        SessionAPI::getInstance()->findByToken<Session>(token)->getPerson()->getId()
+                ) ;
+
+            }catch (const NotFound &nf)
+            {
+                response.send(Http::Code::Unauthorized, nf.what(), MIME(Text, Plain)) ;
+                return ;
+            }
+
             std::shared_ptr<Customer> person = PersonAPI::getInstance()->findById<Customer>(id) ;
             std::string json = CustomerConverter().entityToJson(person.get());
             response.send(Http::Code::Ok, json, MIME(Application, Json)) ;
@@ -481,13 +529,29 @@ namespace RestAPI
         }
     }
 
-    // Route: /customer/get/name/:value
+    // SÉCURISÉ
+    // Route: /customer/get/name/:value?token=xxx
     void RequestHandler::getCustomerByName(const Rest::Request &request, Http::ResponseWriter response)
     {
         // Header pour authorisé l'ajax
         response.headers().add(std::make_shared<Pistache::Http::Header::AccessControlAllowOrigin>("http://127.0.0.1")) ;
         try
         {
+
+            // Sécurisation
+            try
+            {
+                std::string token = getQueryParam(request.query(), "token") ;
+                PersonAPI::getInstance()->findById<Employee>(
+                        SessionAPI::getInstance()->findByToken<Session>(token)->getPerson()->getId()
+                ) ;
+
+            }catch (const NotFound &nf)
+            {
+                response.send(Http::Code::Unauthorized, nf.what(), MIME(Text, Plain)) ;
+                return ;
+            }
+
             std::string name_pattern = request.param(":value").as<std::string>() ;
             std::vector<std::shared_ptr<Customer> > customers = PersonAPI::getInstance()->findByName<Customer>(name_pattern) ;
             CustomerConverter cc ;
@@ -556,6 +620,8 @@ namespace RestAPI
     }
 
     // Les routes DELETE
+    // SÉCURISÉ
+    // Route /person/delete/:id?token=xxx
     void RequestHandler::deletePerson(const Rest::Request &request, Http::ResponseWriter response)
     {
         /* Vérifions le paramettre */
@@ -563,6 +629,16 @@ namespace RestAPI
         try
         {
             id = request.param(":id").as<int>() ;
+            // Sécurisation
+            std::string token = getQueryParam(request.query(), "token") ;
+            PersonAPI::getInstance()->findById<Employee>(
+                    SessionAPI::getInstance()->findByToken<Session>(token)->getPerson()->getId()
+            ) ;
+
+        }catch (const NotFound &nf)
+        {
+            response.send(Http::Code::Unauthorized, nf.what(), MIME(Text, Plain)) ;
+            return ;
         }catch(const std::exception &e)
         {
             LOG_ERROR << e.what() ;
@@ -600,6 +676,8 @@ namespace RestAPI
         response.send(Http::Code::Ok) ;
     }
 
+    // SÉCURISÉ
+    // Route /account/delete/:id?token=xxx
     void RequestHandler::deleteAccount(const Rest::Request &request, Http::ResponseWriter response)
     {
         /* Vérifions le paramettre */
@@ -607,6 +685,16 @@ namespace RestAPI
         try
         {
             id = request.param(":id").as<int>() ;
+            // Sécurisation
+            std::string token = getQueryParam(request.query(), "token") ;
+            PersonAPI::getInstance()->findById<Employee>(
+                    SessionAPI::getInstance()->findByToken<Session>(token)->getPerson()->getId()
+            ) ;
+
+        }catch (const NotFound &nf)
+        {
+            response.send(Http::Code::Unauthorized, nf.what(), MIME(Text, Plain)) ;
+            return ;
         }catch(const std::exception &e)
         {
             LOG_ERROR << e.what() ;
@@ -644,6 +732,8 @@ namespace RestAPI
         response.send(Http::Code::Ok) ;
     }
 
+    // SÉCURISÉ
+    // Route /operation/delete/:id?token=xxx
     void RequestHandler::deleteOperation(const Rest::Request &request, Http::ResponseWriter response)
     {
         /* Vérifions le paramettre */
@@ -651,6 +741,16 @@ namespace RestAPI
         try
         {
             id = request.param(":id").as<int>() ;
+            // Sécurisation
+            std::string token = getQueryParam(request.query(), "token") ;
+            PersonAPI::getInstance()->findById<Employee>(
+                    SessionAPI::getInstance()->findByToken<Session>(token)->getPerson()->getId()
+            ) ;
+
+        }catch (const NotFound &nf)
+        {
+            response.send(Http::Code::Unauthorized, nf.what(), MIME(Text, Plain)) ;
+            return ;
         }catch(const std::exception &e)
         {
             LOG_ERROR << e.what() ;

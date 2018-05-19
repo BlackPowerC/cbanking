@@ -24,6 +24,17 @@ using namespace Pistache;
  */
 namespace RestAPI
 {
+
+
+    /**
+     * Cette méthode permet d'extraire facilement un paramettre URL de l'objet Pistache::Http::Uri::Query
+     * @param queries Un objet contenant les paramettres.
+     * @param param_name Le nom du paramettre dont on veut la valeur.
+     * @return La valeur du paramettre.
+     * @throw NotFound.
+     */
+    std::string getQueryParam(const Http::Uri::Query &queries, std::string &param_name) ;
+
     /**
      * \struct ResquestHandler
      * \brief Cette structure contient les méthodes distantes du web service
