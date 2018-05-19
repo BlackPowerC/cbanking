@@ -97,7 +97,8 @@ CREATE TABLE `Token` (
   `id` INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `typeid` VARCHAR(255) NOT NULL,
   `id_person` INT NULL,
-  `token` VARCHAR(1024) NOT NULL
+  `token` VARCHAR(255) NOT NULL,
+  `appInstanceId` VARCHAR(511) NOT NULL
   /*
   CONSTRAINT `Token_id_person_fk`
     FOREIGN KEY (`id_person`)
