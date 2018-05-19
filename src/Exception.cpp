@@ -58,3 +58,9 @@ SessionExprired::SessionExprired(std::string msg_): BaseException(msg_)
 {
 
 }
+
+// CurlException
+CurlException::CurlException(std::string _msg): BaseException(_msg)
+{
+
+}

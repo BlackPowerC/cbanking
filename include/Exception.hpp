@@ -78,4 +78,14 @@ public:
     SessionExprired(std::string _msg) ;
 };
 
+/**
+ * @classe CurlException
+ * @brief Classe pour les exceptions liés à curl.
+ */
+class CurlException: public BaseException
+{
+public:
+    CurlException(std::string _msg) ;
+};
+
 #endif // EXCEPTION_HPP_INCLUDED
