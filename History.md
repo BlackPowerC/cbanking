@@ -1,4 +1,17 @@
 
+v1.1.0 / 2018-05-19
+==================
+
+Les fonctions suivantes s'appellent en ajoutant à l'url le paramettre token.
+  * getAccountById
+  * getAccountByCustomerId
+  * getAccountByEmployeeId
+  * getEmployeeById
+  * getCustomerById
+  * getCustomerByName
+  * deletePerson
+  * deleteAccount
+
 v1.0.5 / 2018-05-03
 ==================
 
