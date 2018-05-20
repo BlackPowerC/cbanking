@@ -6,7 +6,7 @@
 
 namespace Util
 {
-    std::string OperationConverter::entityToJson(const Entity::Operation &entity)
+    std::string OperationConverter::entityToJson(const Entity::BaseOperation &entity)
     {
         std::string json("{\n\t") ;
         json += "\"id\":"+std::to_string(entity.getId())+",\n";
@@ -18,12 +18,12 @@ namespace Util
         return json ;
     }
 
-    std::string OperationConverter::entityToJson(const Entity::Operation *entity)
+    std::string OperationConverter::entityToJson(const Entity::BaseOperation *entity)
     {
         return this->entityToJson(*entity) ;
     }
 
-    std::string OperationConverter::entityToJson(const std::shared_ptr<Entity::Operation> &entity)
+    std::string OperationConverter::entityToJson(const std::shared_ptr<Entity::BaseOperation> &entity)
     {
         return this->entityToJson(*entity) ;
     }

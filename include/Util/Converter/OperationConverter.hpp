@@ -14,7 +14,7 @@ namespace Util
      * @class OperationConverter
      * @brief Cette classe est la convertisseur de la classe Operation.
      */
-    class OperationConverter: public Converter<Entity::Operation>
+    class OperationConverter: public Converter<Entity::BaseOperation>
     {
     public:
         /**
@@ -23,11 +23,11 @@ namespace Util
          * @param entity
          * @return Une chaine de caractère formaté en JSON.
          */
-        virtual std::string entityToJson(const Entity::Operation &entity) ;
+        virtual std::string entityToJson(const Entity::BaseOperation &entity) ;
 
-        virtual std::string entityToJson(const Entity::Operation *entity) ;
+        virtual std::string entityToJson(const Entity::BaseOperation *entity) ;
 
-        virtual std::string entityToJson(const std::shared_ptr<Entity::Operation> &entity) ;
+        virtual std::string entityToJson(const std::shared_ptr<Entity::BaseOperation> &entity) ;
     };
 }
 

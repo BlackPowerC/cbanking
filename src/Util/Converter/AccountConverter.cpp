@@ -31,7 +31,7 @@ namespace Util
         for(const auto operation: entity.getOperations())
         {
             flag = true ;
-            json += oc.entityToJson(dynamic_cast<Entity::Operation*>(operation.get()))+",\n" ;
+            json += oc.entityToJson(*operation)+",\n" ;
         }
         if(flag)
         {

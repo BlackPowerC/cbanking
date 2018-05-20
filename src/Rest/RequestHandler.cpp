@@ -313,6 +313,7 @@ namespace RestAPI
               	LOG_DEBUG << p_session->getPerson()->getEmail() << " session expired !" ;
                 std::string err_msg = "{\"erreur\":[\"message\":\"session expirée\"]}" ;
                 response.send(Http::Code::Unauthorized, err_msg, MIME(Application, Json)) ;
+                return ;
               }
               /* Employé ou client */
               PersonAPI::getInstance()->findById<Customer>(p_session->getPerson()->getId()) ;
@@ -321,6 +322,7 @@ namespace RestAPI
  			  LOG_WARNING << "Unauthorized access detected !" ;
               std::string err_msg = "{\"erreur\":[\"message\":\"non authorisé sur cet API\"]}" ;
               response.send(Http::Code::Unauthorized, err_msg, MIME(Application, Json)) ;
+              return ;
             }
 
             int id = p_session->getPerson()->getId() ;
@@ -863,14 +865,14 @@ namespace RestAPI
             PersonAPI::getInstance()->update<Employee>(*p_employee) ;
 
             // Envoie de la notification
-            try
-            {
-                Fcm::FCMNotification::getInstance()->sendMessageToSpecificDevice(p_customer->getToken()->getAppInstanceId(), "RequestHandler::addAccount") ;
-            }catch(const std::exception &e)
-            {
-                LOG_ERROR << e.what();
-                LOG_ERROR << "Cannot send Notification !";
-            }
+            //try
+            //{
+              //  Fcm::FCMNotification::getInstance()->sendMessageToSpecificDevice(p_customer->getToken()->getAppInstanceId(), "RequestHandler::addAccount") ;
+            //}catch(const std::exception &e)
+            //{
+                //LOG_ERROR << e.what();
+                //LOG_ERROR << "Cannot send Notification !";
+            //}
         }
         catch(const NotFound &nf)
         {

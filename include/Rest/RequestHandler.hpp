@@ -82,6 +82,7 @@ namespace RestAPI
         void addEmployee(const Rest::Request &request, Http::ResponseWriter response) ;
         void addAccount(const Rest::Request &request, Http::ResponseWriter response) ;
         void addOperation(const Rest::Request &request, Http::ResponseWriter response) ;
+        void addVirement(const Rest::Request &request, Http::ResponseWriter response) ;
 
         // Les routes pour l'authentification et l'inscription et la modification
         void authentification(const Rest::Request &request, Http::ResponseWriter response) ;
