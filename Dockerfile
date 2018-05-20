@@ -7,7 +7,7 @@ MAINTAINER jordy
 RUN apt-get update && apt-get install odb libodb-2.4 libodb-mysql-2.4 \
     libodb-dev libodb-mysql-dev  \
     libmysql++-dev libmysqlclient-dev \
-    libcurl3 libcurl3-gnutls libcurl4-openssl-dev \ 
+    libcurl3 libcurl3-gnutls openssl libgnutls-openssl27 libcurl4-openssl-dev libssh-dev libssl-dev libssl1.0 \ 
     libmysql++3v5 libmysqlclient20 libmysqlcppconn7v5 libmysqlcppconn-dev --no-install-recommends -y \
     && apt-get install --fix-missing \
     # Installation des outils de build
@@ -25,7 +25,7 @@ WORKDIR /home/cbanking
 ADD https://github.com/Tencent/rapidjson/archive/v1.1.0.tar.gz .
 ADD https://github.com/jedisct1/libsodium/releases/download/1.0.16/libsodium-1.0.16.tar.gz .
 ADD https://github.com/SergiusTheBest/plog/archive/1.1.3.tar.gz .
-ADD https://github.com/BlackPowerC/cbanking_rest_api/archive/v1.1.0-alpha.tar.gz .
+ADD https://github.com/BlackPowerC/cbanking_rest_api/archive/v1.2.0.tar.gz .
 ADD https://github.com/BlackPowerC/googletest/archive/release-1.8.0.tar.gz .
 ADD https://github.com/BlackPowerC/pistache-1/archive/28-04-18.tar.gz .
 ADD https://github.com/curl/curl/releases/download/curl-7_60_0/curl-7.60.0.tar.gz .
@@ -40,10 +40,16 @@ RUN mv cmake-3.11.1-Linux-x86_64/ cmake/ \
 RUN tar -xzf v1.1.0.tar.gz \
   && tar -xzf libsodium-1.0.16.tar.gz \
   && tar -xzf 1.1.3.tar.gz \
-  && tar -xzf v1.1.0-alpha.tar.gz \
+  && tar -xzf v1.2.0.tar.gz \
   && tar -xzf release-1.8.0.tar.gz \
   && tar -xzf 28-04-18.tar.gz \
   && tar -xzf curl-7.60.0.tar.gz
+
+# Compilation de curl
+WORKDIR /home/cbanking/curl-7.60.0
+RUN /usr/local/cmake/bin/cmake -G Unix\ Makefiles . \
+  && make \
+  && make install
 
 # Compilation de libsodium
 WORKDIR /home/cbanking/libsodium-1.0.16
@@ -53,12 +59,6 @@ RUN ./configure \
 
 # Compilation de rapidjson
 WORKDIR /home/cbanking/rapidjson-1.1.0
-RUN /usr/local/cmake/bin/cmake -G Unix\ Makefiles . \
-  && make \
-  && make install
-
-# Compilation de curl
-WORKDIR /home/cbanking/curl-7.60.0
 RUN /usr/local/cmake/bin/cmake -G Unix\ Makefiles . \
   && make \
   && make install
@@ -80,23 +80,22 @@ WORKDIR /home/cbanking/plog-1.1.3
 RUN cp -R include/plog /usr/local/include/
 
 # installation de cbanking
-WORKDIR /home/cbanking/cbanking_rest_api-1.1.0-alpha
+WORKDIR /home/cbanking/cbanking_rest_api-1.2.0
 RUN /usr/local/cmake/bin/cmake -G Unix\ Makefiles . && make
-RUN cp -R cbanking_rest_api resources/ ..
+RUN cp -R futurabank_rest_api resources/ ..
 
 # Création d'un entrypoint
-RUN printf "#!/bin/bash\n ./cbanking_rest_api 8181\n" > /home/cbanking/entrypoint.sh && chmod +x /home/cbanking/entrypoint.sh
+RUN printf "#!/bin/bash\n ./futurabank_rest_api 8181\n" > /home/cbanking/entrypoint.sh && chmod +x /home/cbanking/entrypoint.sh
 
 # Cleanup
 WORKDIR /home/cbanking
 RUN rm -dr /usr/local/cmake
-RUN apt-get autoremove --purge libodb-dev libodb-mysql-dev g++ make gcc \
-    libmysqlclient-dev \
-    libmysqlcppconn-dev libmysqlcppconn-dev \
+RUN apt-get autoremove --purge libodb-dev g++ make gcc \
+    libmysqlclient-dev libmysqlcppconn-dev \
     libmysql++-dev libmysqlclient-dev \
-    libcurl4-openssl-dev \
-    libodb-dev libodb-mysql-dev -y
-RUN rm *.tar.gz googletest-release-1.8.0 rapidjson-1.1.0 libsodium-1.0.16 cbanking_rest_api-1.1.0-alpha pistache-1-28-04-18 curl-7.60.0 -dr
+    libcurl4-openssl-dev libssh-dev libssl-dev  \
+    libodb-mysql-dev -y
+RUN rm *.tar.gz googletest-release-1.8.0 rapidjson-1.1.0 libsodium-1.0.16 cbanking_rest_api-1.2.0 pistache-1-28-04-18 curl-7.60.0 -dr
 RUN rm /var/lib/dpkg/* -dr
 
 EXPOSE 8181

@@ -25,10 +25,10 @@ namespace Util
         }
         else
         {
-            rapidjson::StringBuffer buffer ;
-            schemaValidator.GetInvalidSchemaPointer().StringifyUriFragment(buffer) ;
-            LOG_ERROR << buffer.GetString() ;
-            LOG_ERROR << schemaValidator.GetInvalidSchemaKeyword() ;
+//            rapidjson::StringBuffer buffer ;
+//            schemaValidator.GetInvalidSchemaPointer().StringifyUriFragment(buffer) ;
+//            LOG_ERROR << buffer.GetString() ;
+//            LOG_ERROR << schemaValidator.GetInvalidSchemaKeyword() ;
             return false ;
         }
     }
