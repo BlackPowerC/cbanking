@@ -986,6 +986,92 @@ namespace RestAPI
     }
 
     // SÉCURISÉ
+    // Route: /virement/add?token=xxx
+    void RequestHandler::addVirement(const Rest::Request &request, Http::ResponseWriter response)
+    {
+        try
+        {
+            std::string body(request.body()) ;
+            const char *body_cstr = body.c_str() ;
+            LOG_DEBUG << "Request body" ;
+            LOG_DEBUG << body ;
+            // Vérification json
+            if(!json_is_valid(fromFileToString("resources/json schema/virement.schema.json"), body))
+            {
+                response.send(Http::Code::Bad_Request) ;
+                return ;
+            }
+            // Deserialization json
+            rapidjson::Document doc; doc.Parse(body_cstr) ;
+
+            // Vérification du token
+            std::shared_ptr<Session> p_session ;
+            try
+            {
+                std::string token = getQueryParam(request.query(), "token") ;
+                p_session = this->checkToken(token) ;
+            }
+            catch(const std::exception &e)
+            {
+                LOG_ERROR << e.what() ;
+                response.send(Http::Code::Unauthorized, e.what(), MIME(Text, Plain)) ;
+                return ;
+            }
+            /* Récupération des Acteurs autour de la transaction*/
+            // L'employée créateur
+            std::shared_ptr<Employee> p_employee = PersonAPI::getInstance()
+                    ->findById<Employee>(p_session->getPerson()->getId()) ;
+            // Le compte cource
+            std::shared_ptr<Account> p_account_src = AccountAPI::getInstance()
+                    ->findById<Account>(doc["src"].GetInt()) ;
+            // Vérification de solde
+            if(p_account_src->getBalance() < doc["balance"].GetInt())
+            {
+                response.send(Http::Code::Accepted,
+                              "{\"message\":\"not enougth balance\"}" , MIME(Application, Json)) ;
+                return ;
+            }
+            // Le compte destinataire
+            std::shared_ptr<Account> p_account_dest = AccountAPI::getInstance()
+                    ->findById<Account>(doc["dest"].GetInt()) ;
+            // Création du virement
+            Virement t_virement(
+                    BaseOperation(0, p_account_src, p_employee, doc["date"].GetString(), doc["balance"].GetInt())
+                    , p_account_dest) ;
+            // Mise à jour des objets
+            p_account_dest->setBalance(p_account_src->getBalance()+doc["balance"].GetInt()) ;
+            p_account_src->setBalance(p_account_src->getBalance()-doc["balance"].GetInt()) ;
+            // Mise à jour de la database
+            long virement_id = OperationAPI::getInstance()->insert<Virement>(t_virement) ;
+            t_virement.setId(virement_id) ;
+            /***********************************/
+            p_employee->addVirement(t_virement) ;
+            p_account_src->addVirement(t_virement) ;
+            p_account_dest->addVirement(t_virement) ;
+            PersonAPI::getInstance()->update<Employee>(*p_employee) ;
+            AccountAPI::getInstance()->update<Account>(*p_account_dest) ;
+            AccountAPI::getInstance()->update<Account>(*p_account_src) ;
+            /**************************************************************/
+            LOG_INFO << "Virement en cours..." ;
+        }
+        catch(const NotFound &nf)
+        {
+            LOG_WARNING << "Tentative frauduleuse de connexion !" ;
+            std::string err_msg = "{\"erreur\":[\"message\":\"non authorisé sur cet API\"]}" ;
+            response.send(Http::Code::Unauthorized, err_msg, MIME(Application, Json)) ;
+            return ;
+        }
+        catch(const std::exception &e)
+        {
+            LOG_WARNING << e.what() ;
+            response.send(Http::Code::Internal_Server_Error) ;
+            return ;
+        }
+        LOG_INFO << "Transaction éffectuée !" ;
+        response.send(Http::Code::Ok) ;
+    }
+
+    // SÉCURISÉ
     // Route: /authentification
     void RequestHandler::authentification(const Rest::Request &request, Http::ResponseWriter response)
     {

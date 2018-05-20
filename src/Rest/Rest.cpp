@@ -57,6 +57,9 @@ namespace RestAPI
         // Ajout d'une opération
         Rest::Routes::Post(this->t_router, "/operation/add/",
                             Rest::Routes::bind(&RequestHandler::addOperation, &this->t_rhandler)) ;
+        // Ajout d'un virement
+        Rest::Routes::Post(this->t_router, "/virement/add/",
+                            Rest::Routes::bind(&RequestHandler::addVirement, &this->t_rhandler)) ;
         // La route pour l'authentification
         Rest::Routes::Post(this->t_router, "/authentification",
                             Rest::Routes::bind(&RequestHandler::authentification, &this->t_rhandler)) ;

@@ -87,6 +87,7 @@ namespace Fcm
             }
 
             curl_easy_cleanup(curl) ;
+            curl_slist_free_all(header_curl) ;
 
             LOG_DEBUG << "Notification sended to " << instanceAppId ;
 
