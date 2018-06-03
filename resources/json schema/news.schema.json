@@ -1,0 +1,26 @@
+{
+  "$schema": "http://json-schema.org/schema#",
+  "title":"news schema",
+  "description":"schema json pour valider des news",
+  "type":"object",
+  "properties":
+  {
+    "date":
+    {
+      "type":"string",
+      "pattern":"^[0-9]{2}-[0-9]{2}-[0-9]{4} [0-9]{2}:[0-9]{2}:[0-9]{2}$",
+      "description":"date de publication"
+    },
+    "title":
+    {
+      "type":"string",
+      "description":"titre de la publication"
+    },
+    "text":
+    {
+      "type":"string",
+      "description":"corps de la publication"
+    }
+  },
+  "required":["text", "title", "date"]
+}

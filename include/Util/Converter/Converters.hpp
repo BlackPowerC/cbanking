@@ -8,6 +8,8 @@
 #define CONVERTERS_HPP
 
 #include "Converter.hpp"
+
+#include "NewsConverter.hpp"
 // Les convertisseurs de personnes
 #include "PersonConverter.hpp"
 #include "CustomerConverter.hpp"

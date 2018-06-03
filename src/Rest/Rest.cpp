@@ -79,6 +79,13 @@ namespace RestAPI
         // Mise à jour de l'instanceAppId
         Rest::Routes::Post(this->t_router, "/misc/instanceidapp",
                              Rest::Routes::bind(&RequestHandler::updateInstaceAppId, &this->t_rhandler)) ;
+
+        // Poster un article
+        Rest::Routes::Post(this->t_router, "misc/news/post/:token",
+                            Rest::Routes::bind(&RequestHandler::postNews, &this->t_rhandler)) ;
+        // Lister tout article
+        Rest::Routes::Get(this->t_router, "misc/news/get/:token",
+                           Rest::Routes::bind(&RequestHandler::getAllNews, &this->t_rhandler)) ;
     }
 
     Address RestServer::parseJson(const std::string &json)

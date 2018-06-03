@@ -19,6 +19,16 @@
 -- Table structure for table `Account`
 --
 
+DROP TABLE IF EXISTS `News`;
+
+CREATE TABLE `News` (
+  `id` BIGINT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  `title` VARCHAR(127) NOT NULL,
+  `date` VARCHAR(127) NOT NULL,
+  `text` TEXT NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
 DROP TABLE IF EXISTS `Account`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;

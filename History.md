@@ -1,4 +1,9 @@
 
+v.3.0 / 2018-06-03
+==================
+  * fonctionalité de publication des articles de la banque.
+
+
 v1.2.2 / 2018-05-21
 ==================
 

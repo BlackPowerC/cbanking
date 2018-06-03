@@ -63,6 +63,7 @@ namespace RestAPI
         // Les routes GET
         void getAccountById(const Rest::Request &request, Http::ResponseWriter response) ;
         void getAllAccounts(const Rest::Request &request, Http::ResponseWriter response) ;
+        void getAllNews(const Rest::Request &request, Http::ResponseWriter response) ;
         void getAccountByCustomerId(const Rest::Request &request, Http::ResponseWriter response) ;
         void getAccountByEmployeeId(const Rest::Request &request, Http::ResponseWriter response) ;
         void getEmployeeById(const Rest::Request &request, Http::ResponseWriter response) ;
@@ -78,6 +79,7 @@ namespace RestAPI
         void deleteOperation(const Rest::Request &request, Http::ResponseWriter response) ;
 
         // Les routes POST
+        void postNews(const Rest::Request &request, Http::ResponseWriter response) ;
         void addCustomer(const Rest::Request &request, Http::ResponseWriter response) ;
         void addEmployee(const Rest::Request &request, Http::ResponseWriter response) ;
         void addAccount(const Rest::Request &request, Http::ResponseWriter response) ;

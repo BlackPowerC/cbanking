@@ -21,6 +21,7 @@
 
 #include "../../include/Util/Converter/Converters.hpp"
 #include "../../include/Rest/FCMNotification.hpp"
+#include "../../include/API/NewsAPI.hpp"
 
 #include <exception>
 #include <plog/Log.h>
@@ -72,6 +73,95 @@ namespace RestAPI
       }
       return p_session ;
     }
+
+
+    // SÉCURISÉ
+    // Route /misc/news/get/token
+    void RequestHandler::getAllNews(const Rest::Request &request, Http::ResponseWriter response)
+    {
+        try
+        {
+            std::string token = request.param(":token").as<std::string>() ;
+            /* Vérification de session */
+            std::shared_ptr<Session> p_session ;
+            try
+            {
+                p_session = SessionAPI::getInstance()->findByToken<Session>(token) ;
+                PersonAPI::getInstance()->findById<Person>(p_session->getPerson()->getId()) ;
+            }
+            catch(const std::exception &e)
+            {
+                LOG_ERROR << e.what() ;
+                response.send(Http::Code::Unauthorized, e.what(), MIME(Text, Plain)) ;
+                return ;
+            }
+            // Traitement de la requête
+            std::vector<std::shared_ptr<News> > list_news = NewsAPI::getInstance()->findAll<News>() ;
+            std::string json("[\n\t") ;
+            for(auto &news : list_news)
+            {
+                json += NewsConverter().entityToJson(news)+",\n";
+            }
+            json.pop_back() ;
+            json.pop_back() ;
+            json += "\t]\n";
+            response.send(Http::Code::Ok, json, MIME(Application, Json)) ;
+
+        }
+        catch(const NotFound &nf)
+        {
+            LOG_WARNING << nf.what() ;
+            std::string err_msg = "{\"erreur\":[\"message\":\"non authorisé sur cet API\"]}" ;
+            response.send(Http::Code::Unauthorized, err_msg, MIME(Application, Json)) ;
+            return ;
+        }
+    }
+
+
+    // SÉCURISÉ
+    // Route /misc/news/post/token
+    void RequestHandler::postNews(const Rest::Request &request, Http::ResponseWriter response)
+    {
+        try
+        {
+            std::string token = request.param(":token").as<std::string>() ;
+            std::shared_ptr<Session> p_session = checkToken(token) ;
+
+            const char *body = request.body().c_str() ;
+            if(!Util::json_is_valid(Util::fromFileToString("resources/json schema/news.schema.json"), request.body()))
+            {
+                response.send(Http::Code::Bad_Request) ;
+                return ;
+            }
+            LOG_DEBUG << request.body() ;
+            rapidjson::Document doc; doc.Parse(body) ;
+            News news ;
+
+            news.setDate( doc["date"].GetString() ) ;
+            news.setText( doc["text"].GetString() ) ;
+            news.setTitle( doc["title"].GetString() ) ;
+
+            NewsAPI::getInstance()->insert<News>(news) ;
+
+            response.send(Http::Code::Created) ;
+
+        }catch(const SessionExprired &se)
+        {
+            LOG_WARNING << se.what() ;
+            response.send(Http::Code::Unauthorized, se.what(), MIME(Application, Json)) ;
+        }
+        catch(const NotFound &nf)
+        {
+            LOG_WARNING << nf.what() ;
+            response.send(Http::Code::Unauthorized, nf.what(), MIME(Application, Json)) ;
+        }
+        catch(const std::exception &e)
+        {
+            LOG_WARNING << e.what() ;
+            response.send(Http::Code::Internal_Server_Error, e.what(), MIME(Text, Plain)) ;
+        }
+    }
+
 
     // SÉCURISÉ
     // Utilisé par le client Android
