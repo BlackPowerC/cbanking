@@ -15,8 +15,14 @@ int main(int argc, char **argv)
  	DBConnection::getInstance() ;
 	if(argc >= 2)
 	{
-        std::cout << argc ;
-		RestAPI::RestServer r(getenv("HOSTNAME"), std::atoi(argv[1])) ;
+		char *hostname = getenv("HOSTNAME") ;
+		if(!hostname)
+		{
+			LOG_FATAL << "Cannot lunch futurabank_rest_api without hostame" ;
+			LOG_FATAL << "Please set HOSTNAME env variable before" ;
+            return -1 ;
+		}
+		RestAPI::RestServer r(hostname, std::atoi(argv[1])) ;
         r.start() ;
         r.stop() ;
 	}
