@@ -115,6 +115,11 @@ public:
         this->passwd = person.passwd ;
         this->sexe = person.sexe ;
     }
+
+    virtual std::string getType() const
+    {
+      return "person" ;
+    }
 };
 
 /**
@@ -194,6 +199,11 @@ public:
     bool operator==(const Customer &t_another)
     {
         return this->id == t_another.id ;
+    }
+
+    virtual std::string getType() const
+    {
+        return "customer" ;
     }
 };
 
@@ -344,6 +354,11 @@ public:
     bool operator==(const Employee &employee)
     {
         return this->id == employee.id ;
+    }
+
+    virtual std::string getType() const
+    {
+        return "customer" ;
     }
 };
 
