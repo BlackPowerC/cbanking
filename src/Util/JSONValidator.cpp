@@ -9,27 +9,28 @@ namespace Util
 {
     bool json_is_valid(const std::string &schema, const std::string &json)
     {
-        rapidjson::Document controlDocument ;
-        if(controlDocument.Parse(schema.c_str()).HasParseError()
-           || controlDocument.Parse(json.c_str()).HasParseError())
+        rapidjson::Document schema_document ; schema_document.Parse(schema.c_str()) ;
+        rapidjson::Document json_input ; json_input.Parse(json.c_str()) ;
+
+        if(schema_document.HasParseError() || json_input.HasParseError())
         {
             return false ;
         }
 
-        rapidjson::Document document ; document.Parse(schema.c_str()) ;
-        rapidjson::SchemaDocument schemaDocument(document) ;
-        rapidjson::SchemaValidator schemaValidator(schemaDocument) ;
-        if(controlDocument.Accept(schemaValidator))
+        rapidjson::SchemaDocument schema_d(schema_document) ;
+        rapidjson::SchemaValidator validator(schema_d) ;
+        if(json_input.Accept(validator))
         {
-//
             return true ;
         }
         else
         {
-//            rapidjson::StringBuffer buffer ;
-//            schemaValidator.GetInvalidSchemaPointer().StringifyUriFragment(buffer) ;
-//            LOG_ERROR << buffer.GetString() ;
-//            LOG_ERROR << schemaValidator.GetInvalidSchemaKeyword() ;
+            rapidjson::StringBuffer sb ;
+            validator.GetInvalidSchemaPointer().StringifyUriFragment(sb) ;
+            LOG_ERROR <<"Invalid schema: "<< sb.GetString() ;
+            LOG_ERROR <<"Invalid keyword: "<< validator.GetInvalidSchemaKeyword() ;
+            validator.GetInvalidDocumentPointer().StringifyUriFragment(sb);
+            LOG_ERROR <<"Invalid document: "<< sb.GetString();
             return false ;
         }
     }

@@ -81,11 +81,17 @@ namespace RestAPI
                              Rest::Routes::bind(&RequestHandler::updateInstaceAppId, &this->t_rhandler)) ;
 
         // Poster un article
-        Rest::Routes::Post(this->t_router, "misc/news/post/:token",
+        Rest::Routes::Post(this->t_router, "misc/news/post",
                             Rest::Routes::bind(&RequestHandler::postNews, &this->t_rhandler)) ;
         // Lister tout article
-        Rest::Routes::Get(this->t_router, "misc/news/get/:token",
+        Rest::Routes::Get(this->t_router, "misc/news",
                            Rest::Routes::bind(&RequestHandler::getAllNews, &this->t_rhandler)) ;
+        // Envoyer un article
+        Rest::Routes::Get(this->t_router, "misc/news/:id",
+                           Rest::Routes::bind(&RequestHandler::getNewsById, &this->t_rhandler)) ;
+        // Envoyer un article
+        Rest::Routes::Delete(this->t_router, "misc/news/:id",
+                           Rest::Routes::bind(&RequestHandler::deleteNews, &this->t_rhandler)) ;
     }
 
     Address RestServer::parseJson(const std::string &json)

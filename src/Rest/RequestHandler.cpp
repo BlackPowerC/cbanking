@@ -74,20 +74,56 @@ namespace RestAPI
       return p_session ;
     }
 
+    // SÉCURISÉ
+    // Route /misc/news/:id?token=xxx
+    void RequestHandler::getNewsById(const Rest::Request &request, Http::ResponseWriter response)
+    {
+        try
+        {
+            std::string token ;
+            /* Vérification de session */
+            std::shared_ptr<Session> p_session ;
+            long news_id ;
+
+            news_id = request.param(":id").as<int>() ;
+            token = getQueryParam(request.query(), "token") ;
+            p_session = SessionAPI::getInstance()->findByToken<Session>(token) ;
+            PersonAPI::getInstance()->findById<Person>(p_session->getPerson()->getId()) ;
+
+            // Traitement de la requête
+            std::shared_ptr<News>  news = NewsAPI::getInstance()->findById<News>(news_id) ;
+            std::string json = NewsConverter().entityToJson(news) ;
+            response.send(Http::Code::Ok, json, MIME(Application, Json)) ;
+
+        }
+        catch(const NotFound &nf)
+        {
+            LOG_WARNING << nf.what() ;
+            std::string err_msg = "{\"erreur\":[\"message\":\"non authorisé sur cet API\"]}" ;
+            response.send(Http::Code::Unauthorized, err_msg, MIME(Application, Json)) ;
+            return ;
+        }
+    }
 
     // SÉCURISÉ
-    // Route /misc/news/get/token
+    // Route /misc/news?token=xxx
     void RequestHandler::getAllNews(const Rest::Request &request, Http::ResponseWriter response)
     {
         try
         {
-            std::string token = request.param(":token").as<std::string>() ;
+            std::string token ;
             /* Vérification de session */
             std::shared_ptr<Session> p_session ;
             try
             {
+                token = getQueryParam(request.query(), "token") ;
                 p_session = SessionAPI::getInstance()->findByToken<Session>(token) ;
                 PersonAPI::getInstance()->findById<Person>(p_session->getPerson()->getId()) ;
+            }
+            catch(const NotFound &nf)
+            {
+                LOG_WARNING << nf.what() ;
+                response.send(Http::Code::Unauthorized, nf.what(), MIME(Text, Plain)) ;
             }
             catch(const std::exception &e)
             {
@@ -95,6 +131,7 @@ namespace RestAPI
                 response.send(Http::Code::Unauthorized, e.what(), MIME(Text, Plain)) ;
                 return ;
             }
+
             // Traitement de la requête
             std::vector<std::shared_ptr<News> > list_news = NewsAPI::getInstance()->findAll<News>() ;
             std::string json("[\n\t") ;
@@ -124,7 +161,7 @@ namespace RestAPI
     {
         try
         {
-            std::string token = request.param(":token").as<std::string>() ;
+            std::string token = getQueryParam(request.query(), "token") ;
             std::shared_ptr<Session> p_session = checkToken(token) ;
 
             const char *body = request.body().c_str() ;
@@ -133,8 +170,8 @@ namespace RestAPI
                 response.send(Http::Code::Bad_Request) ;
                 return ;
             }
-            LOG_DEBUG << request.body() ;
-            rapidjson::Document doc; doc.Parse(body) ;
+            LOG_DEBUG << "request: " << request.body() ;
+            rapidjson::Document doc; doc.Parse(request.body().c_str()) ;
             News news ;
 
             news.setDate( doc["date"].GetString() ) ;
@@ -875,6 +912,35 @@ namespace RestAPI
                 response.send(Http::Code::Not_Found, ne.what(), MIME(Text, Plain)) ;
                 return ;
             }
+        }
+        response.send(Http::Code::Ok) ;
+    }
+
+    // SÉCURISÉ
+    // Route /misc/news/:id?token=xxx
+    void RequestHandler::deleteNews(const Rest::Request &request, Http::ResponseWriter response)
+    {
+        /* Vérifions le paramettre */
+        long id ;
+        try
+        {
+            id = request.param(":id").as<int>() ;
+            // Sécurisation
+            std::string token = getQueryParam(request.query(), "token") ;
+            PersonAPI::getInstance()->findById<Employee>(
+                    SessionAPI::getInstance()->findByToken<Session>(token)->getPerson()->getId()
+            ) ;
+            NewsAPI::getInstance()->erase<News>(id) ;
+
+        }catch (const NotFound &nf)
+        {
+            response.send(Http::Code::Unauthorized, nf.what(), MIME(Text, Plain)) ;
+            return ;
+        }catch(const std::exception &e)
+        {
+            LOG_ERROR << e.what() ;
+            response.send(Http::Code::No_Content, e.what(), MIME(Text, Plain)) ;
+            return ;
         }
         response.send(Http::Code::Ok) ;
     }

@@ -9,10 +9,10 @@ namespace Util
     std::string NewsConverter::entityToJson(const Entity::News &entity)
     {
         std::string json = ("{") ;
-        json += "\"id\":"+entity.getId()+std::string(",\n");
+        json += "\"id\":"+std::to_string(entity.getId())+",\n";
         json += "\"title\":\""+entity.getTitle()+std::string("\",\n") ;
         json += "\"date\":\""+entity.getDate()+std::string("\",\n") ;
-        json += "\"text\":\""+entity.getText()+std::string("\n}") ;
+        json += "\"text\":\""+entity.getText()+std::string("\"\n}") ;
         return json ;
     }
 
