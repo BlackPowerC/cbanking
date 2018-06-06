@@ -1,5 +1,10 @@
 
-v.3.0 / 2018-06-03
+v1.3.1 / 2018-06-06
+==================
+
+  * feature(publication): suppression, listing.
+
+v1.3.0 / 2018-06-03
 ==================
   * fonctionalité de publication des articles de la banque.
 

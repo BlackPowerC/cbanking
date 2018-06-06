@@ -25,7 +25,7 @@ WORKDIR /home/cbanking
 ADD https://github.com/Tencent/rapidjson/archive/v1.1.0.tar.gz .
 ADD https://github.com/jedisct1/libsodium/releases/download/1.0.16/libsodium-1.0.16.tar.gz .
 ADD https://github.com/SergiusTheBest/plog/archive/1.1.3.tar.gz .
-ADD https://github.com/BlackPowerC/futura-bank/archive/v1.3.0.tar.gz .
+ADD https://github.com/BlackPowerC/futura-bank/archive/v1.3.1.tar.gz .
 ADD https://github.com/BlackPowerC/googletest/archive/release-1.8.0.tar.gz .
 ADD https://github.com/BlackPowerC/pistache-1/archive/28-04-18.tar.gz .
 ADD https://github.com/curl/curl/releases/download/curl-7_60_0/curl-7.60.0.tar.gz .
@@ -40,7 +40,7 @@ RUN mv cmake-3.11.1-Linux-x86_64/ cmake/ \
 RUN tar -xzf v1.1.0.tar.gz \
   && tar -xzf libsodium-1.0.16.tar.gz \
   && tar -xzf 1.1.3.tar.gz \
-  && tar -xzf v1.3.0.tar.gz \
+  && tar -xzf v1.3.1.tar.gz \
   && tar -xzf release-1.8.0.tar.gz \
   && tar -xzf 28-04-18.tar.gz \
   && tar -xzf curl-7.60.0.tar.gz
@@ -80,7 +80,7 @@ WORKDIR /home/cbanking/plog-1.1.3
 RUN cp -R include/plog /usr/local/include/
 
 # installation de cbanking
-WORKDIR /home/cbanking/futura-bank-1.3.0
+WORKDIR /home/cbanking/futura-bank-1.3.1
 RUN /usr/local/cmake/bin/cmake -G Unix\ Makefiles . && make
 RUN cp -R futurabank_rest_api resources/ ..
 
@@ -95,7 +95,7 @@ RUN apt-get autoremove --purge libodb-dev g++ make gcc \
     libmysql++-dev libmysqlclient-dev \
     libcurl4-openssl-dev libssh-dev libssl-dev  \
     libodb-mysql-dev -y
-RUN rm *.tar.gz googletest-release-1.8.0 rapidjson-1.1.0 libsodium-1.0.16 futura-bank-1.3.0 pistache-1-28-04-18 curl-7.60.0 -dr
+RUN rm *.tar.gz googletest-release-1.8.0 rapidjson-1.1.0 libsodium-1.0.16 futura-bank-1.3.1 pistache-1-28-04-18 curl-7.60.0 -dr
 RUN rm /var/lib/dpkg/* -dr
 
 EXPOSE 8181

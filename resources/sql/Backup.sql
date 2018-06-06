@@ -1,13 +1,13 @@
 -- MySQL dump 10.15  Distrib 10.0.34-MariaDB, for debian-linux-gnu (x86_64)
 --
--- Host: 172.17.0.3    Database: test_cbanking
+-- Host: 172.17.0.2    Database: test_cbanking
 -- ------------------------------------------------------
 -- Server version	5.7.12
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
+/*!40101 SET NAMES utf8mb4 */;
 /*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
 /*!40103 SET TIME_ZONE='+00:00' */;
 /*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
@@ -18,16 +18,6 @@
 --
 -- Table structure for table `Account`
 --
-
-DROP TABLE IF EXISTS `News`;
-
-CREATE TABLE `News` (
-  `id` BIGINT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-  `title` VARCHAR(127) NOT NULL,
-  `date` VARCHAR(127) NOT NULL,
-  `text` TEXT NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
 
 DROP TABLE IF EXISTS `Account`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -41,7 +31,7 @@ CREATE TABLE `Account` (
   `initialBalance` double NOT NULL,
   `creationDate` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -50,6 +40,7 @@ CREATE TABLE `Account` (
 
 LOCK TABLES `Account` WRITE;
 /*!40000 ALTER TABLE `Account` DISABLE KEYS */;
+INSERT INTO `Account` VALUES (1,'Entity::CurrentAccount',13,12,16530,15000,'24-05-2018 22:40:45'),(2,'Entity::CurrentAccount',13,12,1500,1500,'24-05-2018 22:42:11'),(3,'Entity::SavingsAccount',13,12,789,789,'24-05-2018 22:42:19'),(4,'Entity::CurrentAccount',15,12,12500,12500,'03-06-2018 16:50:15');
 /*!40000 ALTER TABLE `Account` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -68,7 +59,7 @@ CREATE TABLE `BaseOperation` (
   `date` varchar(255) NOT NULL,
   `montant` double NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -77,6 +68,7 @@ CREATE TABLE `BaseOperation` (
 
 LOCK TABLES `BaseOperation` WRITE;
 /*!40000 ALTER TABLE `BaseOperation` DISABLE KEYS */;
+INSERT INTO `BaseOperation` VALUES (1,'Entity::Operation',1,12,'24-05-2018 22:41:01',1530);
 /*!40000 ALTER TABLE `BaseOperation` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -101,6 +93,7 @@ CREATE TABLE `CurrentAccount` (
 
 LOCK TABLES `CurrentAccount` WRITE;
 /*!40000 ALTER TABLE `CurrentAccount` DISABLE KEYS */;
+INSERT INTO `CurrentAccount` VALUES (1,5),(2,12),(4,5);
 /*!40000 ALTER TABLE `CurrentAccount` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -124,7 +117,7 @@ CREATE TABLE `Customer` (
 
 LOCK TABLES `Customer` WRITE;
 /*!40000 ALTER TABLE `Customer` DISABLE KEYS */;
-INSERT INTO `Customer` VALUES (9),(10),(11),(13),(14);
+INSERT INTO `Customer` VALUES (9),(10),(11),(13),(14),(15),(16);
 /*!40000 ALTER TABLE `Customer` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -226,6 +219,32 @@ LOCK TABLES `Group_members` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `News`
+--
+
+DROP TABLE IF EXISTS `News`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `News` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `title` varchar(127) NOT NULL,
+  `date` varchar(127) NOT NULL,
+  `text` text NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `News`
+--
+
+LOCK TABLES `News` WRITE;
+/*!40000 ALTER TABLE `News` DISABLE KEYS */;
+INSERT INTO `News` VALUES (1,'Bonjour','02-06-2018 21:05','Bienvenue à futura bank'),(2,'Article','02-06-2018 21:05','Ceci est un article');
+/*!40000 ALTER TABLE `News` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `Operation`
 --
 
@@ -246,6 +265,7 @@ CREATE TABLE `Operation` (
 
 LOCK TABLES `Operation` WRITE;
 /*!40000 ALTER TABLE `Operation` DISABLE KEYS */;
+INSERT INTO `Operation` VALUES (1,0);
 /*!40000 ALTER TABLE `Operation` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -267,7 +287,7 @@ CREATE TABLE `Person` (
   `id_token` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `email_i` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -276,7 +296,7 @@ CREATE TABLE `Person` (
 
 LOCK TABLES `Person` WRITE;
 /*!40000 ALTER TABLE `Person` DISABLE KEYS */;
-INSERT INTO `Person` VALUES (9,'Entity::Customer','dalida','kodjo','dalida@gmail.com','C8E37EBBF525D680D2E0051D8FA2D6EC4DD358FBF81D87E26B3B4478A337F2D3','feminin',NULL),(10,'Entity::Customer','nabine','sabine','nabin@gmail.com','C8E37EBBF525D680D2E0051D8FA2D6EC4DD358FBF81D87E26B3B4478A337F2D3','feminin',NULL),(11,'Entity::Customer','thierrno','barry','thierrno@gmail.com','C8E37EBBF525D680D2E0051D8FA2D6EC4DD358FBF81D87E26B3B4478A337F2D3','masculin',NULL),(12,'Entity::Employee','root','root','root@root.com','6F8DC2A043C8D2C68D039FDB66AAFAEA7C9F8990F77C0C521E552B456F8BEDDA','masculin',3),(13,'Entity::Customer','bawara','titianne','titianne@gmail.com','C8E37EBBF525D680D2E0051D8FA2D6EC4DD358FBF81D87E26B3B4478A337F2D3','feminin',NULL),(14,'Entity::Customer','baba','samuelbaba@gmail.com','','732ADBBAFC12A2DC678A0A5B5EDE387708C3CF2383B83CF4805534CB9B12085F','',NULL);
+INSERT INTO `Person` VALUES (9,'Entity::Customer','dalida','kodjo','dalida@gmail.com','C8E37EBBF525D680D2E0051D8FA2D6EC4DD358FBF81D87E26B3B4478A337F2D3','feminin',NULL),(10,'Entity::Customer','nabine','sabine','nabin@gmail.com','C8E37EBBF525D680D2E0051D8FA2D6EC4DD358FBF81D87E26B3B4478A337F2D3','feminin',NULL),(11,'Entity::Customer','thierrno','barry','thierrno@gmail.com','C8E37EBBF525D680D2E0051D8FA2D6EC4DD358FBF81D87E26B3B4478A337F2D3','masculin',NULL),(12,'Entity::Employee','root','root','root@root.com','6F8DC2A043C8D2C68D039FDB66AAFAEA7C9F8990F77C0C521E552B456F8BEDDA','masculin',3),(13,'Entity::Customer','bawara','titianne','titianne@gmail.com','C8E37EBBF525D680D2E0051D8FA2D6EC4DD358FBF81D87E26B3B4478A337F2D3','feminin',NULL),(14,'Entity::Customer','baba','samuelbaba@gmail.com','','732ADBBAFC12A2DC678A0A5B5EDE387708C3CF2383B83CF4805534CB9B12085F','',NULL),(15,'Entity::Customer','jordy','jordy','fatigba@gmail.com','6F8DC2A043C8D2C68D039FDB66AAFAEA7C9F8990F77C0C521E552B456F8BEDDA','masculin',4),(16,'Entity::Customer','kodjo','dalila','dalila@kodjo.com','6F8DC2A043C8D2C68D039FDB66AAFAEA7C9F8990F77C0C521E552B456F8BEDDA','feminin',5);
 /*!40000 ALTER TABLE `Person` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -325,6 +345,7 @@ CREATE TABLE `SavingsAccount` (
 
 LOCK TABLES `SavingsAccount` WRITE;
 /*!40000 ALTER TABLE `SavingsAccount` DISABLE KEYS */;
+INSERT INTO `SavingsAccount` VALUES (3,3);
 /*!40000 ALTER TABLE `SavingsAccount` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -350,7 +371,7 @@ CREATE TABLE `Session` (
 
 LOCK TABLES `Session` WRITE;
 /*!40000 ALTER TABLE `Session` DISABLE KEYS */;
-INSERT INTO `Session` VALUES (3,1526170122,3052340244);
+INSERT INTO `Session` VALUES (3,1526170122,3052340244),(4,1527415248,3054830496),(5,1527934864,3055869728);
 /*!40000 ALTER TABLE `Session` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -366,10 +387,10 @@ CREATE TABLE `Token` (
   `typeid` varchar(255) NOT NULL,
   `id_person` int(11) DEFAULT NULL,
   `token` varchar(255) NOT NULL,
-  `appInstanceId` VARCHAR(511) NOT NULL,
+  `appInstanceId` varchar(511) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `token_i` (`token`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -378,7 +399,7 @@ CREATE TABLE `Token` (
 
 LOCK TABLES `Token` WRITE;
 /*!40000 ALTER TABLE `Token` DISABLE KEYS */;
-INSERT INTO `Token` VALUES (3,'Entity::Session',12,'EDFF32707D057B88546D0BDCCE676A007A2080599346D4138ABB7474E473743E', '');
+INSERT INTO `Token` VALUES (3,'Entity::Session',12,'EDFF32707D057B88546D0BDCCE676A007A2080599346D4138ABB7474E473743E',''),(4,'Entity::Session',15,'A855D49432D027B9825FF27866CE5178C517955E23A4E38879B3C0C24DBE5255',''),(5,'Entity::Session',16,'B07AA41D358304BA3720249B123CC24D73199F18FDCEC0BCB0B673F4EE5FF7B0','');
 /*!40000 ALTER TABLE `Token` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -440,4 +461,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-05-14 13:10:52
+-- Dump completed on 2018-06-04 14:32:12
